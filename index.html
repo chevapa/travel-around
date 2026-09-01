@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Атлас поездок — Загреб и окрестности</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F3EEE3;
+    --paper:#FFFDF8;
+    --ink:#2B2A25;
+    --ink-soft:#6B6558;
+    --line:#DCD3BF;
+    --green:#1E9E52;
+    --green-soft:#E4F6EA;
+    --amber:#D6790F;
+    --amber-soft:#FBEEDC;
+    --grey:#7C8592;
+    --grey-soft:#EEF0F2;
+    --star:#E8590C;
+    --teal:#2E6E7E;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;font-family:'Inter',sans-serif;color:var(--ink);background:var(--cream);}
+  #app{display:flex;height:100vh;width:100vw;}
+
+  #sidebar{
+    width:340px;min-width:340px;
+    background:var(--paper);
+    border-right:1px solid var(--line);
+    display:flex;flex-direction:column;
+    z-index:1000;
+  }
+  #sidebar-header{padding:26px 24px 16px;border-bottom:1px solid var(--line);}
+  #sidebar-header h1{
+    font-family:'Fraunces',serif;font-weight:600;font-size:26px;line-height:1.15;margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  #sidebar-header p{margin:0;color:var(--ink-soft);font-size:13.5px;line-height:1.5;}
+
+  #scroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;}
+
+  #filters-toggle{
+    display:none;width:100%;padding:11px 24px;background:var(--cream);
+    border:none;border-bottom:1px solid var(--line);cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--ink);
+    text-align:left;align-items:center;gap:8px;
+  }
+  #filters-toggle .chev{width:12px;height:12px;margin-left:auto;transition:transform .18s ease;}
+  #filters-toggle.collapsed .chev{transform:rotate(-90deg);}
+  #controls.hidden{display:none;}
+
+  .panel{border-bottom:1px solid var(--line);}
+  .panel-head{
+    display:flex;align-items:center;gap:8px;width:100%;
+    padding:14px 24px;background:none;border:none;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);
+    text-align:left;
+  }
+  .panel-head:hover{background:var(--cream);}
+  .panel-head .chev{
+    margin-left:auto;transition:transform .18s ease;flex-shrink:0;
+    width:12px;height:12px;
+  }
+  .panel.closed .chev{transform:rotate(-90deg);}
+  .panel-body{padding:0 16px 14px;}
+  .panel.closed .panel-body{display:none;}
+
+  .field{padding:0 24px 14px;}
+  .field label{
+    display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--ink-soft);font-weight:600;margin-bottom:7px;
+  }
+  .field select{
+    width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--line);
+    background:var(--cream);font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);
+    cursor:pointer;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236B6558' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  .field select:focus{outline:2px solid var(--teal);outline-offset:1px;}
+
+  .check{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 8px;border-radius:9px;cursor:pointer;
+    transition:background .15s ease;user-select:none;
+  }
+  .check:hover{background:var(--cream);}
+  .check input{
+    appearance:none;width:16px;height:16px;border-radius:5px;
+    border:1.5px solid var(--line);background:var(--paper);
+    cursor:pointer;flex-shrink:0;position:relative;
+  }
+  .check input:checked{background:var(--ink);border-color:var(--ink);}
+  .check input:checked::after{
+    content:"";position:absolute;left:4.5px;top:1.5px;
+    width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+  }
+  .check .swatch{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+  .check .ico{font-size:14px;width:17px;text-align:center;flex-shrink:0;}
+  .check .txt{font-size:14px;flex:1;}
+  .check .num{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;}
+  .check.off .txt, .check.off .num{opacity:.45;}
+
+  .bulk{
+    display:flex;gap:14px;padding:2px 8px 8px;
+  }
+  .bulk button{
+    background:none;border:none;padding:0;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:12px;color:var(--teal);
+    text-decoration:underline;text-underline-offset:2px;
+  }
+  .bulk button:hover{color:var(--ink);}
+
+  #list-panel{border-top:1px solid var(--line);}
+  #result-count{
+    position:sticky;top:0;z-index:5;background:var(--paper);
+    padding:12px 24px 10px;font-size:11px;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--ink-soft);font-weight:600;
+    border-bottom:1px solid var(--line);
+  }
+  #list-wrap{padding:0 12px 24px;}
+  .group-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--ink-soft);padding:14px 12px 4px;font-weight:600;
+  }
+  .place-card{
+    padding:10px 12px;border-radius:10px;cursor:pointer;
+    display:flex;gap:10px;align-items:flex-start;
+    transition:background .15s ease;
+  }
+  .place-card:hover{background:var(--cream);}
+  .place-card .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+  .place-card .info{flex:1;min-width:0;}
+  .place-card .name{font-size:14px;font-weight:500;line-height:1.3;}
+  .place-card .name .star-mark{color:var(--star);margin-left:4px;}
+  .place-card .meta{font-size:12px;color:var(--ink-soft);margin-top:1px;}
+  .empty-note{padding:20px 24px;font-size:13px;color:var(--ink-soft);line-height:1.5;}
+
+  #add-btn{
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    width:calc(100% - 48px);margin:16px 24px;padding:11px 14px;
+    background:var(--ink);color:#fff;border:none;border-radius:10px;
+    font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;
+    transition:opacity .15s ease;flex-shrink:0;
+  }
+  #add-btn:hover{opacity:.85;}
+
+  #modal-back{
+    position:fixed;inset:0;background:rgba(43,42,37,.45);z-index:3000;
+    display:none;align-items:center;justify-content:center;padding:20px;
+  }
+  #modal-back.open{display:flex;}
+  #modal{
+    background:var(--paper);border-radius:14px;width:100%;max-width:460px;
+    max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  #modal h2{
+    font-family:'Fraunces',serif;font-size:21px;margin:0;
+    padding:22px 24px 14px;border-bottom:1px solid var(--line);
+  }
+  .form-body{padding:18px 24px 22px;}
+  .fg{margin-bottom:15px;}
+  .fg > label{
+    display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--ink-soft);font-weight:600;margin-bottom:6px;
+  }
+  .fg input[type=text], .fg textarea, .fg select{
+    width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;
+    font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);background:var(--paper);
+  }
+  .fg textarea{resize:vertical;min-height:60px;}
+  .fg input:focus, .fg textarea:focus, .fg select:focus{outline:2px solid var(--teal);outline-offset:1px;}
+  .coord-row{display:flex;gap:8px;align-items:flex-end;}
+  .coord-row .fg{flex:1;margin-bottom:0;}
+  #pick-btn{
+    padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--cream);
+    font-family:'Inter',sans-serif;font-size:12.5px;cursor:pointer;white-space:nowrap;color:var(--ink);
+  }
+  #pick-btn.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+  .cat-grid .check{padding:6px 7px;}
+  .cat-grid .check .txt{font-size:13px;}
+  .form-actions{display:flex;gap:10px;padding:0 24px 22px;}
+  .form-actions button{
+    flex:1;padding:11px;border-radius:9px;font-family:'Inter',sans-serif;
+    font-size:13.5px;font-weight:600;cursor:pointer;border:none;
+  }
+  #save-btn{background:var(--ink);color:#fff;}
+  #cancel-btn{background:var(--cream);color:var(--ink);border:1px solid var(--line);}
+  .form-err{color:#c0392b;font-size:12.5px;padding:0 24px 12px;display:none;}
+  .form-err.show{display:block;}
+  #pick-hint{
+    position:absolute;top:14px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:9px 16px;border-radius:100px;
+    font-size:13px;font-weight:500;z-index:2500;display:none;
+    box-shadow:0 4px 16px rgba(0,0,0,.3);
+  }
+  #pick-hint.show{display:block;}
+  .del-link{
+    background:none;border:none;color:#c0392b;font-size:12.5px;cursor:pointer;
+    text-decoration:underline;text-underline-offset:2px;padding:4px 0;
+    font-family:'Inter',sans-serif;
+  }
+
+  #sidebar-collapse{
+    position:absolute;top:14px;left:14px;z-index:1200;
+    display:flex;align-items:center;gap:7px;
+    padding:9px 13px;background:var(--paper);color:var(--ink);
+    border:1px solid var(--line);border-radius:9px;cursor:pointer;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+    box-shadow:0 2px 10px rgba(43,42,37,.18);
+  }
+  #sidebar-collapse:hover{background:var(--cream);}
+  #app.hidden-sidebar #sidebar{display:none;}
+
+  #map{flex:1;height:100%;}
+  .leaflet-popup-content-wrapper{
+    border-radius:12px;background:var(--paper);
+    box-shadow:0 8px 28px rgba(43,42,37,.18);
+  }
+  .leaflet-popup-content{margin:16px 18px;width:260px !important;}
+  .popup-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+  .popup-badge{
+    display:inline-block;font-size:11px;font-weight:600;
+    padding:3px 9px;border-radius:100px;
+  }
+  .popup-badge.green{background:var(--green-soft);color:#14713a;}
+  .popup-badge.amber{background:var(--amber-soft);color:#8a5006;}
+  .popup-badge.grey{background:var(--grey-soft);color:#59606b;}
+  .popup-badge.cat{background:var(--cream);color:var(--ink-soft);}
+  .popup-title{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:0 0 6px;line-height:1.25;}
+  .popup-title .title-link{
+    color:var(--ink);text-decoration:none;
+    border-bottom:1.5px solid var(--line);
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .popup-title .title-link:hover{color:var(--teal);border-bottom-color:var(--teal);}
+  .ext-ico{
+    width:12px;height:12px;display:inline-block;vertical-align:baseline;
+    margin-left:5px;opacity:.5;
+  }
+  .popup-title .title-link:hover .ext-ico{opacity:1;}
+  .popup-title .star-mark{color:var(--star);font-size:15px;margin-left:4px;}
+  .popup-note{font-size:13px;line-height:1.5;color:#4a4638;margin:0;}
+  .popup-warn{
+    font-size:12.5px;line-height:1.45;color:#8a5006;background:var(--amber-soft);
+    padding:8px 10px;border-radius:8px;margin:10px 0 0;
+  }
+  .popup-meta{font-size:12px;color:var(--ink-soft);margin-top:8px;}
+  .popup-drivetime{
+    font-size:12.5px;color:var(--ink);margin:10px 0 0;padding-top:9px;
+    border-top:1px solid var(--line);
+  }
+  .popup-drivetime .dt-value{font-weight:600;}
+  .popup-drivetime.dt-error .dt-value{font-weight:500;color:var(--ink-soft);font-style:italic;}
+
+  .nearby-box{margin-top:10px;padding-top:9px;border-top:1px solid var(--line);}
+  .nearby-btn{
+    background:var(--cream);border:1px solid var(--line);border-radius:8px;
+    padding:7px 11px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;
+    color:var(--ink);cursor:pointer;width:100%;
+  }
+  .nearby-btn:hover{background:var(--paper);border-color:var(--teal);color:var(--teal);}
+  .nearby-btn:disabled{opacity:.6;cursor:default;}
+  .nearby-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--ink-soft);font-weight:600;margin:0 0 6px;
+  }
+  .nearby-item{
+    display:flex;align-items:center;gap:8px;width:100%;
+    background:none;border:none;padding:6px 4px;border-radius:7px;cursor:pointer;
+    font-family:'Inter',sans-serif;text-align:left;
+  }
+  .nearby-item:hover{background:var(--cream);}
+  .ni-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .ni-name{flex:1;font-size:13px;color:var(--ink);}
+  .ni-min{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .nearby-empty{font-size:12.5px;color:var(--ink-soft);margin:0;line-height:1.45;}
+
+  .pin-wrap{position:relative;width:28px;height:28px;}
+  .pin-dot{
+    position:absolute;left:5px;top:9px;width:18px;height:18px;border-radius:50%;
+    border:2.5px solid #fff;
+    box-shadow:0 1px 4px rgba(0,0,0,.45), 0 0 0 1px rgba(0,0,0,.10);
+    display:flex;align-items:center;justify-content:center;
+    font-size:9px;line-height:1;
+  }
+  .pin-badge{
+    position:absolute;left:13px;top:0px;width:15px;height:15px;border-radius:50%;
+    background:#fff;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 1px 4px rgba(0,0,0,.40);
+    font-size:10px;line-height:1;color:var(--star);
+    transition:opacity .15s ease, transform .15s ease;
+  }
+  .pin-badge.hidden{opacity:0;transform:scale(.4);pointer-events:none;}
+  .leaflet-marker-icon{background:none;border:none;}
+  .radius-label{
+    background:transparent !important;border:none !important;box-shadow:none !important;
+    color:#5B6270;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;
+    padding:0 !important;
+  }
+  .radius-label::before{display:none !important;}
+  .base-pin{
+    width:16px;height:16px;border-radius:50%;background:var(--ink);
+    border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.5), 0 0 0 6px rgba(43,42,37,.12);
+  }
+
+  @media (max-width:860px){
+    #app{flex-direction:column;}
+    #sidebar{
+      width:100%;min-width:0;order:2;flex:1;min-height:0;
+      border-right:none;border-top:1px solid var(--line);
+    }
+    #map{order:1;height:45vh;flex:none;}
+    #app.hidden-sidebar #map{height:100vh;}
+    #sidebar-collapse{top:10px;left:10px;padding:8px 11px;font-size:12.5px;}
+    #sidebar-header{padding:14px 20px 12px;}
+    #sidebar-header h1{font-size:20px;margin-bottom:2px;}
+    #sidebar-header p{display:none;}
+    #filters-toggle{display:flex;}
+    #controls.collapsed{display:none;}
+    #add-btn{margin:12px 20px;width:calc(100% - 40px);}
+    .field{padding:0 20px 12px;}
+    .panel-head{padding:12px 20px;}
+    #result-count{padding:10px 20px 8px;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <h1>Атлас поездок</h1>
+      <p>Загреб, Загорье, Словения и побережье — где были и куда планируем.</p>
+    </div>
+
+    <button id="filters-toggle">
+      Фильтры и настройки
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+
+    <button id="add-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      Добавить место
+    </button>
+
+    <div id="scroll">
+    <div id="controls">
+      <div class="field">
+        <label for="base-select">Точка отсчёта</label>
+        <select id="base-select">
+          <option value="zagreb">Загреб</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="mode-select">Способ передвижения</label>
+        <select id="mode-select">
+          <option value="car">На машине</option>
+        </select>
+      </div>
+
+      <div class="panel" id="panel-status">
+        <button class="panel-head" data-panel="panel-status">
+          Статус
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="panel-body" id="status-list"></div>
+      </div>
+
+      <div class="panel" id="panel-country">
+        <button class="panel-head" data-panel="panel-country">
+          Страна
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="panel-body" id="country-list"></div>
+      </div>
+
+      <div class="panel closed" id="panel-season">
+        <button class="panel-head" data-panel="panel-season">
+          Сезон
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="panel-body" id="season-list"></div>
+      </div>
+
+      <div class="panel closed" id="panel-cats">
+        <button class="panel-head" data-panel="panel-cats">
+          Тип места
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="panel-body">
+          <div class="bulk">
+            <button id="cats-all">Выбрать все</button>
+            <button id="cats-none">Снять все</button>
+          </div>
+          <div id="cat-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-marks">
+        <button class="panel-head" data-panel="panel-marks">
+          Отметки
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="panel-body">
+          <label class="check" id="check-return">
+            <input type="checkbox" checked>
+            <span class="ico" style="color:var(--star)">★</span>
+            <span class="txt">Хотим вернуться</span>
+            <span class="num" id="count-return"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div id="list-panel">
+      <div id="result-count"></div>
+      <div id="list-wrap"></div>
+    </div>
+    </div>
+  </div>
+  <div id="map"></div>
+  <button id="sidebar-collapse" title="Скрыть/показать панель">
+    <svg id="collapse-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+    <span id="collapse-txt">Скрыть панель</span>
+  </button>
+  <div id="pick-hint">Кликните по карте, чтобы поставить точку</div>
+</div>
+
+<div id="modal-back">
+  <div id="modal">
+    <h2 id="modal-title">Новое место</h2>
+    <div class="form-body">
+      <div class="fg">
+        <label for="f-name">Название</label>
+        <input type="text" id="f-name" placeholder="Например: Гарич-град">
+      </div>
+
+      <div class="fg">
+        <label for="f-q">Название на местном языке (для поиска)</label>
+        <input type="text" id="f-q" placeholder="Например: Garić grad">
+      </div>
+
+      <div class="coord-row">
+        <div class="fg">
+          <label for="f-lat">Широта</label>
+          <input type="text" id="f-lat" placeholder="45.8150">
+        </div>
+        <div class="fg">
+          <label for="f-lng">Долгота</label>
+          <input type="text" id="f-lng" placeholder="15.9819">
+        </div>
+        <button id="pick-btn" type="button">На карте</button>
+      </div>
+      <div style="height:15px"></div>
+
+      <div class="fg">
+        <label for="f-status">Статус</label>
+        <select id="f-status"></select>
+      </div>
+
+      <div class="fg">
+        <label for="f-country">Страна</label>
+        <select id="f-country"></select>
+      </div>
+
+      <div class="fg">
+        <label for="f-season">Сезон</label>
+        <select id="f-season"></select>
+      </div>
+
+      <div class="fg">
+        <label>Тип места (можно несколько)</label>
+        <div class="cat-grid" id="f-cats"></div>
+      </div>
+
+      <div class="fg">
+        <label for="f-drive">Время в пути</label>
+        <input type="text" id="f-drive" placeholder="1 ч 15 мин">
+      </div>
+
+      <div class="fg">
+        <label for="f-note">Описание / впечатление</label>
+        <textarea id="f-note" placeholder="Что там интересного"></textarea>
+      </div>
+
+      <div class="fg">
+        <label for="f-warn">Проверить перед выездом (необязательно)</label>
+        <input type="text" id="f-warn" placeholder="Например: закрыто по понедельникам">
+      </div>
+
+      <div class="fg">
+        <label for="f-meta">Заметка о поездке (необязательно)</label>
+        <input type="text" id="f-meta" placeholder="Например: окт · авто">
+      </div>
+
+      <label class="check" style="padding-left:0;">
+        <input type="checkbox" id="f-return">
+        <span class="ico" style="color:var(--star)">★</span>
+        <span class="txt">Хотим вернуться</span>
+      </label>
+
+      <div id="del-wrap" style="display:none;margin-top:8px;">
+        <button class="del-link" id="del-btn">Удалить это место</button>
+      </div>
+    </div>
+    <div class="form-err" id="form-err"></div>
+    <div class="form-actions">
+      <button id="cancel-btn" type="button">Отмена</button>
+      <button id="save-btn" type="button">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+// ---------- CATEGORIES ----------
+const CATEGORIES = {
+  town:    {label:'Город / городок',      ico:'🏛'},
+  castle:  {label:'Замок / крепость',     ico:'🏰'},
+  museum:  {label:'Музей / этнография',   ico:'🗿'},
+  church:  {label:'Церковь / сакральное', ico:'⛪'},
+  nature:  {label:'Природа / хайк',       ico:'🌲'},
+  view:    {label:'Смотровая',            ico:'🔭'},
+  water:   {label:'Озеро / река',         ico:'💧'},
+  cave:    {label:'Пещера',               ico:'🕳'},
+  beach:   {label:'Пляж / море',          ico:'🏖'},
+  food:    {label:'Еда / вино',           ico:'🍷'},
+  bike:    {label:'Велотема',             ico:'🚲'},
+  spa:     {label:'Термы',                ico:'♨️'},
+};
+
+const COUNTRIES = {
+  hr: {label:'Хорватия',  flag:'🇭🇷', local:'Hrvatska'},
+  si: {label:'Словения',  flag:'🇸🇮', local:'Slovenija'},
+  it: {label:'Италия',    flag:'🇮🇹', local:'Italia'},
+  hu: {label:'Венгрия',   flag:'🇭🇺', local:'Magyarország'},
+};
+
+const SEASONS = {
+  all:    {label:'Круглый год',        ico:'🗓'},
+  warm:   {label:'Тепло (апр–окт)',    ico:'🌤'},
+  summer: {label:'Лето / купание',     ico:'☀️'},
+  stork:  {label:'Аисты (март–авг)',   ico:'🕊'},
+};
+
+const STATUSES = {
+  loved: {label:'Понравилось',          color:'#1E9E52', badge:'green'},
+  ok:    {label:'Так себе / нейтрально', color:'#D6790F', badge:'amber'},
+  plan:  {label:'Ещё не были (план)',    color:'#7C8592', badge:'grey'},
+};
+
+// ---------- DATA ----------
+const PLACES = [
+  // ===== VISITED — loved =====
+  {name:"Кумровец (Старо Село)", lat:45.9581, lng:15.5253, cat:"loved", cats:["museum","town"], wantReturn:false, q:"Kumrovec Staro Selo", country:"hr", season:"all", drive:"50 мин", note:"Целостная этно-деревня, аутентичные дома разного назначения, интерьеры.", meta:"30 авг · авто"},
+  {name:"Мария Бистрица", lat:45.9989, lng:16.0167, cat:"loved", cats:["church","town","nature"], wantReturn:false, q:"Marija Bistrica", country:"hr", season:"all", drive:"40 мин", note:"Необычная церковь «замкового» типа, улица вниз к площади, Кальвария.", meta:"30 авг · авто"},
+  {name:"Велики Табор", lat:46.1975, lng:15.7644, cat:"loved", cats:["castle","museum"], wantReturn:true, q:"Veliki Tabor dvorac", country:"hr", season:"all", drive:"1 ч 5 мин", note:"Сохранившиеся стены, двор, местами интерьеры. Хочется доисследовать.", meta:"март · авто"},
+  {name:"Грешна Горица", lat:46.1958, lng:15.7592, cat:"loved", cats:["food","view"], wantReturn:false, q:"Grešna Gorica restoran", country:"hr", season:"all", drive:"1 ч 5 мин", note:"Локальная кухня, загорские штрукли, вид на замок, царско месо. Обожрались.", meta:"март · авто"},
+  {name:"Трakошчан", lat:46.2775, lng:15.9539, cat:"loved", cats:["castle","water","nature"], wantReturn:true, q:"Trakošćan dvorac", country:"hr", season:"warm", warn:"Прогулка вокруг озера лучше в сухую погоду", drive:"1 ч 15 мин", note:"Романтический замок, озеро вокруг — хочется повторить прогулку.", meta:"авг · авто"},
+  {name:"Вараждин", lat:46.3057, lng:16.3366, cat:"loved", cats:["town","castle","museum"], wantReturn:true, q:"Varaždin", country:"hr", season:"all", warn:"Адвент — отдельный повод; расписание летающего Санты уточнять", drive:"1 ч 5 мин", note:"Старый город и замок (внутри не был — надо зайти). Отличный Адвент, кладбище.", meta:"3× · авто"},
+  {name:"Самобор", lat:45.8025, lng:15.7133, cat:"loved", cats:["town","nature","food","bike"], wantReturn:true, q:"Samobor", country:"hr", season:"all", warn:"Фашник (карнавал) — февраль, даты плавающие", drive:"30 мин", note:"Ар-нуво площадь, кремшнита в Ливадиче, хайк к руинам замка. Зимой — на Фашник.", meta:"много раз · авто+вело"},
+  {name:"Япетич (вершина)", lat:45.6103, lng:15.5972, cat:"loved", cats:["view","nature","food"], wantReturn:false, q:"Japetić vrh", country:"hr", season:"warm", warn:"Дом для путешественников работает не каждый день", drive:"55 мин", note:"Супер вид, парковка рядом, дом для путешественников с кофе.", meta:"окт · авто"},
+  {name:"Sumski Dvor (ресторан)", lat:45.6280, lng:15.6520, cat:"loved", cats:["food","view"], wantReturn:false, q:"Šumski Dvor restoran", country:"hr", season:"all", warn:"Столик лучше бронировать заранее", drive:"50 мин", note:"Локальная кухня, потрясающий вид с холмов.", meta:"окт · авто"},
+  {name:"Сльеме / Медведница", lat:45.8971, lng:15.9503, cat:"loved", cats:["nature","view","castle"], wantReturn:false, q:"Sljeme Medvednica", country:"hr", season:"all", drive:"35 мин", note:"Смотровая башня, тропы, крепость Медведград — на удивление хороша.", meta:"много раз · пешком+авто"},
+  {name:"Расток", lat:45.1103, lng:15.5763, cat:"loved", cats:["water","museum","nature"], wantReturn:false, q:"Rastoke", country:"hr", season:"warm", drive:"1 ч 30 мин", note:"Речка, музей, мельницы, остров с домами и водопадиками.", meta:"1.5 ч · авто"},
+  {name:"Плитвицкие озёра", lat:44.8654, lng:15.5820, cat:"loved", cats:["nature","water"], wantReturn:true, q:"Plitvička jezera", country:"hr", season:"all", warn:"Летом толпы и дорогие билеты; осень/зима дешевле и тише", drive:"2 ч", note:"Отлично — хочется вернуться в другой сезон (осень/зима).", meta:"июнь"},
+  {name:"Фужине", lat:45.4667, lng:14.7167, cat:"loved", cats:["water","nature","bike","cave"], wantReturn:true, q:"Fužine", country:"hr", season:"warm", warn:"Пещеры закрываются в холодный сезон", drive:"1 ч 25 мин", note:"Городок с горным озером, велосипеды до верха, пещеры.", meta:"нояб · автобус"},
+  {name:"Любляна", lat:46.0569, lng:14.5058, cat:"loved", cats:["town","museum","food"], wantReturn:true, q:"Ljubljana", country:"si", season:"all", drive:"1 ч 30 мин", note:"Старый город, шопинг, еда, прогулки, римское городище.", meta:"много раз"},
+  {name:"Блед", lat:46.3683, lng:14.1146, cat:"loved", cats:["water","nature","castle"], wantReturn:false, q:"Bled", country:"si", season:"all", drive:"2 ч 15 мин", note:"Топ место, были на Адвенте.", meta:""},
+  {name:"Бохиньское озеро + Вогель", lat:46.2833, lng:13.8833, cat:"loved", cats:["water","nature","view"], wantReturn:false, q:"Bohinjsko jezero Vogel", country:"si", season:"all", warn:"Канатка может не работать в межсезонье и при ветре", drive:"2 ч 50 мин", note:"Потрясающе, как и Блед. Канатка на Вогеле, супер прогулка.", meta:"авто"},
+  {name:"Постойнска-Яма + Предъямски замок", lat:45.7830, lng:14.2018, cat:"loved", cats:["cave","castle"], wantReturn:false, q:"Postojnska jama Predjamski grad", country:"si", season:"all", warn:"Замок Предъяма зимой в сокращённом режиме", drive:"1 ч 50 мин", note:"Огромная пещера, впечатляющий замок — поражает воображение.", meta:"июнь · автобус"},
+  {name:"Триест", lat:45.6495, lng:13.7768, cat:"loved", cats:["town","food","museum","castle"], wantReturn:true, q:"Trieste", country:"it", season:"all", drive:"2 ч 20 мин", note:"Шопинг, еда, замок, дворцы, раскопки. Хочется доехать до Мирамаре.", meta:"авто/автобус"},
+  {name:"Опатия", lat:45.3378, lng:14.3053, cat:"loved", cats:["town","beach","nature"], wantReturn:false, q:"Opatija", country:"hr", season:"all", drive:"1 ч 50 мин", note:"Солнечный зимний гетевей, прогулка вдоль моря.", meta:"янв · авто"},
+  {name:"Мотовун", lat:45.3325, lng:13.8347, cat:"loved", cats:["town","view","nature"], wantReturn:false, q:"Motovun", country:"hr", season:"warm", warn:"Рестораны выбирать заранее — много туристических", drive:"2 ч 40 мин", note:"Супер виды, но ресторан оказался туристической ловушкой.", meta:"хайк"},
+  {name:"Пула", lat:44.8666, lng:13.8496, cat:"loved", cats:["town","museum","beach"], wantReturn:false, q:"Pula", country:"hr", season:"warm", drive:"3 ч 30 мин", note:"Арена, город, Верудела — многодневное направление.", meta:"неск. раз"},
+  {name:"Бриюни", lat:44.9333, lng:13.7667, cat:"loved", cats:["nature","beach","museum"], wantReturn:true, q:"Brijuni", country:"hr", season:"warm", warn:"Только по расписанию катеров, бронь обязательна", drive:"3 ч 40 мин", note:"Топ место — не однодневная поездка от Загреба.", meta:"1×"},
+  {name:"Ровинь", lat:45.0811, lng:13.6387, cat:"loved", cats:["town","beach"], wantReturn:true, q:"Rovinj", country:"hr", season:"warm", drive:"3 ч 20 мин", note:"Супер понравилось — тоже не однодневная поездка.", meta:"1×"},
+  {name:"Мошченицка-Драга", lat:45.2989, lng:14.2439, cat:"loved", cats:["beach","town"], wantReturn:false, q:"Mošćenička Draga", country:"hr", season:"summer", drive:"2 ч", note:"Интересный городок, пляжный отдых.", meta:""},
+  {name:"Крк (город)", lat:45.0247, lng:14.5750, cat:"loved", cats:["town","beach","museum"], wantReturn:true, q:"Krk grad", country:"hr", season:"all", warn:"Музеи работают по сокращённому графику вне сезона", drive:"2 ч 15 мин", note:"В музеи не заходили — есть что доисследовать.", meta:""},
+  {name:"Малинска", lat:45.1319, lng:14.5236, cat:"loved", cats:["beach","nature"], wantReturn:false, q:"Malinska", country:"hr", season:"all", warn:"Хороша именно в межсезонье", drive:"2 ч 10 мин", note:"Супер для прогулок, дышать морем — хороша в межсезонье.", meta:"зима+весна"},
+  {name:"Башка", lat:44.9739, lng:14.7539, cat:"loved", cats:["beach"], wantReturn:false, q:"Baška", country:"hr", season:"summer", drive:"2 ч 45 мин", note:"Эталон пляжного отдыха: берег, заход, простор, виды.", meta:""},
+  {name:"Караловац", lat:45.4870, lng:15.5478, cat:"loved", cats:["town","castle","museum"], wantReturn:false, q:"Karlovac", country:"hr", season:"all", drive:"50 мин", note:"Архитектурный старый центр, небольшой но занимательный замок.", meta:"июнь · поезд"},
+  {name:"Брежице (Словения)", lat:45.9058, lng:15.5936, cat:"loved", cats:["town","museum","bike"], wantReturn:true, q:"Brežice", country:"si", season:"all", drive:"45 мин", note:"Крутой музей от римлян до наших дней, улица, доходный дом, кофейня.", meta:"2× · авто+вело"},
+
+  // ===== VISITED — ok =====
+  {name:"Смотровая Графичар", lat:45.9520, lng:16.0450, cat:"ok", cats:["view"], wantReturn:false, q:"Grafičar vidikovac", country:"hr", season:"all", warn:"Приезжать ближе к закату — время проверять", drive:"45 мин", note:"Неплохо, но не супер — стоило приехать ближе к закату.", meta:"30 авг · авто"},
+  {name:"Подсреда (Словения)", lat:46.0206, lng:15.5680, cat:"ok", cats:["castle","town","nature"], wantReturn:false, q:"Podsreda grad", country:"si", season:"warm", drive:"1 ч 10 мин", note:"Городок и замок, вид с холмов — интересно, но «на один раз».", meta:"кон. сент · авто"},
+  {name:"Крапина", lat:46.1639, lng:15.8708, cat:"ok", cats:["museum","town"], wantReturn:false, q:"Krapina muzej krapinskih neandertalaca", country:"hr", season:"all", drive:"45 мин", note:"Музей неандертальцев интересен, но местами слишком «детский».", meta:"нояб · авто"},
+  {name:"Надьканижа (Венгрия)", lat:46.4590, lng:16.9896, cat:"ok", cats:["town"], wantReturn:false, q:"Nagykanizsa", country:"hu", season:"all", drive:"1 ч 50 мин", note:"Пара красивых зданий в центре, на этом всё.", meta:"авто"},
+  {name:"Сисак", lat:45.4881, lng:16.3789, cat:"ok", cats:["town","castle"], wantReturn:false, q:"Sisak", country:"hr", season:"all", drive:"50 мин", note:"Похоже на Надьканижу, чуть побольше по объёму.", meta:"лето · поезд"},
+  {name:"Пещера к северу от Самобора", lat:45.8194, lng:15.6919, cat:"ok", cats:["cave"], wantReturn:false, q:"špilja Samobor", country:"hr", season:"warm", drive:"40 мин", note:"Интересно, но немного — уступает крупным пещерам.", meta:""},
+  {name:"Заприешич", lat:45.8564, lng:15.8092, cat:"ok", cats:["town","bike","food"], wantReturn:false, q:"Zaprešić Novi dvori", country:"hr", season:"all", warn:"Novi dvori — проверить, закончена ли реконструкция", drive:"25 мин", note:"Novi dvori Elačićevi (частично реконструкция), ресторан Batak.", meta:"вело"},
+  {name:"Велика-Горица", lat:45.7125, lng:16.0764, cat:"ok", cats:["town","bike","museum"], wantReturn:false, q:"Velika Gorica", country:"hr", season:"warm", drive:"25 мин", note:"Велодорожка в городе, музей не особо интересен, приятный парк.", meta:"лето · вело"},
+  {name:"Андаутония (римские раскопки)", lat:45.7439, lng:16.0733, cat:"ok", cats:["museum","bike"], wantReturn:true, q:"Andautonija Ščitarjevo", country:"hr", season:"warm", warn:"Открыто в основном по выходным, май–октябрь", drive:"25 мин", note:"Сами раскопки не посещал, проезжал мимо — стоит вернуться.", meta:"вело"},
+  {name:"Ястребарско", lat:45.6667, lng:15.6500, cat:"ok", cats:["town","castle"], wantReturn:true, q:"Jastrebarsko dvorac", country:"hr", season:"all", warn:"Дворец — уточнить статус реконструкции перед выездом", drive:"35 мин", note:"Дворец то ли на реконструкции, то ли уже готов — стоит доехать.", meta:"окт · авто"},
+  {name:"Нови-Винодольски", lat:45.1281, lng:14.7886, cat:"ok", cats:["beach","town"], wantReturn:false, q:"Novi Vinodolski", country:"hr", season:"summer", drive:"1 ч 55 мин", note:"Окей, не супер — скученно, узкие тротуары.", meta:""},
+
+  // ===== PLANS =====
+  {name:"Озаль", lat:45.6108, lng:15.4736, cat:"plan", cats:["castle","museum","water"], wantReturn:false, q:"Ozalj stari grad", country:"hr", season:"all", warn:"Купание в Купе — только летом", drive:"50 мин", note:"Замок на скале с музейным интерьером + «Мунярa», ГЭС-«замок» + прогулка вдоль Купы. Топ-1 из планов.", meta:"~50 мин"},
+  {name:"Белец", lat:46.1206, lng:15.9875, cat:"plan", cats:["church"], wantReturn:false, q:"Belec crkva svete Marije Snježne", country:"hr", season:"all", warn:"Церковь обычно заперта — договариваться через приход заранее", drive:"1 ч", note:"Барочная церковь Св. Марии Снежной — фрески Рангера. Звонить заранее, обычно закрыта.", meta:"~1 ч"},
+  {name:"Кальник", lat:46.1167, lng:16.4667, cat:"plan", cats:["castle","view","food","nature"], wantReturn:false, q:"Kalnik stari grad planinarski dom", country:"hr", season:"warm", warn:"Горный дом закрыт по понедельникам", drive:"1 ч 15 мин", note:"Руины крепости рядом с горным домом — вид + штрукли, как на Япетиче.", meta:"~1 ч 15"},
+  {name:"Дворец Оршич (Горня-Стубица)", lat:45.9944, lng:15.9575, cat:"plan", cats:["castle","museum"], wantReturn:false, q:"dvorac Oršić Gornja Stubica", country:"hr", season:"all", drive:"40 мин", note:"Барочный дворец с интерьером и парком, музей крестьянских восстаний.", meta:"~40 мин"},
+  {name:"Окич + Плешивица", lat:45.7311, lng:15.7086, cat:"plan", cats:["castle","food","view"], wantReturn:false, q:"Okić grad Plešivica", country:"hr", season:"warm", warn:"Винодельни лучше согласовать заранее", drive:"45 мин", note:"Руины на скале + винная дорога с дегустациями и ресторанами.", meta:"~45–60 мин"},
+  {name:"Шкофья-Лока (Словения)", lat:46.1653, lng:14.3057, cat:"plan", cats:["town","castle","museum"], wantReturn:false, q:"Škofja Loka", country:"si", season:"all", drive:"1 ч 45 мин", note:"Средневековый городок + замок-музей — мини-Любляна без толп.", meta:"~1 ч 45"},
+  {name:"Турополье (Велика-Млака + Лукавец)", lat:45.7139, lng:16.0472, cat:"plan", cats:["church","castle","bike","museum"], wantReturn:false, q:"Velika Mlaka crkva svete Barbare Lukavec", country:"hr", season:"warm", warn:"Деревянные капеллы открывают по договорённости", drive:"30 мин", note:"Деревянные капеллы + небольшой замок-крепость, плоская вело-местность.", meta:"~30–40 мин"},
+  {name:"Чаковец", lat:46.3833, lng:16.4333, cat:"plan", cats:["castle","museum","town"], wantReturn:false, q:"Čakovec Stari grad Zrinski", country:"hr", season:"all", warn:"Часть крыльев музея закрыта на ремонт — проверить, что открыто", drive:"1 ч 15 мин", note:"Крепость Зринских с музеем, сокровищницей и тоннелями. Часть крыльев на реконструкции.", meta:"~1 ч 15"},
+  {name:"Целе (Словения)", lat:46.2311, lng:15.2683, cat:"plan", cats:["castle","town","museum"], wantReturn:false, q:"Celje grad", country:"si", season:"all", drive:"1 ч 50 мин", note:"Крупнейший средневековый замок Словении с интерьерами + старый город.", meta:"~1 ч 45–2 ч"},
+  {name:"Птуй (Словения)", lat:46.4200, lng:15.8700, cat:"plan", cats:["castle","town","museum"], wantReturn:false, q:"Ptuj grad", country:"si", season:"all", drive:"1 ч 50 мин", note:"Старейший город Словении, замок XII в. с обставленными комнатами.", meta:"~2 ч"},
+  {name:"Гргосова пещера (Жумберак)", lat:45.7553, lng:15.6353, cat:"plan", cats:["cave","nature"], wantReturn:false, q:"Grgosova špilja Otruševec", country:"hr", season:"warm", warn:"С гидом, вне сезона по договорённости", drive:"1 ч", note:"«Самая красивая пещера СЗ Хорватии» — противовес мелкой пещере у Самобора.", meta:"~1 ч"},
+  {name:"Свети-Крыж-Зачретье", lat:46.0728, lng:15.8494, cat:"plan", cats:["castle","town","museum"], wantReturn:false, q:"Sveti Križ Začretje dvorac", country:"hr", season:"all", drive:"45 мин", note:"Отреставрированная усадьба + приятный центр городка.", meta:"~45 мин"},
+  {name:"Лоньско-поле (Чигоч)", lat:45.2833, lng:16.6167, cat:"plan", cats:["nature","museum","water"], wantReturn:false, q:"Lonjsko polje Čigoč", country:"hr", season:"stork", warn:"Аисты — примерно конец марта – конец августа", drive:"1 ч 10 мин", note:"Живая деревня аистов, деревянная застройка — Кумровец, но природный.", meta:"~1 ч"},
+  {name:"Лепоглава", lat:46.1967, lng:16.0092, cat:"plan", cats:["church","museum","town"], wantReturn:false, q:"Lepoglava pavlinski samostan", country:"hr", season:"all", warn:"Фестиваль кружева — отдельный сезонный повод", drive:"1 ч 15 мин", note:"Бывший паулинский монастырь с фресками Рангера + традиция кружевоплетения.", meta:"~1 ч 15"},
+  {name:"Камник (Словения)", lat:46.2256, lng:14.6111, cat:"plan", cats:["town","castle","nature","view"], wantReturn:false, q:"Kamnik", country:"si", season:"warm", warn:"Канатка на Велика-Планина — проверять работу", drive:"1 ч 55 мин", note:"Городок с двумя руинами замков + канатка на плато Велика-Планина.", meta:"~2 ч"},
+  // ===== ДОБАВЛЕНО ПО ИТОГАМ ИССЛЕДОВАНИЯ (восток + новые находки) =====
+  {name:"Вараждинске-Топлице (Aquae Iasae)", lat:46.2078, lng:16.4197, cat:"plan", cats:["museum","town","spa","church"], wantReturn:false, q:"Varaždinske Toplice Aquae Iasae arheološki park", country:"hr", season:"all", warn:"Групповые экскурсии бронировать за 3 дня", drive:"1 ч 15 мин", note:"Римский комплекс терм и форума под навесом (~6000 м²) + старейший курорт Хорватии + готическая церковь Св. Мартина с органом 1765 г.", meta:"~85 км"},
+  {name:"Лудбрег", lat:46.2542, lng:16.6183, cat:"plan", cats:["church","museum","town"], wantReturn:false, q:"Ludbreg svetište Predragocjene Krvi Kristove", country:"hr", season:"all", warn:"Свята-Неделя 28 авг – 6 сент 2026: до 100 тыс. паломников, толпы", drive:"1 ч 20 мин", note:"Единственное евхаристическое святилище Хорватии, фрески Михаэля Пека в часовне Батьяни, римский Iovia, «Центр мира».", meta:"~90 км"},
+  {name:"Дворец Миляна", lat:46.0722, lng:15.6486, cat:"plan", cats:["castle"], wantReturn:false, q:"dvorac Miljana", country:"hr", season:"all", warn:"Частное владение — доступ внутрь только по договорённости или на мероприятиях", drive:"1 ч", note:"Полностью отреставрированная ренессансно-барочная усадьба с парком.", meta:"~55 км"},
+  {name:"Конйщина (водный замок)", lat:46.0442, lng:16.0489, cat:"plan", cats:["castle"], wantReturn:false, q:"Stari grad Konjščina", country:"hr", season:"warm", warn:"Внутрь обычно не попасть — смотрят снаружи; проверять календарь событий", drive:"45 мин", note:"Редкий низинный замок с рвом (не на холме), сохранившиеся стены и башни, площадка для пикника.", meta:"~50 км"},
+  {name:"Стубичке-Топлице (Дианина купель)", lat:46.0403, lng:15.9161, cat:"plan", cats:["spa","museum","nature"], wantReturn:false, q:"Stubičke Toplice Dijanina kupelj", country:"hr", season:"all", drive:"40 мин", note:"Историческая купальня, ставшая небольшим выставочным пространством, в парке столетних пихт — курорт с архитектурой, а не аквапарк.", meta:""},
+  {name:"Планинарски дом Главица", lat:45.8419, lng:15.8817, cat:"plan", cats:["view","food","nature"], wantReturn:false, q:"Planinarski dom Glavica Medvednica", country:"hr", season:"all", warn:"В будни может открываться только с полудня — звонить заранее", drive:"35 мин", note:"Горный дом с панорамой на Загреб и домашней кухней, рядом пещера Ветерница.", meta:"420 м"},
+  {name:"Пунтиярка (Сльеме)", lat:45.9081, lng:15.9631, cat:"plan", cats:["food","view","nature"], wantReturn:false, q:"Planinarski dom Puntijarka Sljeme", country:"hr", season:"all", drive:"40 мин", note:"Классический горный дом: сыр со сметаной, грах, жаркое. Рядом Grofica с полуметровым шницелем.", meta:"957 м"},
+  {name:"Джурджевац (Стари град)", lat:46.0364, lng:17.0631, cat:"plan", cats:["castle","museum","town"], wantReturn:false, q:"Đurđevac Stari grad", country:"hr", season:"all", warn:"Валы на реконструкции — уточнять доступ внутрь вне фестиваля", drive:"1 ч 45 мин", note:"Кирпичная ренессансная крепость (ок. 1488) с галереей. Фестиваль Пицокияда 26–28 июня 2026.", meta:"~130 км"},
+  {name:"Джурджевачки пески («Хорватская Сахара»)", lat:46.0287, lng:17.0992, cat:"plan", cats:["nature","view"], wantReturn:false, q:"Đurđevački peski", country:"hr", season:"warm", drive:"1 ч 45 мин", note:"Песчаные дюны — уникальный для Хорватии заповедник (19,33 га, охраняется с 1963), мини-зоопарк с верблюдами. Неожиданный «экстра».", meta:"~130 км"},
+  {name:"Хлебине (наивное искусство)", lat:46.1114, lng:16.9536, cat:"plan", cats:["museum","town"], wantReturn:false, q:"Hlebine galerija naivne umjetnosti", country:"hr", season:"all", warn:"Пн закрыто; вт–пт 10–16, сб–вс 10–14", drive:"1 ч 30 мин", note:"Родина Хлебинской школы наивной живописи по стеклу: ~1000 работ, парк скульптур, этно-дом Генералича.", meta:"~110 км"},
+  {name:"Копривница + озеро Шодерица", lat:46.1630, lng:16.8280, cat:"plan", cats:["town","museum","water","nature"], wantReturn:false, q:"Koprivnica stari grad Šoderica", country:"hr", season:"warm", drive:"1 ч 15 мин", note:"Ренессансные валы, превращённые в парк, барочно-сецессионный центр и музей + «Подравское море» с галечными пляжами.", meta:"~90 км"},
+  {name:"Чазма (церковь Св. Марии Магдалины)", lat:45.7486, lng:16.6130, cat:"plan", cats:["church"], wantReturn:false, q:"Čazma crkva svete Marije Magdalene", country:"hr", season:"all", warn:"Действующий приход — вход через жупный уред", drive:"1 ч", note:"Романско-готические кости и богатый барочный интерьер (алтари, кафедра, орган рококо) — снаружи скромно, внутри роскошно.", meta:"~60 км"},
+  {name:"Подгарич (монумент Джамони)", lat:45.6408, lng:16.7778, cat:"plan", cats:["museum","view","nature"], wantReturn:false, q:"Spomenik revoluciji naroda Moslavine Podgarić", country:"hr", season:"all", warn:"Соседний Гарич-град ЗАКРЫТ на реставрацию — не планировать", drive:"1 ч 15 мин", note:"Абстрактный монумент Душана Джамони (1967), 10 м в высоту и 20 в ширину, «крылья победы». Рядом ресторан Vila Garić у озера.", meta:"~95 км"},
+  {name:"Крижевцы", lat:46.0260, lng:16.5430, cat:"plan", cats:["town","church","museum"], wantReturn:false, q:"Križevci crkva svetog Križa", country:"hr", season:"all", warn:"Часть экспозиции городского музея была закрыта на ремонт — проверить", drive:"55 мин", note:"Церковь Св. Креста (1232) с раннеготическим порталом и мраморным алтарём Роббы (1756), греко-католический собор. Справисче 5–7 июня 2026.", meta:"~60 км"},
+  {name:"Планинарски дом Каменитовац (Билогора)", lat:45.9553, lng:16.9236, cat:"plan", cats:["view","food","nature"], wantReturn:false, q:"Planinarski dom Kamenitovac Maglenča", country:"hr", season:"warm", warn:"Ресторан для групп по предварительной записи — звонить", drive:"1 ч 30 мин", note:"Горный дом на Билогоре с видами в сторону Кальника.", meta:"координаты приблизительные"},
+  {name:"Мославачка гора — видовая «Вис»", lat:45.6001, lng:16.7558, cat:"plan", cats:["view","nature"], wantReturn:false, q:"Moslavačka gora vidikovac Vis", country:"hr", season:"warm", warn:"Еды на горе нет — спускаться к Vila Garić", drive:"1 ч 15 мин", note:"Новая видовая с рельефным макетом на тропе Бела Црква, 437 м.", meta:""},
+  {name:"Ружица град (Папук)", lat:45.5433, lng:17.8925, cat:"plan", cats:["castle","nature","water","view"], wantReturn:false, q:"Ružica grad Orahovica", country:"hr", season:"warm", drive:"2 ч 20 мин", note:"Крупнейший сохранившийся средневековый укреплённый город Славонии в геопарке ЮНЕСКО Папук. Рядом Ораховачко озеро, Янковац и водопад Скакавац 36 м.", meta:"многодневный вариант"},
+  {name:"Сопотски слап (Жумберак)", lat:45.7561, lng:15.3403, cat:"plan", cats:["nature","view","water"], wantReturn:false, q:"Sopotski slap Sošice Žumberak", country:"hr", season:"warm", warn:"PD Vodice открыт по выходным весна–осень; иначе только родник", drive:"1 ч", note:"Крупнейший водопад Жумберака, подъезд почти вплотную по асфальту, луг для пикника. Кольцевой маршрут через вершину Плиеш (977 м).", meta:""},
+  {name:"Долина Слапница (Жумберак)", lat:45.7300, lng:15.3700, cat:"plan", cats:["nature","water","castle"], wantReturn:false, q:"Slapnica Brisalo Vranjački slap", country:"hr", season:"warm", warn:"Лучше весной/в начале лета — летом каскады мелеют", drive:"1 ч", note:"Каньон с чередой туфовых водопадов и купелей, выходит к руинам Стари град Жумберак.", meta:""},
+  {name:"Барачеве пещеры", lat:44.9803, lng:15.6461, cat:"plan", cats:["cave","nature"], wantReturn:false, q:"Baraćeve špilje Rakovica", country:"hr", season:"warm", warn:"Заметно меньше Постойны — брать как дополнение к Плитвицам, не самоцелью", drive:"2 ч", note:"Оборудованная пещера (верхняя, 492 м, экскурсия ~60 мин, 9°C) + карстовая тропа. Рядом крепость Дрежник над каньоном Кораны.", meta:"~20 км от Плитвиц"},
+  {name:"Костаньевица-на-Крки (Словения)", lat:45.8425, lng:15.4222, cat:"plan", cats:["town","museum","food","water"], wantReturn:false, q:"Kostanjevica na Krki samostan galerija Božidar Jakac", country:"si", season:"all", warn:"Зимние часы уточнять; виньетка не нужна — дорога местная", drive:"1 ч 15 мин", note:"Самый маленький город Словении на речном острове. Цистерцианский монастырь (1234) с одним из крупнейших аркадных дворов Европы, галерея, парк скульптур Forma Viva (с 1961).", meta:"«Доленьская Венеция»"},
+  {name:"Шкоцянске-Яме (Словения)", lat:45.6636, lng:13.9903, cat:"plan", cats:["cave","nature"], wantReturn:false, q:"Škocjanske jame", country:"si", season:"all", warn:"Только с гидом ~1ч30, много мокрых ступеней, съёмка запрещена, билеты заранее", drive:"2 ч 20 мин", note:"Объект ЮНЕСКО (1986): подземный каньон реки Реки и мост Черквеник на высоте 47 м над водой. Многие ставят выше Постойны.", meta:"многодневный вариант"},
+  {name:"Град Богеншперк (Словения)", lat:46.0089, lng:14.8656, cat:"plan", cats:["castle","museum"], wantReturn:false, q:"Grad Bogenšperk", country:"si", season:"all", warn:"Интерьеры только с экскурсией — проверять сезонные часы", drive:"2 ч", note:"Ренессансный замок-музей Вальвазора: обставленный кабинет и библиотека, восстановленная печатня, коллекция о колдовстве. Тише Бледа.", meta:""},
+  {name:"Жичка картузия + Гастуж (Словения)", lat:46.2914, lng:15.4408, cat:"plan", cats:["church","museum","food"], wantReturn:false, q:"Žička kartuzija Gastuž", country:"si", season:"warm", drive:"1 ч 45 мин", note:"Атмосферные руины средневекового картузианского монастыря в тихой долине + Гастуж, одна из старейших корчм Словении, с локальной кухней.", meta:""},
+];
+
+// ---------- STATE ----------
+const state = {
+  statuses: new Set(Object.keys(STATUSES)),
+  cats: new Set(Object.keys(CATEGORIES)),
+  countries: new Set(Object.keys(COUNTRIES)),
+  seasons: new Set(Object.keys(SEASONS)),
+  onlyReturn: false,
+  showReturnBadge: true,
+};
+
+// ---------- MAP ----------
+const map = L.map('map', {zoomControl:false}).setView([45.85, 15.60], 8);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
+}).addTo(map);
+
+const markersLayer = L.layerGroup().addTo(map);
+const markerRefs = [];
+const driveTimeCache = {};
+let placeIdCounter = 0;
+
+function buildMarker(place){
+  const color = STATUSES[place.cat].color;
+  const html = `<div class="pin-wrap">
+      <div class="pin-dot" style="background:${color}"></div>
+      ${place.wantReturn ? `<div class="pin-badge">★</div>` : ''}
+    </div>`;
+  const icon = L.divIcon({html, className:'', iconSize:[28,28], iconAnchor:[14,18], popupAnchor:[0,-20]});
+  const marker = L.marker([place.lat,place.lng], {icon});
+  const st = STATUSES[place.cat];
+  const starMark = place.wantReturn ? ' <span class="star-mark">★</span>' : '';
+  const driveId = `dt-${placeIdCounter++}`;
+  const catBadges = place.cats.map(c=>
+    `<span class="popup-badge cat">${CATEGORIES[c].ico} ${CATEGORIES[c].label}</span>`).join('');
+  const countryBadge = `<span class="popup-badge cat">${COUNTRIES[place.country].flag} ${COUNTRIES[place.country].label}</span>`;
+  const seasonBadge = place.season!=='all'
+    ? `<span class="popup-badge cat">${SEASONS[place.season].ico} ${SEASONS[place.season].label}</span>` : '';
+  const warnBlock = place.warn ? `<p class="popup-warn">⚠️ ${place.warn}</p>` : '';
+  const editBlock = place.custom
+    ? `<p style="margin:10px 0 0"><button class="del-link edit-place" data-name="${place.name}" style="color:var(--teal)">Изменить</button></p>` : '';
+  const searchQ = encodeURIComponent(`${place.q || place.name} ${COUNTRIES[place.country].local}`);
+  const searchUrl = `https://www.google.com/search?q=${searchQ}`;
+  marker.bindPopup(
+    `<div class="popup-badges"><span class="popup-badge ${st.badge}">${st.label}</span>${countryBadge}${seasonBadge}${catBadges}</div>` +
+    `<p class="popup-title"><a href="${searchUrl}" target="_blank" rel="noopener" class="title-link">${place.name}<svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>${starMark}</p>` +
+    `<p class="popup-note">${place.note}</p>` +
+    warnBlock +
+    (place.meta ? `<p class="popup-meta">${place.meta}</p>` : '') +
+    `<p class="popup-drivetime" id="${driveId}">🚗 время в пути: <span class="dt-value">${place.drive}</span></p>` +
+    `<div class="nearby-box"><button class="nearby-btn" data-name="${place.name}">Что рядом →</button><div class="nearby-out"></div></div>` +
+    editBlock
+  );
+  marker.on('popupopen', ()=>loadDriveTime(place, driveId));
+  marker.on('add', ()=>{
+    const el = marker.getElement();
+    const b = el && el.querySelector('.pin-badge');
+    if(b) b.classList.toggle('hidden', !state.showReturnBadge);
+  });
+  markerRefs.push({place, marker});
+}
+PLACES.forEach(buildMarker);
+
+function visiblePlaces(){
+  return PLACES.filter(p=>
+    state.statuses.has(p.cat) &&
+    state.countries.has(p.country) &&
+    state.seasons.has(p.season) &&
+    p.cats.some(c=>state.cats.has(c)) &&
+    (!state.onlyReturn || p.wantReturn)
+  );
+}
+
+function refresh(){
+  const visible = new Set(visiblePlaces());
+  markersLayer.clearLayers();
+  markerRefs.forEach(({place, marker})=>{
+    if(visible.has(place)) markersLayer.addLayer(marker);
+  });
+  renderList([...visible]);
+  updateCounts();
+}
+
+// ---------- DRIVING TIME ----------
+// Время в пути зашито вручную (реалистичные значения для оптимальных условий).
+// OSRM ниже используется только как уточнение, если сеть доступна.
+async function loadDriveTime(place, driveId){
+  const base = BASE_POINTS[document.getElementById('base-select').value];
+  const cacheKey = `${base.name}::${place.name}`;
+  const el = document.getElementById(driveId);
+  if(!el) return;
+  if(driveTimeCache[cacheKey]){
+    el.querySelector('.dt-value').textContent = driveTimeCache[cacheKey];
+    return;
+  }
+  try{
+    const url = `https://router.project-osrm.org/route/v1/driving/${base.lng},${base.lat};${place.lng},${place.lat}?overview=false`;
+    const ctrl = new AbortController();
+    const timer = setTimeout(()=>ctrl.abort(), 5000);
+    const res = await fetch(url, {signal:ctrl.signal});
+    clearTimeout(timer);
+    if(!res.ok) throw new Error('bad');
+    const data = await res.json();
+    if(!data.routes || !data.routes.length) throw new Error('none');
+    const s = data.routes[0].duration, km = Math.round(data.routes[0].distance/1000);
+    const h = Math.floor(s/3600), m = Math.round((s%3600)/60);
+    const str = (h>0 ? `${h} ч ${m} мин` : `${m} мин`) + ` (${km} км по дорогам)`;
+    driveTimeCache[cacheKey] = str;
+    const cur = document.getElementById(driveId);
+    if(cur){
+      cur.querySelector('.dt-value').textContent = str;
+      cur.classList.remove('dt-error');
+    }
+  }catch(err){
+    // сеть недоступна — остаётся зашитое значение, ничего не меняем
+  }
+}
+
+// ---------- RINGS ----------
+const BASE_POINTS = { zagreb:{name:'Загреб', lat:45.8150, lng:15.9819} };
+// Расстояния ПО ПРЯМОЙ (не по дорогам), откалиброванные по реальному времени:
+//  1ч — Вараждин 1:05 (61км) · Ново-Место 54мин (63км) · Кутина 55мин (72км) · Караловац 50мин (47км)
+//  2ч — Грац 2:00 (146км) · Постойна 1:58 (137км) · Плитвице 2:00 (107км) · Слав.Брод 1:50 (175км)
+//  3ч — Задар 3:00 (197км) · Удине 3:00 (214км) · Осиек 2:50 (213км)
+const RING_DATA = { zagreb:[
+  {label:'~1 ч', N:61,  E:72,  S:47,  W:63},
+  {label:'~2 ч', N:146, E:180, S:107, W:137},
+  {label:'~3 ч', N:200, E:225, S:197, W:214},
+]};
+let baseMarker = null, radiusShapes = [];
+
+function smoothLerp(a,b,t){ const s=t*t*(3-2*t); return a+(b-a)*s; }
+function destPoint(lat0,lng0,km,brg){
+  const r=brg*Math.PI/180, latR=lat0*Math.PI/180;
+  return [lat0 + (km*Math.cos(r))/111.32, lng0 + (km*Math.sin(r))/(111.32*Math.cos(latR))];
+}
+function ovalPoints(c,d,steps=144){
+  const pts=[];
+  for(let i=0;i<steps;i++){
+    const b=i*360/steps;
+    let km;
+    if(b<=90) km=smoothLerp(d.N,d.E,b/90);
+    else if(b<=180) km=smoothLerp(d.E,d.S,(b-90)/90);
+    else if(b<=270) km=smoothLerp(d.S,d.W,(b-180)/90);
+    else km=smoothLerp(d.W,d.N,(b-270)/90);
+    pts.push(destPoint(c.lat,c.lng,km,b));
+  }
+  return pts;
+}
+function drawBase(key){
+  const base = BASE_POINTS[key], rings = RING_DATA[key]||[];
+  radiusShapes.forEach(s=>map.removeLayer(s));
+  radiusShapes = [];
+  if(baseMarker) map.removeLayer(baseMarker);
+  rings.forEach(ring=>{
+    const shape = L.polygon(ovalPoints(base,ring), {
+      color:'#6B7280', weight:2, dashArray:'7,7', fill:false, opacity:.85, interactive:false
+    }).addTo(map);
+    shape.bindTooltip(ring.label,{permanent:true,direction:'top',className:'radius-label',offset:[0,-2]});
+    shape.openTooltip(destPoint(base.lat,base.lng,ring.N,0));
+    radiusShapes.push(shape);
+  });
+  baseMarker = L.marker([base.lat,base.lng],{
+    icon:L.divIcon({html:'<div class="base-pin"></div>',className:'',iconSize:[16,16],iconAnchor:[8,8]}),
+    interactive:false, zIndexOffset:1000
+  }).addTo(map);
+}
+drawBase('zagreb');
+document.getElementById('base-select').addEventListener('change', e=>drawBase(e.target.value));
+document.getElementById('mode-select').addEventListener('change', ()=>drawBase(document.getElementById('base-select').value));
+
+// ---------- FILTER UI ----------
+const statusList = document.getElementById('status-list');
+Object.entries(STATUSES).forEach(([key, s])=>{
+  const el = document.createElement('label');
+  el.className = 'check';
+  el.innerHTML = `<input type="checkbox" checked>
+    <span class="swatch" style="background:${s.color}"></span>
+    <span class="txt">${s.label}</span>
+    <span class="num" data-status-count="${key}"></span>`;
+  el.querySelector('input').addEventListener('change', e=>{
+    if(e.target.checked) state.statuses.add(key); else state.statuses.delete(key);
+    el.classList.toggle('off', !e.target.checked);
+    refresh();
+  });
+  statusList.appendChild(el);
+});
+
+const countryList = document.getElementById('country-list');
+Object.entries(COUNTRIES).forEach(([key, c])=>{
+  const el = document.createElement('label');
+  el.className = 'check';
+  el.innerHTML = `<input type="checkbox" checked>
+    <span class="ico">${c.flag}</span>
+    <span class="txt">${c.label}</span>
+    <span class="num" data-country-count="${key}"></span>`;
+  el.querySelector('input').addEventListener('change', e=>{
+    if(e.target.checked) state.countries.add(key); else state.countries.delete(key);
+    el.classList.toggle('off', !e.target.checked);
+    refresh();
+  });
+  countryList.appendChild(el);
+});
+
+const seasonList = document.getElementById('season-list');
+Object.entries(SEASONS).forEach(([key, s])=>{
+  const el = document.createElement('label');
+  el.className = 'check';
+  el.innerHTML = `<input type="checkbox" checked>
+    <span class="ico">${s.ico}</span>
+    <span class="txt">${s.label}</span>
+    <span class="num" data-season-count="${key}"></span>`;
+  el.querySelector('input').addEventListener('change', e=>{
+    if(e.target.checked) state.seasons.add(key); else state.seasons.delete(key);
+    el.classList.toggle('off', !e.target.checked);
+    refresh();
+  });
+  seasonList.appendChild(el);
+});
+
+const catList = document.getElementById('cat-list');
+Object.entries(CATEGORIES).forEach(([key, c])=>{
+  const el = document.createElement('label');
+  el.className = 'check';
+  el.innerHTML = `<input type="checkbox" checked>
+    <span class="ico">${c.ico}</span>
+    <span class="txt">${c.label}</span>
+    <span class="num" data-cat-count="${key}"></span>`;
+  el.querySelector('input').addEventListener('change', e=>{
+    if(e.target.checked) state.cats.add(key); else state.cats.delete(key);
+    el.classList.toggle('off', !e.target.checked);
+    refresh();
+  });
+  catList.appendChild(el);
+});
+
+document.getElementById('cats-all').addEventListener('click', ()=>{
+  Object.keys(CATEGORIES).forEach(k=>state.cats.add(k));
+  catList.querySelectorAll('input').forEach(i=>{i.checked=true; i.closest('.check').classList.remove('off');});
+  refresh();
+});
+document.getElementById('cats-none').addEventListener('click', ()=>{
+  state.cats.clear();
+  catList.querySelectorAll('input').forEach(i=>{i.checked=false; i.closest('.check').classList.add('off');});
+  refresh();
+});
+
+const returnCheck = document.getElementById('check-return').querySelector('input');
+returnCheck.addEventListener('change', e=>{
+  // checked = показывать звёзды и не фильтровать; unchecked = скрыть звёзды
+  state.showReturnBadge = e.target.checked;
+  markerRefs.forEach(({place, marker})=>{
+    if(!place.wantReturn) return;
+    const el = marker.getElement();
+    const b = el && el.querySelector('.pin-badge');
+    if(b) b.classList.toggle('hidden', !e.target.checked);
+  });
+  document.getElementById('check-return').classList.toggle('off', !e.target.checked);
+});
+
+// Collapsible panels
+document.querySelectorAll('.panel-head').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.getElementById(btn.dataset.panel).classList.toggle('closed');
+  });
+});
+
+// Mobile: whole filter block collapses so the list is reachable
+const filtersToggle = document.getElementById('filters-toggle');
+const controlsEl = document.getElementById('controls');
+function isNarrow(){ return window.matchMedia('(max-width:860px)').matches; }
+if(isNarrow()){
+  controlsEl.classList.add('collapsed');
+  filtersToggle.classList.add('collapsed');
+}
+filtersToggle.addEventListener('click', ()=>{
+  controlsEl.classList.toggle('collapsed');
+  filtersToggle.classList.toggle('collapsed');
+});
+window.addEventListener('resize', ()=>{
+  if(!isNarrow()) controlsEl.classList.remove('collapsed');
+});
+
+// ---------- CUSTOM PLACES ----------
+const STORAGE_KEY = 'trip-atlas-custom-places';
+let editingPlace = null;
+let pickMode = false;
+
+const modalBack = document.getElementById('modal-back');
+const pickHint = document.getElementById('pick-hint');
+
+// Заполняем селекты
+function fillSelect(id, obj, labelFn){
+  const sel = document.getElementById(id);
+  sel.innerHTML = '';
+  Object.entries(obj).forEach(([k,v])=>{
+    const o = document.createElement('option');
+    o.value = k; o.textContent = labelFn(v);
+    sel.appendChild(o);
+  });
+}
+fillSelect('f-status', STATUSES, v=>v.label);
+fillSelect('f-country', COUNTRIES, v=>`${v.flag} ${v.label}`);
+fillSelect('f-season', SEASONS, v=>`${v.ico} ${v.label}`);
+
+const fCats = document.getElementById('f-cats');
+Object.entries(CATEGORIES).forEach(([key,c])=>{
+  const el = document.createElement('label');
+  el.className='check';
+  el.innerHTML = `<input type="checkbox" value="${key}">
+    <span class="ico">${c.ico}</span><span class="txt">${c.label}</span>`;
+  fCats.appendChild(el);
+});
+
+function openModal(place){
+  editingPlace = place || null;
+  document.getElementById('modal-title').textContent = place ? 'Изменить место' : 'Новое место';
+  document.getElementById('f-name').value  = place ? place.name : '';
+  document.getElementById('f-q').value     = place && place.q ? place.q : '';
+  document.getElementById('f-lat').value   = place ? place.lat : '';
+  document.getElementById('f-lng').value   = place ? place.lng : '';
+  document.getElementById('f-status').value= place ? place.cat : 'plan';
+  document.getElementById('f-country').value=place ? place.country : 'hr';
+  document.getElementById('f-season').value = place ? place.season : 'all';
+  document.getElementById('f-drive').value = place ? place.drive : '';
+  document.getElementById('f-note').value  = place ? place.note : '';
+  document.getElementById('f-warn').value  = place && place.warn ? place.warn : '';
+  document.getElementById('f-meta').value  = place && place.meta ? place.meta : '';
+  document.getElementById('f-return').checked = place ? !!place.wantReturn : false;
+  fCats.querySelectorAll('input').forEach(i=>{
+    i.checked = place ? place.cats.includes(i.value) : false;
+  });
+  document.getElementById('del-wrap').style.display = (place && place.custom) ? 'block' : 'none';
+  document.getElementById('form-err').classList.remove('show');
+  modalBack.classList.add('open');
+}
+function closeModal(){
+  modalBack.classList.remove('open');
+  setPickMode(false);
+  editingPlace = null;
+}
+
+function setPickMode(on){
+  pickMode = on;
+  document.getElementById('pick-btn').classList.toggle('active', on);
+  pickHint.classList.toggle('show', on);
+  modalBack.style.visibility = on ? 'hidden' : 'visible';
+  map.getContainer().style.cursor = on ? 'crosshair' : '';
+}
+document.getElementById('pick-btn').addEventListener('click', ()=>setPickMode(!pickMode));
+map.on('click', e=>{
+  if(!pickMode) return;
+  document.getElementById('f-lat').value = e.latlng.lat.toFixed(4);
+  document.getElementById('f-lng').value = e.latlng.lng.toFixed(4);
+  setPickMode(false);
+});
+
+document.getElementById('add-btn').addEventListener('click', ()=>openModal(null));
+document.getElementById('cancel-btn').addEventListener('click', closeModal);
+modalBack.addEventListener('click', e=>{ if(e.target===modalBack) closeModal(); });
+
+document.getElementById('save-btn').addEventListener('click', ()=>{
+  const err = document.getElementById('form-err');
+  const name = document.getElementById('f-name').value.trim();
+  const lat = parseFloat(document.getElementById('f-lat').value);
+  const lng = parseFloat(document.getElementById('f-lng').value);
+  const cats = [...fCats.querySelectorAll('input:checked')].map(i=>i.value);
+
+  if(!name){ err.textContent='Укажите название.'; err.classList.add('show'); return; }
+  if(isNaN(lat)||isNaN(lng)){ err.textContent='Укажите координаты — вручную или кнопкой «На карте».'; err.classList.add('show'); return; }
+  if(!cats.length){ err.textContent='Выберите хотя бы один тип места.'; err.classList.add('show'); return; }
+
+  const data = {
+    name, lat, lng, cats,
+    cat: document.getElementById('f-status').value,
+    country: document.getElementById('f-country').value,
+    season: document.getElementById('f-season').value,
+    drive: document.getElementById('f-drive').value.trim() || '—',
+    note: document.getElementById('f-note').value.trim() || 'Без описания.',
+    wantReturn: document.getElementById('f-return').checked,
+    custom: true,
+  };
+  const warn = document.getElementById('f-warn').value.trim();
+  const meta = document.getElementById('f-meta').value.trim();
+  const qv = document.getElementById('f-q').value.trim();
+  if(warn) data.warn = warn;
+  if(meta) data.meta = meta;
+  if(qv) data.q = qv;
+
+  if(editingPlace){
+    Object.assign(editingPlace, data);
+  } else {
+    PLACES.push(data);
+  }
+  rebuildMarkers();
+  saveCustom();
+  closeModal();
+});
+
+document.getElementById('del-btn').addEventListener('click', ()=>{
+  if(!editingPlace) return;
+  const i = PLACES.indexOf(editingPlace);
+  if(i>-1) PLACES.splice(i,1);
+  rebuildMarkers();
+  saveCustom();
+  closeModal();
+});
+
+function rebuildMarkers(){
+  markerRefs.length = 0;
+  placeIdCounter = 0;
+  PLACES.forEach(buildMarker);
+  refresh();
+}
+
+// Универсальное хранилище: window.storage (артефакт) или localStorage (GitHub Pages/локально)
+const store = {
+  async set(k,v){
+    if(window.storage) return window.storage.set(k,v);
+    localStorage.setItem(k,v);
+  },
+  async get(k){
+    if(window.storage) return window.storage.get(k);
+    const v = localStorage.getItem(k);
+    return v==null ? null : {value:v};
+  }
+};
+
+async function saveCustom(){
+  const custom = PLACES.filter(p=>p.custom);
+  try{ await store.set(STORAGE_KEY, JSON.stringify(custom)); }
+  catch(e){ /* хранилище недоступно — точки останутся только на эту сессию */ }
+}
+async function loadCustom(){
+  try{
+    const r = await store.get(STORAGE_KEY);
+    if(r && r.value){
+      const arr = JSON.parse(r.value);
+      if(Array.isArray(arr) && arr.length){
+        arr.forEach(p=>PLACES.push(p));
+        rebuildMarkers();
+      }
+    }
+  }catch(e){ /* ключа ещё нет — это нормально при первом запуске */ }
+}
+
+// ---------- SIDEBAR COLLAPSE ----------
+const appEl = document.getElementById('app');
+document.getElementById('sidebar-collapse').addEventListener('click', ()=>{
+  const hidden = appEl.classList.toggle('hidden-sidebar');
+  document.getElementById('collapse-txt').textContent = hidden ? 'Показать панель' : 'Скрыть панель';
+  document.getElementById('collapse-ico').innerHTML = hidden
+    ? '<path d="M9 18l6-6-6-6"/>'
+    : '<path d="M15 18l-6-6 6-6"/>';
+  setTimeout(()=>map.invalidateSize(), 60);
+});
+
+// ---------- ЛЕНИВЫЙ ПОИСК СОСЕДЕЙ (OSRM /table, sources=0) ----------
+// Полную матрицу 79×79 не строим. При клике на «Что рядом» делаем ОДИН запрос
+// от выбранной точки ко всем кандидатам в радиусе, результат кешируем навсегда.
+const ROUTE_CACHE_KEY = 'trip-atlas-route-cache';
+let routeCache = {};
+const NEARBY_RADIUS_KM = 70;   // дальше комбинировать в один день смысла нет
+const MAX_CANDIDATES  = 45;    // с запасом под лимит демо-сервера
+
+function airKm(a, b){
+  const dLat=(b.lat-a.lat)*111.32;
+  const dLng=(b.lng-a.lng)*111.32*Math.cos(a.lat*Math.PI/180);
+  return Math.hypot(dLat,dLng);
+}
+function fmtMin(m){
+  const h=Math.floor(m/60), mm=Math.round(m%60);
+  return h>0 ? `${h} ч ${mm} мин` : `${mm} мин`;
+}
+
+async function saveRouteCache(){
+  try{ await store.set(ROUTE_CACHE_KEY, JSON.stringify(routeCache)); }
+  catch(e){ /* хранилище недоступно — кеш живёт до перезагрузки */ }
+}
+async function loadRouteCache(){
+  try{
+    const r = await store.get(ROUTE_CACHE_KEY);
+    if(r && r.value) routeCache = JSON.parse(r.value) || {};
+  }catch(e){ /* первого запуска ещё не было */ }
+}
+
+// Возвращает [{place, min, estimated}] отсортированные по времени
+async function nearbyTimes(origin){
+  const candidates = visiblePlaces()
+    .filter(p => p !== origin && airKm(origin, p) <= NEARBY_RADIUS_KM)
+    .sort((a,b) => airKm(origin,a) - airKm(origin,b))
+    .slice(0, MAX_CANDIDATES);
+  if(!candidates.length) return [];
+
+  const cached = routeCache[origin.name] || {};
+  const missing = candidates.filter(p => cached[p.name] === undefined);
+
+  if(missing.length){
+    try{
+      const coords = [origin, ...missing].map(p=>`${p.lng},${p.lat}`).join(';');
+      const dest = missing.map((_,i)=>i+1).join(';');
+      const url = `https://router.project-osrm.org/table/v1/driving/${coords}?sources=0&destinations=${dest}&annotations=duration`;
+      const ctrl = new AbortController();
+      const timer = setTimeout(()=>ctrl.abort(), 9000);
+      const res = await fetch(url, {signal:ctrl.signal});
+      clearTimeout(timer);
+      if(!res.ok) throw new Error('bad');
+      const data = await res.json();
+      const row = data.durations && data.durations[0];
+      if(!row) throw new Error('no durations');
+      missing.forEach((p,i)=>{
+        if(row[i]!=null) cached[p.name] = Math.round(row[i]/60);
+      });
+      routeCache[origin.name] = cached;
+      saveRouteCache();
+    }catch(err){
+      // сеть недоступна — оценка по прямой с поправкой на извилистость
+      missing.forEach(p=>{
+        const km = airKm(origin,p);
+        const kmh = km<40 ? 42 : km<80 ? 58 : 68;
+        cached[p.name] = Math.round(km/kmh*60);
+        cached['__est_'+p.name] = true;
+      });
+      routeCache[origin.name] = cached;
+    }
+  }
+
+  return candidates
+    .map(p=>({place:p, min:cached[p.name], estimated:!!cached['__est_'+p.name]}))
+    .filter(x=>x.min!=null)
+    .sort((a,b)=>a.min-b.min);
+}
+
+// ---------- LIST ----------
+function renderList(places){
+  const wrap = document.getElementById('list-wrap');
+  wrap.innerHTML = '';
+  if(!places.length){
+    wrap.innerHTML = '<p class="empty-note">Ничего не подходит под выбранные фильтры. Включите больше типов мест или статусов.</p>';
+    return;
+  }
+  Object.entries(STATUSES).forEach(([key, s])=>{
+    const items = places.filter(p=>p.cat===key);
+    if(!items.length) return;
+    const h = document.createElement('div');
+    h.className='group-title'; h.textContent = s.label;
+    wrap.appendChild(h);
+    items.forEach(place=>{
+      const card = document.createElement('div');
+      card.className='place-card';
+      const star = place.wantReturn ? '<span class="star-mark">★</span>' : '';
+      const catIcons = place.cats.map(c=>CATEGORIES[c].ico).join(' ');
+      card.innerHTML = `<span class="dot" style="background:${s.color}"></span>
+        <span class="info">
+          <div class="name">${COUNTRIES[place.country].flag} ${place.name}${star}${place.warn?' <span title="Проверить перед выездом">⚠️</span>':''}</div>
+          <div class="meta">${catIcons} · 🚗 ${place.drive}${place.meta ? ' · '+place.meta : ''}</div>
+        </span>`;
+      card.addEventListener('click', ()=>{
+        map.flyTo([place.lat,place.lng], 11, {duration:.6});
+        const ref = markerRefs.find(r=>r.place===place);
+        if(ref) setTimeout(()=>ref.marker.openPopup(), 650);
+      });
+      wrap.appendChild(card);
+    });
+  });
+}
+
+function updateCounts(){
+  const vis = visiblePlaces();
+  document.getElementById('result-count').textContent = `Показано: ${vis.length} из ${PLACES.length}`;
+  document.querySelectorAll('[data-status-count]').forEach(el=>{
+    el.textContent = PLACES.filter(p=>p.cat===el.dataset.statusCount).length;
+  });
+  document.querySelectorAll('[data-cat-count]').forEach(el=>{
+    el.textContent = PLACES.filter(p=>p.cats.includes(el.dataset.catCount)).length;
+  });
+  document.querySelectorAll('[data-country-count]').forEach(el=>{
+    el.textContent = PLACES.filter(p=>p.country===el.dataset.countryCount).length;
+  });
+  document.querySelectorAll('[data-season-count]').forEach(el=>{
+    el.textContent = PLACES.filter(p=>p.season===el.dataset.seasonCount).length;
+  });
+  document.getElementById('count-return').textContent = PLACES.filter(p=>p.wantReturn).length;
+}
+
+refresh();
+loadCustom();
+loadRouteCache();
+
+// Кнопка «Что рядом» — ленивый запрос соседей
+map.on('popupopen', e=>{
+  const el = e.popup.getElement();
+  if(!el) return;
+  const nb = el.querySelector('.nearby-btn');
+  if(nb && !nb.dataset.wired){
+    nb.dataset.wired = '1';
+    nb.addEventListener('click', async ()=>{
+      const origin = PLACES.find(x=>x.name===nb.dataset.name);
+      const out = el.querySelector('.nearby-out');
+      if(!origin || !out) return;
+      nb.disabled = true;
+      nb.textContent = 'Считаю…';
+      const list = await nearbyTimes(origin);
+      nb.style.display = 'none';
+      if(!list.length){
+        out.innerHTML = '<p class="nearby-empty">Рядом ничего нет среди показанных точек — снимите фильтры.</p>';
+        return;
+      }
+      const anyEst = list.some(x=>x.estimated);
+      out.innerHTML =
+        `<p class="nearby-title">Рядом${anyEst?' (оценка)':''}:</p>` +
+        list.slice(0,8).map(x=>
+          `<button class="nearby-item" data-goto="${x.place.name}">
+             <span class="ni-dot" style="background:${STATUSES[x.place.cat].color}"></span>
+             <span class="ni-name">${x.place.name}</span>
+             <span class="ni-min">${fmtMin(x.min)}</span>
+           </button>`).join('');
+      out.querySelectorAll('[data-goto]').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const t = PLACES.find(x=>x.name===b.dataset.goto);
+          if(!t) return;
+          map.closePopup();
+          map.flyTo([t.lat,t.lng], 11, {duration:.6});
+          const ref = markerRefs.find(r=>r.place===t);
+          if(ref) setTimeout(()=>ref.marker.openPopup(), 650);
+        });
+      });
+    });
+  }
+  const btn = el.querySelector('.edit-place');
+  if(!btn) return;
+  btn.addEventListener('click', ()=>{
+    const p = PLACES.find(x=>x.name===btn.dataset.name && x.custom);
+    if(p){ map.closePopup(); openModal(p); }
+  });
+});
+</script>
+</body>
+</html>
