@@ -9,23 +9,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#F3EEE3;
-    --paper:#FFFDF8;
-    --ink:#2B2A25;
-    --ink-soft:#6B6558;
-    --line:#DCD3BF;
-    --green:#1E9E52;
-    --green-soft:#E4F6EA;
-    --amber:#D6790F;
-    --amber-soft:#FBEEDC;
-    --grey:#7C8592;
-    --grey-soft:#EEF0F2;
-    --star:#E8590C;
-    --teal:#2E6E7E;
+    --cream:#F0EBDC;
+    --paper:#F7F3E7;
+    --ink:#1C1A17;
+    --ink-soft:#5C564A;
+    --line:#1C1A17;
+    --green:#1F8C82;
+    --green-soft:#DCEFEA;
+    --amber:#FF5A2B;
+    --amber-soft:#FFE4D6;
+    --grey:#6E4FA0;
+    --grey-soft:#EAE1F4;
+    --star:#FF2E93;
+    --teal:#1F8C82;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--cream);}
   #app{display:flex;height:100vh;width:100vw;position:relative;}
+  #grain{
+    position:fixed;inset:0;z-index:9999;pointer-events:none;
+    opacity:.05;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 
   #sidebar{
     width:340px;min-width:340px;
@@ -36,10 +41,12 @@
   }
   #sidebar-header{padding:26px 24px 16px;border-bottom:1px solid var(--line);}
   #sidebar-header h1{
-    font-family:'Fraunces',serif;font-weight:600;font-size:26px;line-height:1.15;margin:0 0 6px;
+    font-family:'Fraunces',serif;font-weight:700;font-size:27px;line-height:1.1;margin:0 0 8px;
     letter-spacing:-0.01em;
+    box-shadow:inset 0 -9px 0 -1px var(--star);
+    display:inline;
   }
-  #sidebar-header p{margin:0;color:var(--ink-soft);font-size:13.5px;line-height:1.5;}
+  #sidebar-header p{margin:8px 0 0;color:var(--ink-soft);font-size:13.5px;line-height:1.5;}
 
   #scroll{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;}
 
@@ -103,7 +110,7 @@
     transform:rotate(45deg);
   }
   .check .swatch{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
-  .check .ico{font-size:14px;width:17px;text-align:center;flex-shrink:0;}
+  .check .ico{width:17px;flex-shrink:0;display:flex;align-items:center;}
   .check .txt{font-size:14px;flex:1;}
   .check .num{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;}
   .check.off .txt, .check.off .num{opacity:.45;}
@@ -215,10 +222,12 @@
 
   #map{flex:1;height:100%;}
   .leaflet-popup-content-wrapper{
-    border-radius:12px;background:var(--paper);
-    box-shadow:0 8px 28px rgba(43,42,37,.18);
+    border-radius:10px;background:var(--paper);
+    border:2px solid var(--ink);
+    box-shadow:4px 4px 0 var(--ink);
   }
   .leaflet-popup-content{margin:16px 18px;width:260px !important;}
+  .leaflet-popup-tip{border:2px solid var(--ink);}
   .popup-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
   .popup-badge{
     display:inline-block;font-size:11px;font-weight:600;
@@ -331,6 +340,7 @@
 </head>
 <body>
 <div id="app">
+  <div id="grain"></div>
   <div id="sidebar">
     <div id="sidebar-header">
       <h1>Атлас поездок</h1>
@@ -513,19 +523,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script>
 // ---------- CATEGORIES ----------
+const RI = { // риso ink palette for icon marks
+  pink:'#FF2E93', orange:'#FF5A2B', yellow:'#FFC700', teal:'#1F8C82', purple:'#6E4FA0', olive:'#8A9A3E'
+};
+function svgIco(inner, vb='0 0 24 24'){
+  return `<svg viewBox="${vb}" width="15" height="15" style="display:block">${inner}</svg>`;
+}
 const CATEGORIES = {
-  town:    {label:'Город / городок',      ico:'🏛'},
-  castle:  {label:'Замок / крепость',     ico:'🏰'},
-  museum:  {label:'Музей / этнография',   ico:'🗿'},
-  church:  {label:'Церковь / сакральное', ico:'⛪'},
-  nature:  {label:'Природа / хайк',       ico:'🌲'},
-  view:    {label:'Смотровая',            ico:'🔭'},
-  water:   {label:'Озеро / река',         ico:'💧'},
-  cave:    {label:'Пещера',               ico:'🕳'},
-  beach:   {label:'Пляж / море',          ico:'🏖'},
-  food:    {label:'Еда / вино',           ico:'🍷'},
-  bike:    {label:'Велотема',             ico:'🚲'},
-  spa:     {label:'Термы',                ico:'♨️'},
+  town:    {label:'Город / городок',      ico: svgIco(`<circle cx="12" cy="12" r="9" fill="${RI.pink}"/>`)},
+  castle:  {label:'Замок / крепость',     ico: svgIco(`<polygon points="12,3 21,21 3,21" fill="${RI.yellow}"/>`)},
+  museum:  {label:'Музей / этнография',   ico: svgIco(`<circle cx="9" cy="13" r="7" fill="${RI.pink}" style="mix-blend-mode:multiply"/><polygon points="17,4 22,20 12,20" fill="${RI.yellow}" style="mix-blend-mode:multiply"/>`)},
+  church:  {label:'Церковь / сакральное', ico: svgIco(`<rect x="10" y="2" width="4" height="20" fill="${RI.purple}"/><rect x="3" y="9" width="18" height="4" fill="${RI.purple}"/>`)},
+  nature:  {label:'Природа / хайк',       ico: svgIco(`<polygon points="12,1 14.5,9 22,9 16,14 18,22 12,17.5 6,22 8,14 2,9 9.5,9" fill="${RI.olive}"/>`)},
+  view:    {label:'Смотровая',            ico: svgIco(`<circle cx="12" cy="12" r="10" fill="none" stroke="${RI.teal}" stroke-width="2.4"/><circle cx="12" cy="12" r="5.5" fill="none" stroke="${RI.teal}" stroke-width="2.4"/>`)},
+  water:   {label:'Озеро / река',         ico: svgIco(`<path d="M2 8c3-3 5 3 8 0s5 3 8 0 4 3 4 3" stroke="${RI.teal}" stroke-width="2.4" fill="none"/><path d="M2 15c3-3 5 3 8 0s5 3 8 0 4 3 4 3" stroke="${RI.teal}" stroke-width="2.4" fill="none" opacity=".55"/>`)},
+  cave:    {label:'Пещера',               ico: svgIco(`<path d="M2 21a10 10 0 0 1 20 0z" fill="${RI.purple}"/>`)},
+  beach:   {label:'Пляж / море',          ico: svgIco(`<circle cx="12" cy="9" r="4.5" fill="${RI.orange}"/><path d="M2 9h2M20 9h2M4.5 2.5l1.4 1.4M18.1 2.5l-1.4 1.4" stroke="${RI.orange}" stroke-width="2" stroke-linecap="round"/><path d="M2 20c3-2 5-2 8 0s5-2 8 0s4 0 4 0" stroke="${RI.teal}" stroke-width="2.4" fill="none"/>`)},
+  food:    {label:'Еда / вино',           ico: svgIco(`<rect x="3" y="3" width="8" height="8" fill="${RI.pink}" style="mix-blend-mode:multiply"/><rect x="13" y="3" width="8" height="8" fill="${RI.yellow}" style="mix-blend-mode:multiply"/><rect x="3" y="13" width="8" height="8" fill="${RI.yellow}" style="mix-blend-mode:multiply"/><rect x="13" y="13" width="8" height="8" fill="${RI.pink}" style="mix-blend-mode:multiply"/>`)},
+  bike:    {label:'Велотема',             ico: svgIco(`<circle cx="7" cy="16" r="6" fill="none" stroke="${RI.teal}" stroke-width="2.3"/><circle cx="17" cy="16" r="6" fill="none" stroke="${RI.orange}" stroke-width="2.3" style="mix-blend-mode:multiply"/>`)},
+  spa:     {label:'Термы',                ico: svgIco(`<circle cx="6" cy="6" r="2.6" fill="${RI.teal}"/><circle cx="18" cy="6" r="2.6" fill="${RI.teal}"/><circle cx="12" cy="10" r="2.6" fill="${RI.teal}"/><circle cx="6" cy="17" r="2.6" fill="${RI.teal}"/><circle cx="18" cy="17" r="2.6" fill="${RI.teal}"/>`)},
 };
 
 const COUNTRIES = {
@@ -543,9 +559,9 @@ const SEASONS = {
 };
 
 const STATUSES = {
-  loved: {label:'Понравилось',          color:'#1E9E52', badge:'green'},
-  ok:    {label:'Так себе / нейтрально', color:'#D6790F', badge:'amber'},
-  plan:  {label:'Ещё не были (план)',    color:'#7C8592', badge:'grey'},
+  loved: {label:'Понравилось',          color:'#1F8C82', badge:'green'},
+  ok:    {label:'Так себе / нейтрально', color:'#FF5A2B', badge:'amber'},
+  plan:  {label:'Ещё не были (план)',    color:'#6E4FA0', badge:'grey'},
 };
 
 // ---------- DATA ----------
