@@ -6,7 +6,7 @@
 <title>Атлас поездок — Загреб и окрестности</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet">
 <style>
   :root{
     --cream:#F3EEE3;
@@ -24,7 +24,7 @@
     --teal:#2E6E7E;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;height:100%;font-family:'Inter',sans-serif;color:var(--ink);background:var(--cream);}
+  html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--cream);}
   #app{display:flex;height:100vh;width:100vw;position:relative;}
 
   #sidebar{
@@ -46,7 +46,7 @@
   #filters-toggle{
     display:none;width:100%;padding:11px 24px;background:var(--cream);
     border:none;border-bottom:1px solid var(--line);cursor:pointer;
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:var(--ink);
     text-align:left;align-items:center;gap:8px;
   }
   #filters-toggle .chev{width:12px;height:12px;margin-left:auto;transition:transform .18s ease;}
@@ -57,7 +57,7 @@
   .panel-head{
     display:flex;align-items:center;gap:8px;width:100%;
     padding:14px 24px;background:none;border:none;cursor:pointer;
-    font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;
     text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);
     text-align:left;
   }
@@ -78,7 +78,7 @@
   }
   .field select{
     width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--line);
-    background:var(--cream);font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);
+    background:var(--cream);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;color:var(--ink);
     cursor:pointer;appearance:none;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236B6558' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     background-repeat:no-repeat;background-position:right 12px center;
@@ -113,7 +113,7 @@
   }
   .bulk button{
     background:none;border:none;padding:0;cursor:pointer;
-    font-family:'Inter',sans-serif;font-size:12px;color:var(--teal);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12px;color:var(--teal);
     text-decoration:underline;text-underline-offset:2px;
   }
   .bulk button:hover{color:var(--ink);}
@@ -143,15 +143,6 @@
   .place-card .meta{font-size:12px;color:var(--ink-soft);margin-top:1px;}
   .empty-note{padding:20px 24px;font-size:13px;color:var(--ink-soft);line-height:1.5;}
 
-  #add-btn{
-    display:flex;align-items:center;justify-content:center;gap:7px;
-    width:calc(100% - 48px);margin:16px 24px;padding:11px 14px;
-    background:var(--ink);color:#fff;border:none;border-radius:10px;
-    font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;
-    transition:opacity .15s ease;flex-shrink:0;
-  }
-  #add-btn:hover{opacity:.85;}
-
   #modal-back{
     position:fixed;inset:0;background:rgba(43,42,37,.45);z-index:3000;
     display:none;align-items:center;justify-content:center;padding:20px;
@@ -173,7 +164,7 @@
   }
   .fg input[type=text], .fg textarea, .fg select{
     width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;
-    font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);background:var(--paper);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:14px;color:var(--ink);background:var(--paper);
   }
   .fg textarea{resize:vertical;min-height:60px;}
   .fg input:focus, .fg textarea:focus, .fg select:focus{outline:2px solid var(--teal);outline-offset:1px;}
@@ -181,7 +172,7 @@
   .coord-row .fg{flex:1;margin-bottom:0;}
   #pick-btn{
     padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--cream);
-    font-family:'Inter',sans-serif;font-size:12.5px;cursor:pointer;white-space:nowrap;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;cursor:pointer;white-space:nowrap;color:var(--ink);
   }
   #pick-btn.active{background:var(--teal);color:#fff;border-color:var(--teal);}
   .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
@@ -189,7 +180,7 @@
   .cat-grid .check .txt{font-size:13px;}
   .form-actions{display:flex;gap:10px;padding:0 24px 22px;}
   .form-actions button{
-    flex:1;padding:11px;border-radius:9px;font-family:'Inter',sans-serif;
+    flex:1;padding:11px;border-radius:9px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
     font-size:13.5px;font-weight:600;cursor:pointer;border:none;
   }
   #save-btn{background:var(--ink);color:#fff;}
@@ -206,7 +197,7 @@
   .del-link{
     background:none;border:none;color:#c0392b;font-size:12.5px;cursor:pointer;
     text-decoration:underline;text-underline-offset:2px;padding:4px 0;
-    font-family:'Inter',sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   }
 
   #sidebar-collapse{
@@ -214,7 +205,7 @@
     display:flex;align-items:center;gap:7px;
     padding:9px 13px;background:var(--paper);color:var(--ink);
     border:1px solid var(--line);border-radius:9px;cursor:pointer;
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;
     box-shadow:0 2px 10px rgba(43,42,37,.18);
     transition:left .18s ease;
   }
@@ -266,7 +257,7 @@
   .nearby-box{margin-top:10px;padding-top:9px;border-top:1px solid var(--line);}
   .nearby-btn{
     background:var(--cream);border:1px solid var(--line);border-radius:8px;
-    padding:7px 11px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;
+    padding:7px 11px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;font-weight:600;
     color:var(--ink);cursor:pointer;width:100%;
   }
   .nearby-btn:hover{background:var(--paper);border-color:var(--teal);color:var(--teal);}
@@ -278,7 +269,7 @@
   .nearby-item{
     display:flex;align-items:center;gap:8px;width:100%;
     background:none;border:none;padding:6px 4px;border-radius:7px;cursor:pointer;
-    font-family:'Inter',sans-serif;text-align:left;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;text-align:left;
   }
   .nearby-item:hover{background:var(--cream);}
   .ni-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
@@ -307,7 +298,7 @@
   .leaflet-marker-icon{background:none;border:none;}
   .radius-label{
     background:transparent !important;border:none !important;box-shadow:none !important;
-    color:#5B6270;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;
+    color:#5B6270;font-size:11px;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
     padding:0 !important;
   }
   .radius-label::before{display:none !important;}
@@ -331,7 +322,6 @@
     #sidebar-header p{display:none;}
     #filters-toggle{display:flex;}
     #controls.collapsed{display:none;}
-    #add-btn{margin:12px 20px;width:calc(100% - 40px);}
     .field{padding:0 20px 12px;}
     .field:first-of-type{padding-top:14px;}
     .panel-head{padding:12px 20px;}
