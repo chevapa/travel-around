@@ -25,7 +25,7 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;height:100%;font-family:'Inter',sans-serif;color:var(--ink);background:var(--cream);}
-  #app{display:flex;height:100vh;width:100vw;}
+  #app{display:flex;height:100vh;width:100vw;position:relative;}
 
   #sidebar{
     width:340px;min-width:340px;
@@ -209,15 +209,17 @@
   }
 
   #sidebar-collapse{
-    position:absolute;top:14px;left:14px;z-index:1200;
+    position:absolute;top:14px;left:354px;z-index:1200;
     display:flex;align-items:center;gap:7px;
     padding:9px 13px;background:var(--paper);color:var(--ink);
     border:1px solid var(--line);border-radius:9px;cursor:pointer;
     font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
     box-shadow:0 2px 10px rgba(43,42,37,.18);
+    transition:left .18s ease;
   }
   #sidebar-collapse:hover{background:var(--cream);}
   #app.hidden-sidebar #sidebar{display:none;}
+  #app.hidden-sidebar #sidebar-collapse{left:14px;}
 
   #map{flex:1;height:100%;}
   .leaflet-popup-content-wrapper{
@@ -320,6 +322,7 @@
     #map{order:1;height:45vh;flex:none;}
     #app.hidden-sidebar #map{height:100vh;}
     #sidebar-collapse{top:10px;left:10px;padding:8px 11px;font-size:12.5px;}
+    #app.hidden-sidebar #sidebar-collapse{left:10px;}
     #sidebar-header{padding:14px 20px 12px;}
     #sidebar-header h1{font-size:20px;margin-bottom:2px;}
     #sidebar-header p{display:none;}
