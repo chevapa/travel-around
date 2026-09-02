@@ -1,0 +1,15 @@
+{
+  "name": "Озаль",
+  "q": "Ozalj",
+  "lat": 45.6333,
+  "lng": 15.5667,
+  "cat": "plan",
+  "cats": ["castle", "view", "water"],
+  "country": "hr",
+  "season": "all",
+  "drive": "50 мин",
+  "note": "Замок на скале над Купой + Мунярa (ГЭС 1908 г., похожа на замок) + прогулка вдоль реки.",
+  "warn": "",
+  "meta": "",
+  "wantReturn": false
+}

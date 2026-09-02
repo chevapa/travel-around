@@ -1662,6 +1662,48 @@ async function loadCustom(){
   }catch(e){ /* ключа ещё нет — это нормально при первом запуске */ }
 }
 
+// ---------- ОБЩИЕ МЕСТА ИЗ ПАПКИ places/ В РЕПОЗИТОРИИ ----------
+// Любой .json-файл, положенный в папку places/ на GitHub (drag&drop + Commit),
+// подхватывается автоматически при загрузке страницы — редактировать
+// массив PLACES вручную не нужно. Файлы, начинающиеся с "_", игнорируются
+// (используются под шаблон/примеры). Файл может содержать один объект-место
+// или массив таких объектов — поля те же, что в PLACES (см. README).
+const FOLDER_API = 'https://api.github.com/repos/chevapa/travel-around/contents/places';
+
+async function loadFolderPlaces(){
+  try{
+    const res = await fetch(FOLDER_API);
+    if(!res.ok) return; // папки нет, лимит API GitHub исчерпан и т.п. — молча пропускаем
+    const files = await res.json();
+    if(!Array.isArray(files)) return;
+
+    const jsonFiles = files.filter(f =>
+      f.type === 'file' && f.name.endsWith('.json') && !f.name.startsWith('_'));
+
+    const results = await Promise.all(jsonFiles.map(async f => {
+      try{
+        const r = await fetch(f.download_url);
+        return r.ok ? await r.json() : null;
+      }catch(e){ return null; }
+    }));
+
+    let added = 0;
+    results.forEach(data => {
+      if(!data) return;
+      const items = Array.isArray(data) ? data : [data];
+      items.forEach(p => {
+        if(p && p.name && typeof p.lat === 'number' && typeof p.lng === 'number'){
+          p.src = p.src || 'folder';
+          PLACES.push(p);
+          added++;
+        }
+      });
+    });
+
+    if(added){ rebuildMarkers(); console.info(`places/: подхвачено ${added} точек`); }
+  }catch(e){ /* нет сети / репозиторий приватный / лимит API — не критично, просто пропускаем */ }
+}
+
 // ---------- SIDEBAR COLLAPSE ----------
 const appEl = document.getElementById('app');
 document.getElementById('sidebar-collapse').addEventListener('click', ()=>{
@@ -1829,6 +1871,7 @@ document.getElementById('reset-filters').addEventListener('click', ()=>{
 searchEl.addEventListener('input', ()=>{ state.query = searchEl.value; refresh(); });
 loadCustom();
 loadRouteCache();
+loadFolderPlaces();
 
 // Кнопка «Что рядом» — ленивый запрос соседей
 map.on('popupopen', e=>{
