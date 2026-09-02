@@ -1096,7 +1096,14 @@ const CATEGORIES = {
   food:{label:'Еда / вино', ico:'<img class="cat-icon-img" src="assets/img023.png" alt="">'},
   bike:{label:'Велотема', ico:'<img class="cat-icon-img" src="assets/img024.png" alt="">'},
   spa:{label:'Термы', ico:'<img class="cat-icon-img" src="assets/img025.png" alt="">'},
+  culture:{label:'Культура / история', ico:'<img class="cat-icon-img" src="assets/img016.png" alt="">'},
 };
+// Заглушка для незнакомой/опечатанной категории — чтобы одна плохая точка
+// не ломала отрисовку остальных мест.
+function catInfo(c){ return CATEGORIES[c] || {label:c, ico:'❔'}; }
+function countryInfo(cc){ return COUNTRIES[cc] || {flag:'🏳️', label:cc, local:cc}; }
+function statusInfo(cat){ return STATUSES[cat] || {label:cat, color:'#888', badge:'grey'}; }
+function seasonInfo(s){ return SEASONS[s] || {label:s, ico:'📅'}; }
 
 const COUNTRIES = {
   hr: {label:'Хорватия',  flag:'🇭🇷', local:'Hrvatska'},
@@ -1238,27 +1245,27 @@ const driveTimeCache = {};
 let placeIdCounter = 0;
 
 function buildMarker(place){
-  const color = STATUSES[place.cat].color;
+  const color = statusInfo(place.cat).color;
   const html = `<div class="pin-wrap">
       <div class="pin-dot" style="background:${color}"></div>
       ${place.wantReturn ? `<div class="pin-badge">★</div>` : ''}
     </div>`;
   const icon = L.divIcon({html, className:'', iconSize:[28,28], iconAnchor:[14,18], popupAnchor:[0,-20]});
   const marker = L.marker([place.lat,place.lng], {icon});
-  const st = STATUSES[place.cat];
+  const st = statusInfo(place.cat);
   const starMark = place.wantReturn ? ' <span class="star-mark">★</span>' : '';
   const driveId = `dt-${placeIdCounter++}`;
   const catBadges = place.cats.slice(0,3).map(c=>
-    `<span class="popup-badge cat"><span class="cat-art">${CATEGORIES[c].ico}</span>${CATEGORIES[c].label.replace(' / ',' · ')}</span>`).join('');
-  const countryBadge = `<span class="popup-badge cat">${COUNTRIES[place.country].flag} ${COUNTRIES[place.country].label}</span>`;
+    `<span class="popup-badge cat"><span class="cat-art">${catInfo(c).ico}</span>${catInfo(c).label.replace(' / ',' · ')}</span>`).join('');
+  const countryBadge = `<span class="popup-badge cat">${countryInfo(place.country).flag} ${countryInfo(place.country).label}</span>`;
   const seasonBadge = place.season!=='all'
-    ? `<span class="popup-badge cat">${SEASONS[place.season].ico} ${SEASONS[place.season].label}</span>` : '';
+    ? `<span class="popup-badge cat">${seasonInfo(place.season).ico} ${seasonInfo(place.season).label}</span>` : '';
   const warnBlock = place.warn ? `<p class="popup-warn">⚠️ ${place.warn}</p>` : '';
   const editBlock = '';
   const sourceBlock = place.src === 'journal'
     ? `<p class="popup-source">📔 Источник: мой дневник поездок</p>`
     : `<p class="popup-source">🔎 Источник: подборка (ИИ-ресёрч по моим предпочтениям)</p>`;
-  const searchQ = encodeURIComponent(`${place.q || place.name} ${COUNTRIES[place.country].local}`);
+  const searchQ = encodeURIComponent(`${place.q || place.name} ${countryInfo(place.country).local}`);
   const searchUrl = `https://www.google.com/search?q=${searchQ}`;
   marker.bindPopup(
     `<div class="popup-badges"><span class="popup-badge ${st.badge}">${st.label}</span>${countryBadge}${seasonBadge}${catBadges}</div>` +
@@ -1816,10 +1823,10 @@ function renderList(places){
       const card = document.createElement('div');
       card.className='place-card';
       const star = place.wantReturn ? '<span class="star-mark">★</span>' : '';
-      const catIcons = place.cats.slice(0,3).map(c=>CATEGORIES[c].ico).join(' ');
+      const catIcons = place.cats.slice(0,3).map(c=>catInfo(c).ico).join(' ');
       card.innerHTML = `<span class="dot" style="background:${s.color}"></span>
         <span class="info">
-          <div class="name">${COUNTRIES[place.country].flag} ${place.name}${star}${place.warn?' <span title="Проверить перед выездом">⚠️</span>':''}</div>
+          <div class="name">${countryInfo(place.country).flag} ${place.name}${star}${place.warn?' <span title="Проверить перед выездом">⚠️</span>':''}</div>
           <div class="meta">${catIcons} · 🚗 ${place.drive}${place.meta ? ' · '+place.meta : ''}</div>
         </span>`;
       card.addEventListener('click', ()=>{
@@ -1902,7 +1909,7 @@ map.on('popupopen', e=>{
         `<p class="nearby-title">Рядом · <span class="${anyEst?'src-est':'src-live'}">${anyEst?'оценка по прямой':'по дорогам, OSRM'}</span></p>` +
         list.slice(0,8).map(x=>
           `<button class="nearby-item" data-goto="${x.place.name}">
-             <span class="ni-dot" style="background:${STATUSES[x.place.cat].color}"></span>
+             <span class="ni-dot" style="background:${statusInfo(x.place.cat).color}"></span>
              <span class="ni-name">${x.place.name}</span>
              <span class="ni-min">${fmtMin(x.min)}</span>
            </button>`).join('');
