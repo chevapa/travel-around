@@ -933,6 +933,14 @@
         <div class="panel-body" id="status-list"></div>
       </div>
 
+      <div class="panel" id="panel-source">
+        <button class="panel-head" data-panel="panel-source">
+          Источник
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="panel-body" id="source-list"></div>
+      </div>
+
       <div class="panel" id="panel-country">
         <button class="panel-head" data-panel="panel-country">
           Страна
@@ -1130,6 +1138,20 @@ const STATUSES = {
   plan:  {label:'Ещё не были (план)',    color:'#6E4FA0', badge:'grey'},
 };
 
+const SOURCES = {
+  journal:  {label:'Мой дневник поездок',        ico:'📔'},
+  research: {label:'Подборка / ИИ-ресёрч',       ico:'🔎'},
+};
+// Места без явного src (напр. дропнутые в places/ файлы без этого поля)
+// по умолчанию считаются "ресёрчем" — неподтверждённая подборка, не личный опыт.
+// Места, добавленные вручную через карту (custom:true), считаются личными
+// (как дневник), даже если явный src не указан.
+function sourceKey(p){
+  if(p.src === 'journal') return 'journal';
+  if(p.custom) return 'journal';
+  return 'research';
+}
+
 // ---------- DATA ----------
 const PLACES = [
   // ===== VISITED — loved =====
@@ -1227,6 +1249,7 @@ const state = {
   cats: new Set(Object.keys(CATEGORIES)),
   countries: new Set(Object.keys(COUNTRIES)),
   seasons: new Set(Object.keys(SEASONS)),
+  sources: new Set(['journal']), // по умолчанию видно только личный дневник
   onlyReturn: false,
   showReturnBadge: true,
   query: "",
@@ -1262,7 +1285,7 @@ function buildMarker(place){
     ? `<span class="popup-badge cat">${seasonInfo(place.season).ico} ${seasonInfo(place.season).label}</span>` : '';
   const warnBlock = place.warn ? `<p class="popup-warn">⚠️ ${place.warn}</p>` : '';
   const editBlock = '';
-  const sourceBlock = place.src === 'journal'
+  const sourceBlock = sourceKey(place) === 'journal'
     ? `<p class="popup-source">📔 Источник: мой дневник поездок</p>`
     : `<p class="popup-source">🔎 Источник: подборка (ИИ-ресёрч по моим предпочтениям)</p>`;
   const searchQ = encodeURIComponent(`${place.q || place.name} ${countryInfo(place.country).local}`);
@@ -1295,6 +1318,7 @@ function visiblePlaces(){
     return state.statuses.has(p.cat) &&
       state.countries.has(p.country) &&
       state.seasons.has(p.season) &&
+      state.sources.has(sourceKey(p)) &&
       p.cats.some(c=>state.cats.has(c)) &&
       (!state.onlyReturn || p.wantReturn) &&
       (!q || text.includes(q));
@@ -1414,6 +1438,23 @@ Object.entries(STATUSES).forEach(([key, s])=>{
     refresh();
   });
   statusList.appendChild(el);
+});
+
+const sourceList = document.getElementById('source-list');
+Object.entries(SOURCES).forEach(([key, s])=>{
+  const checked = state.sources.has(key);
+  const el = document.createElement('label');
+  el.className = 'check' + (checked ? '' : ' off');
+  el.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}>
+    <span class="ico">${s.ico}</span>
+    <span class="txt">${s.label}</span>
+    <span class="num" data-source-count="${key}"></span>`;
+  el.querySelector('input').addEventListener('change', e=>{
+    if(e.target.checked) state.sources.add(key); else state.sources.delete(key);
+    el.classList.toggle('off', !e.target.checked);
+    refresh();
+  });
+  sourceList.appendChild(el);
 });
 
 const countryList = document.getElementById('country-list');
@@ -1855,6 +1896,9 @@ function updateCounts(){
   document.querySelectorAll('[data-season-count]').forEach(el=>{
     el.textContent = PLACES.filter(p=>p.season===el.dataset.seasonCount).length;
   });
+  document.querySelectorAll('[data-source-count]').forEach(el=>{
+    el.textContent = PLACES.filter(p=>sourceKey(p)===el.dataset.sourceCount).length;
+  });
   document.getElementById('count-return').textContent = PLACES.filter(p=>p.wantReturn).length;
 }
 
@@ -1874,10 +1918,17 @@ document.getElementById('reset-filters').addEventListener('click', ()=>{
   state.countries = new Set(Object.keys(COUNTRIES));
   state.seasons = new Set(Object.keys(SEASONS));
   state.cats = new Set(Object.keys(CATEGORIES));
+  state.sources = new Set(['journal']); // «Сбросить» возвращает к дефолту: только дневник
   state.onlyReturn = false;
   state.query = '';
   searchEl.value = '';
   document.querySelectorAll('#controls input[type=checkbox]').forEach(i=>{i.checked=true;i.closest('.check')?.classList.remove('off');});
+  sourceList.querySelectorAll('input').forEach(i=>{
+    const key = i.closest('.check').querySelector('[data-source-count]').dataset.sourceCount;
+    const on = state.sources.has(key);
+    i.checked = on;
+    i.closest('.check').classList.toggle('off', !on);
+  });
   refresh();
 });
 searchEl.addEventListener('input', ()=>{ state.query = searchEl.value; refresh(); });
