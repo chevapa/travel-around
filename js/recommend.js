@@ -6,7 +6,7 @@
 // см. data_refactoring.md: raw-события отдельно от того, что из них следует.
 import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo } from './places.js';
 import { flyToPlace, map } from './map.js';
-import { loadInteractions, logInteraction, hasInteraction, clearInteractions } from './interactions.js';
+import { loadInteractions, logInteraction, hasInteraction, clearInteractions, getAllInteractions } from './interactions.js';
 
 let queue = [];
 let stackEl, sheetBack, sheetBody;
@@ -28,9 +28,16 @@ function buildQueue(){
 
 // категории мест, которые пользователь уже отметил "понравилось" —
 // используется, чтобы объяснить рекомендацию через реальное совпадение вкуса.
+// Источник — не поле place.cat напрямую, а журнал взаимодействий (реальные
+// свайпы "да" + исторические "loved", восстановленные как seed-события,
+// см. interactions.js:getSeedInteractions). Из-за этого свайп "нравится" на
+// ещё не посещённом месте теперь тоже сразу влияет на объяснения других
+// карточек — раньше учитывались только места со статусом "loved".
 function lovedCatSet(){
+  const likedIds = new Set(
+    getAllInteractions(PLACES).filter(e => e.type === 'liked').map(e => e.placeId));
   const set = new Set();
-  PLACES.filter(p => p.cat === 'loved').forEach(p => p.cats.forEach(c => set.add(c)));
+  PLACES.filter(p => likedIds.has(p.id)).forEach(p => p.cats.forEach(c => set.add(c)));
   return set;
 }
 

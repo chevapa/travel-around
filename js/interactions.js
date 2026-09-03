@@ -75,3 +75,40 @@ export function clearInteractions(){
   log = [];
   persist();
 }
+
+// ---------- СИНТЕТИЧЕСКАЯ ИСТОРИЯ ИЗ СТАРЫХ ПОЛЕЙ (cat / wantReturn) ----------
+// places/*.json на 117 мест хранят "loved"/"ok"/"plan" как поле места и
+// используют это как есть уже пару лет — переписывать все файлы руками,
+// чтобы формально соблюсти "Place не должен знать про visited/liked" из
+// data_refactoring.md, не стоит того. Вместо миграции файлов — конвертируем
+// на лету: cat/wantReturn читаются как раньше (карта, фильтры), а тут же
+// из них ВЫВОДИТСЯ история посещений в виде Interaction-событий с
+// timestamp:null ("дата неизвестна, это исторический импорт"). Эти события
+// нигде не сохраняются — они пересчитываются заново при каждой загрузке,
+// то есть по определению не могут разъехаться с source-of-truth (самим
+// местом), в отличие от закешированных производных данных.
+export function getSeedInteractions(places){
+  const seeds = [];
+  places.forEach(p => {
+    if(p.cat === 'loved' || p.cat === 'ok'){
+      seeds.push({ id:`seed-${p.id}-visited`, placeId:p.id, type:'visited',
+        timestamp:null, context:{source:'legacy_cat', rating:p.cat} });
+    }
+    if(p.cat === 'loved'){
+      seeds.push({ id:`seed-${p.id}-liked`, placeId:p.id, type:'liked',
+        timestamp:null, context:{source:'legacy_cat'} });
+    }
+    if(p.wantReturn){
+      seeds.push({ id:`seed-${p.id}-wants-return`, placeId:p.id, type:'wants_to_return',
+        timestamp:null, context:{source:'legacy_wantReturn'} });
+    }
+  });
+  return seeds;
+}
+
+// Полная история для чтения (профиль/сигналы/рекомендации): исторический
+// "импорт" + реальный залогированный опыт. Порядок имеет значение только
+// для отладки, не для корректности — потребители читают по типу/месту.
+export function getAllInteractions(places){
+  return [...getSeedInteractions(places), ...log];
+}
