@@ -44,23 +44,13 @@ export function sourceKey(p){
 // Дальше на этот id опирается история взаимодействий (interactions.js) —
 // без него свайпы/визиты привязывались бы к строке name и ломались
 // при любом переименовании места.
-const CYR_TO_LAT = {
-  а:'a', б:'b', в:'v', г:'g', д:'d', е:'e', ё:'e', ж:'zh', з:'z', и:'i',
-  й:'y', к:'k', л:'l', м:'m', н:'n', о:'o', п:'p', р:'r', с:'s', т:'t',
-  у:'u', ф:'f', х:'h', ц:'ts', ч:'ch', ш:'sh', щ:'sch', ъ:'', ы:'y', ь:'',
-  э:'e', ю:'yu', я:'ya',
-};
-function slugify(str){
-  return String(str).toLowerCase().split('').map(ch => CYR_TO_LAT[ch] ?? ch).join('')
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/-{2,}/g, '-');
-}
 const usedIds = new Set();
 export function ensurePlaceId(p){
   if(p.id){ usedIds.add(p.id); return p; }
-  const base = slugify(p.q || p.name) || 'place';
-  let candidate = `${base}-${p.country || 'xx'}`;
-  let n = 2;
-  while(usedIds.has(candidate)) candidate = `${base}-${p.country || 'xx'}-${n++}`;
+  let candidate = Math.random().toString(36).slice(2, 10);
+  while (usedIds.has(candidate)) {
+    candidate = Math.random().toString(36).slice(2, 10);
+  }
   usedIds.add(candidate);
   p.id = candidate;
   return p;

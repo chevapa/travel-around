@@ -1,6 +1,6 @@
 [
   {
-    "id": "kumrovec-staro-selo-hr",
+    "id": "b7nmno2d",
     "name": "Кумровец (Старо Село)",
     "lat": 45.9581,
     "lng": 15.5253,
@@ -19,7 +19,7 @@
     "meta": "30 авг · авто"
   },
   {
-    "id": "marija-bistrica-hr",
+    "id": "bbryj12x",
     "name": "Мария Бистрица",
     "lat": 45.9989,
     "lng": 16.0167,
@@ -39,7 +39,7 @@
     "meta": "30 авг · авто"
   },
   {
-    "id": "veliki-tabor-dvorac-hr",
+    "id": "7tq5n0pr",
     "name": "Велики Табор",
     "lat": 46.1975,
     "lng": 15.7644,
@@ -58,7 +58,7 @@
     "meta": "март · авто"
   },
   {
-    "id": "gresna-gorica-restoran-hr",
+    "id": "2ip59p3d",
     "name": "Грешна Горица",
     "lat": 46.1958,
     "lng": 15.7592,
@@ -77,7 +77,7 @@
     "meta": "март · авто"
   },
   {
-    "id": "trakoscan-dvorac-hr",
+    "id": "pvou01fr",
     "name": "Трakошчан",
     "lat": 46.2775,
     "lng": 15.9539,
@@ -98,7 +98,7 @@
     "meta": "авг · авто"
   },
   {
-    "id": "varazdin-hr",
+    "id": "zgu5uuxj",
     "name": "Вараждин",
     "lat": 46.3057,
     "lng": 16.3366,
@@ -119,7 +119,7 @@
     "meta": "3× · авто"
   },
   {
-    "id": "samobor-hr",
+    "id": "uhfl9s5q",
     "name": "Самобор",
     "lat": 45.8025,
     "lng": 15.7133,
@@ -141,7 +141,7 @@
     "meta": "много раз · авто+вело"
   },
   {
-    "id": "japetic-vrh-hr",
+    "id": "zuj2rvwo",
     "name": "Япетич (вершина)",
     "lat": 45.6103,
     "lng": 15.5972,
@@ -162,7 +162,7 @@
     "meta": "окт · авто"
   },
   {
-    "id": "sumski-dvor-restoran-hr",
+    "id": "61hj47iz",
     "name": "Sumski Dvor (ресторан)",
     "lat": 45.628,
     "lng": 15.652,
@@ -182,7 +182,7 @@
     "meta": "окт · авто"
   },
   {
-    "id": "sljeme-medvednica-hr",
+    "id": "4oagsbr2",
     "name": "Сльеме / Медведница",
     "lat": 45.8971,
     "lng": 15.9503,
@@ -202,7 +202,7 @@
     "meta": "много раз · пешком+авто"
   },
   {
-    "id": "rastoke-hr",
+    "id": "k01vmign",
     "name": "Расток",
     "lat": 45.1103,
     "lng": 15.5763,
@@ -222,7 +222,7 @@
     "meta": "1.5 ч · авто"
   },
   {
-    "id": "plitvicka-jezera-hr",
+    "id": "sv4i71e6",
     "name": "Плитвицкие озёра",
     "lat": 44.8654,
     "lng": 15.582,
@@ -242,7 +242,7 @@
     "meta": "июнь"
   },
   {
-    "id": "fuzine-hr",
+    "id": "8go91sam",
     "name": "Фужине",
     "lat": 45.4667,
     "lng": 14.7167,
@@ -264,7 +264,7 @@
     "meta": "нояб · автобус"
   },
   {
-    "id": "ljubljana-si",
+    "id": "1x51glz5",
     "name": "Любляна",
     "lat": 46.0569,
     "lng": 14.5058,
@@ -284,7 +284,7 @@
     "meta": "много раз"
   },
   {
-    "id": "bled-si",
+    "id": "wpjb7hn4",
     "name": "Блед",
     "lat": 46.3683,
     "lng": 14.1146,
@@ -304,7 +304,7 @@
     "meta": ""
   },
   {
-    "id": "bohinjsko-jezero-vogel-si",
+    "id": "ioaqzsw6",
     "name": "Бохиньское озеро + Вогель",
     "lat": 46.2833,
     "lng": 13.8833,
@@ -325,7 +325,7 @@
     "meta": "авто"
   },
   {
-    "id": "postojnska-jama-predjamski-grad-si",
+    "id": "3xt2rsn6",
     "name": "Постойнска-Яма + Предъямски замок",
     "lat": 45.783,
     "lng": 14.2018,
@@ -345,7 +345,7 @@
     "meta": "июнь · автобус"
   },
   {
-    "id": "trieste-it",
+    "id": "n3cogik0",
     "name": "Триест",
     "lat": 45.6495,
     "lng": 13.7768,
@@ -366,7 +366,7 @@
     "meta": "авто/автобус"
   },
   {
-    "id": "opatija-hr",
+    "id": "mkhlgg4o",
     "name": "Опатия",
     "lat": 45.3378,
     "lng": 14.3053,
@@ -386,7 +386,7 @@
     "meta": "янв · авто"
   },
   {
-    "id": "motovun-hr",
+    "id": "d2a0vzpm",
     "name": "Мотовун",
     "lat": 45.3325,
     "lng": 13.8347,
@@ -407,7 +407,7 @@
     "meta": "хайк"
   },
   {
-    "id": "vizinada-parenzana-hr",
+    "id": "0urjkdh2",
     "name": "Вижинада (старт Паренцаны)",
     "lat": 45.3444,
     "lng": 13.7469,
@@ -426,7 +426,7 @@
     "meta": "25 апр · Smart Travel · пешком"
   },
   {
-    "id": "pula-hr",
+    "id": "yyg71e9a",
     "name": "Пула",
     "lat": 44.8666,
     "lng": 13.8496,
@@ -446,7 +446,7 @@
     "meta": "неск. раз"
   },
   {
-    "id": "brijuni-hr",
+    "id": "34aobu5f",
     "name": "Бриюни",
     "lat": 44.9333,
     "lng": 13.7667,
@@ -467,7 +467,7 @@
     "meta": "1×"
   },
   {
-    "id": "rovinj-hr",
+    "id": "ljvtfaz1",
     "name": "Ровинь",
     "lat": 45.0811,
     "lng": 13.6387,
@@ -486,7 +486,7 @@
     "meta": "1×"
   },
   {
-    "id": "moscenicka-draga-hr",
+    "id": "lbnvj8q3",
     "name": "Мошченицка-Драга",
     "lat": 45.2989,
     "lng": 14.2439,
@@ -505,7 +505,7 @@
     "meta": ""
   },
   {
-    "id": "krk-grad-hr",
+    "id": "lsl867ro",
     "name": "Крк (город)",
     "lat": 45.0247,
     "lng": 14.575,
@@ -526,7 +526,7 @@
     "meta": ""
   },
   {
-    "id": "punat-krk-hr",
+    "id": "f5h3ezrg",
     "name": "Пунат (о. Крк)",
     "lat": 45.0136,
     "lng": 14.6178,
@@ -545,7 +545,7 @@
     "meta": "Autoturist · суббота"
   },
   {
-    "id": "malinska-hr",
+    "id": "91lhvfa8",
     "name": "Малинска",
     "lat": 45.1319,
     "lng": 14.5236,
@@ -565,7 +565,7 @@
     "meta": "зима+весна"
   },
   {
-    "id": "baska-hr",
+    "id": "ic10bb5s",
     "name": "Башка",
     "lat": 44.9739,
     "lng": 14.7539,
@@ -583,7 +583,7 @@
     "meta": ""
   },
   {
-    "id": "karlovac-hr",
+    "id": "d6fq80dz",
     "name": "Караловац",
     "lat": 45.487,
     "lng": 15.5478,
@@ -603,7 +603,7 @@
     "meta": "июнь · поезд"
   },
   {
-    "id": "brezice-si",
+    "id": "x7ivklxr",
     "name": "Брежице (Словения)",
     "lat": 45.9058,
     "lng": 15.5936,
