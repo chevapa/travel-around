@@ -1,0 +1,204 @@
+[
+  {
+    "name": "Смотровая Графичар",
+    "lat": 45.952,
+    "lng": 16.045,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Grafičar vidikovac",
+    "country": "hr",
+    "season": "all",
+    "warn": "Приезжать ближе к закату — время проверять",
+    "drive": "45 мин",
+    "note": "Неплохо, но не супер — стоило приехать ближе к закату.",
+    "meta": "30 авг · авто"
+  },
+  {
+    "name": "Подсреда (Словения)",
+    "lat": 46.0206,
+    "lng": 15.568,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "castle",
+      "town",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Podsreda grad",
+    "country": "si",
+    "season": "warm",
+    "drive": "1 ч 10 мин",
+    "note": "Городок и замок, вид с холмов — интересно, но «на один раз».",
+    "meta": "кон. сент · авто"
+  },
+  {
+    "name": "Крапина",
+    "lat": 46.1639,
+    "lng": 15.8708,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "museum",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Krapina muzej krapinskih neandertalaca",
+    "country": "hr",
+    "season": "all",
+    "drive": "45 мин",
+    "note": "Музей неандертальцев интересен, но местами слишком «детский».",
+    "meta": "нояб · авто"
+  },
+  {
+    "name": "Надьканижа (Венгрия)",
+    "lat": 46.459,
+    "lng": 16.9896,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Nagykanizsa",
+    "country": "hu",
+    "season": "all",
+    "drive": "1 ч 50 мин",
+    "note": "Пара красивых зданий в центре, на этом всё.",
+    "meta": "авто"
+  },
+  {
+    "name": "Сисак",
+    "lat": 45.4881,
+    "lng": 16.3789,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "town",
+      "castle"
+    ],
+    "wantReturn": false,
+    "q": "Sisak",
+    "country": "hr",
+    "season": "all",
+    "drive": "50 мин",
+    "note": "Похоже на Надьканижу, чуть побольше по объёму.",
+    "meta": "лето · поезд"
+  },
+  {
+    "name": "Пещера к северу от Самобора",
+    "lat": 45.8194,
+    "lng": 15.6919,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "cave"
+    ],
+    "wantReturn": false,
+    "q": "špilja Samobor",
+    "country": "hr",
+    "season": "warm",
+    "drive": "40 мин",
+    "note": "Интересно, но немного — уступает крупным пещерам.",
+    "meta": ""
+  },
+  {
+    "name": "Заприешич",
+    "lat": 45.8564,
+    "lng": 15.8092,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "town",
+      "bike",
+      "food"
+    ],
+    "wantReturn": false,
+    "q": "Zaprešić Novi dvori",
+    "country": "hr",
+    "season": "all",
+    "warn": "Novi dvori — проверить, закончена ли реконструкция",
+    "drive": "25 мин",
+    "note": "Novi dvori Elačićevi (частично реконструкция), ресторан Batak.",
+    "meta": "вело"
+  },
+  {
+    "name": "Велика-Горица",
+    "lat": 45.7125,
+    "lng": 16.0764,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "town",
+      "bike",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Velika Gorica",
+    "country": "hr",
+    "season": "warm",
+    "drive": "25 мин",
+    "note": "Велодорожка в городе, музей не особо интересен, приятный парк.",
+    "meta": "лето · вело"
+  },
+  {
+    "name": "Андаутония (римские раскопки)",
+    "lat": 45.7439,
+    "lng": 16.0733,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "museum",
+      "bike"
+    ],
+    "wantReturn": true,
+    "q": "Andautonija Ščitarjevo",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Открыто в основном по выходным, май–октябрь",
+    "drive": "25 мин",
+    "note": "Сами раскопки не посещал, проезжал мимо — стоит вернуться.",
+    "meta": "вело"
+  },
+  {
+    "name": "Ястребарско",
+    "lat": 45.6667,
+    "lng": 15.65,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "town",
+      "castle"
+    ],
+    "wantReturn": true,
+    "q": "Jastrebarsko dvorac",
+    "country": "hr",
+    "season": "all",
+    "warn": "Дворец — уточнить статус реконструкции перед выездом",
+    "drive": "35 мин",
+    "note": "Дворец то ли на реконструкции, то ли уже готов — стоит доехать.",
+    "meta": "окт · авто"
+  },
+  {
+    "name": "Нови-Винодольски",
+    "lat": 45.1281,
+    "lng": 14.7886,
+    "cat": "ok",
+    "src": "journal",
+    "cats": [
+      "beach",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Novi Vinodolski",
+    "country": "hr",
+    "season": "summer",
+    "drive": "1 ч 55 мин",
+    "note": "Окей, не супер — скученно, узкие тротуары. Худшая поездка сезона: холодная вода из подводных ключей, «проходной» пляж, много народу.",
+    "meta": "Autoturist · суббота"
+  }
+]
