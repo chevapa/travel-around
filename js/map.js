@@ -2,7 +2,11 @@ import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo, sourceKey, store 
 import { pickMode, setPickedCoords } from './modal.js';
 
 // ---------- КАРТА ----------
-export const map = L.map('map', {zoomControl:false}).setView([45.85, 15.60], 8);
+// На мобильном стартуем чуть приближенным видом (примерно по кольцу ~1ч
+// вокруг Загреба), а не тем же зумом, что на десктопе — иначе на маленьком
+// экране полезная область карты выглядит слишком мелкой и далёкой.
+const isMobileViewport = window.matchMedia('(max-width:860px)').matches;
+export const map = L.map('map', {zoomControl:false}).setView([45.85, 15.60], isMobileViewport ? 9 : 8);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
@@ -35,6 +39,8 @@ export function buildMarker(place){
     : `<p class="popup-source">🔎 Источник: подборка (ИИ-ресёрч по моим предпочтениям)</p>`;
   const searchQ = encodeURIComponent(`${place.q || place.name} ${countryInfo(place.country).local}`);
   const searchUrl = `https://www.google.com/search?q=${searchQ}`;
+  const base = BASE_POINTS[document.getElementById('base-select').value] || BASE_POINTS.zagreb;
+  const gmapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${base.lat},${base.lng}&destination=${place.lat},${place.lng}&travelmode=driving`;
   marker.bindPopup(
     `<div class="popup-badges"><span class="popup-badge ${st.badge}">${st.label}</span>${countryBadge}${seasonBadge}${catBadges}</div>` +
     `<p class="popup-title"><a href="${searchUrl}" target="_blank" rel="noopener" class="title-link">${place.name}<svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>${starMark}</p>` +
@@ -42,7 +48,7 @@ export function buildMarker(place){
     warnBlock +
     (place.meta ? `<p class="popup-meta">${place.meta}</p>` : '') +
     sourceBlock +
-    `<p class="popup-drivetime" id="${driveId}">🚗 время в пути: <span class="dt-value">${place.drive}</span></p>` +
+    `<p class="popup-drivetime" id="${driveId}"><a href="${gmapsUrl}" target="_blank" rel="noopener" class="drivetime-link">🚗 время в пути: <span class="dt-value">${place.drive}</span> <svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a></p>` +
     `<div class="nearby-box"><button class="nearby-btn" data-name="${place.name}">Что рядом →</button><div class="nearby-out"></div></div>`
   );
   marker.on('popupopen', ()=>loadDriveTime(place, driveId));
