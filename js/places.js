@@ -1,53 +1,23 @@
 // ---------- СЛОВАРИ / ВОКАБУЛЯР МЕСТА ----------
 // Категории, страны, сезоны, статусы, источники — общий "справочник",
 // на который опираются карта (иконки/цвета), фильтры (чекбоксы) и
-// модалка добавления/редактирования (select'ы).
+// модалка добавления/редактирования (select'ы). Раньше эти 5 объектов были
+// захардкожены прямо тут; теперь они лежат в data/vocab.json — так же, как
+// сами места лежат в JSON, а не в коде. Правится через GitHub, без правки .js.
+//
+// top-level await: модуль places.js не закончит инициализацию (а значит и
+// все, кто его импортирует — map.js/filters.js/modal.js/app.js — не начнут
+// строить UI), пока этот fetch не завершится. Это специально: раньше
+// CATEGORIES и другие константы были доступны сразу и синхронно, и не
+// хотелось переписывать весь app.js на передачу колбэков ради одного fetch.
+const VOCAB_URL = 'data/vocab.json';
+const vocab = await fetch(VOCAB_URL).then(r => r.json());
 
-export const CATEGORIES = {
-  town:{label:'Город / городок', ico:'<img class="cat-icon-img" src="assets/img014.png" alt="">'},
-  castle:{label:'Замок / крепость', ico:'<img class="cat-icon-img" src="assets/img015.png" alt="">'},
-  museum:{label:'Музей / этнография', ico:'<img class="cat-icon-img" src="assets/img016.png" alt="">'},
-  church:{label:'Церковь / сакральное', ico:'<img class="cat-icon-img" src="assets/img017.png" alt="">'},
-  nature:{label:'Природа / хайк', ico:'<img class="cat-icon-img" src="assets/img018.png" alt="">'},
-  view:{label:'Смотровая', ico:'<img class="cat-icon-img" src="assets/img019.png" alt="">'},
-  water:{label:'Озеро / река', ico:'<img class="cat-icon-img" src="assets/img020.png" alt="">'},
-  cave:{label:'Пещера', ico:'<img class="cat-icon-img" src="assets/img021.png" alt="">'},
-  beach:{label:'Пляж / море', ico:'<img class="cat-icon-img" src="assets/img022.png" alt="">'},
-  food:{label:'Еда / вино', ico:'<img class="cat-icon-img" src="assets/img023.png" alt="">'},
-  bike:{label:'Велотема', ico:'<img class="cat-icon-img" src="assets/img024.png" alt="">'},
-  spa:{label:'Термы', ico:'<img class="cat-icon-img" src="assets/img025.png" alt="">'},
-  culture:{label:'Культура / история', ico:'<img class="cat-icon-img" src="assets/img016.png" alt="">'},
-};
-
-export const COUNTRIES = {
-  hr: {label:'Хорватия',  flag:'🇭🇷', local:'Hrvatska'},
-  si: {label:'Словения',  flag:'🇸🇮', local:'Slovenija'},
-  it: {label:'Италия',    flag:'🇮🇹', local:'Italia'},
-  hu: {label:'Венгрия',   flag:'🇭🇺', local:'Magyarország'},
-  mk: {label:'Сев. Македония', flag:'🇲🇰', local:'Северна Македонија'},
-  ba: {label:'Босния и Герцеговина', flag:'🇧🇦', local:'Bosna i Hercegovina'},
-  me: {label:'Черногория', flag:'🇲🇪', local:'Crna Gora'},
-  rs: {label:'Сербия',    flag:'🇷🇸', local:'Srbija'},
-  al: {label:'Албания',   flag:'🇦🇱', local:'Shqipëria'},
-};
-
-export const SEASONS = {
-  all:    {label:'Круглый год',        ico:'🗓'},
-  warm:   {label:'Тепло (апр–окт)',    ico:'🌤'},
-  summer: {label:'Лето / купание',     ico:'☀️'},
-  stork:  {label:'Аисты (март–авг)',   ico:'🕊'},
-};
-
-export const STATUSES = {
-  loved: {label:'Понравилось',          color:'#1F8C82', badge:'green'},
-  ok:    {label:'Так себе / нейтрально', color:'#FF5A2B', badge:'amber'},
-  plan:  {label:'Ещё не были (план)',    color:'#6E4FA0', badge:'grey'},
-};
-
-export const SOURCES = {
-  journal:  {label:'Мой дневник поездок',        ico:'📔'},
-  research: {label:'Подборка / ИИ-ресёрч',       ico:'🔎'},
-};
+export const CATEGORIES = vocab.categories;
+export const COUNTRIES = vocab.countries;
+export const SEASONS = vocab.seasons;
+export const STATUSES = vocab.statuses;
+export const SOURCES = vocab.sources;
 
 // Заглушки для незнакомой/опечатанной категории/страны/статуса/сезона —
 // чтобы одна плохая точка не ломала отрисовку остальных мест.
