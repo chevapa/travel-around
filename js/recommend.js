@@ -6,64 +6,37 @@
 // см. data_refactoring.md: raw-события отдельно от того, что из них следует.
 import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo } from './places.js';
 import { flyToPlace, map } from './map.js';
-import { loadInteractions, logInteraction, hasInteraction, clearInteractions, getAllInteractions } from './interactions.js';
+import { loadInteractions, logInteraction, hasInteraction, clearInteractions } from './interactions.js';
+import { computeProfile } from './profile.js';
+import { currentContext, getWeather } from './context.js';
+import { rankPlaces } from './recommendationEngine.js';
 
-let queue = [];
+let queue = [];               // элементы {place, score, reasons} — см. buildQueue()
 let stackEl, sheetBack, sheetBody;
+// Погода — один запрос на сессию (см. context.js), приходит асинхронно
+// уже после первого рендера; когда придёт, просто пересчитываем очередь.
+let weather = null;
 // "Показано" в эту сессию — только чтобы не заспамить журнал повторным
 // логированием 'viewed' при каждом ре-рендере одной и той же верхней
 // карточки (renderStack дергается чаще, чем реально меняется top of stack).
 const viewedThisSession = new Set();
 
-// ---------- ПОДБОР КАНДИДАТОВ ----------
+// ---------- ПОДБОР И РАНЖИРОВАНИЕ КАНДИДАТОВ ----------
+// Реализация "Place → Interaction → Derived signals → Recommendation" из
+// data_refactoring.md: candidates — сырые кандидаты (места-планы, на
+// которые ещё нет решения), profile/ctx/weather — производные сигналы и
+// объективная реальность, rankPlaces — сама формула score.
 function buildQueue(){
   const candidates = PLACES.filter(p =>
     p.cat === 'plan' && !hasInteraction(p.id, 'not_interested') && !hasInteraction(p.id, 'liked'));
+  const profile = computeProfile(PLACES);
+  const ctx = currentContext();
+  const ranked = rankPlaces(candidates, profile, ctx, weather);
   // "На потом" не выкидываем — просто откладываем в конец очереди,
-  // чтобы карточка попалась снова, но не мешала свежим вариантам.
-  const primary  = candidates.filter(p => !hasInteraction(p.id, 'saved_for_later'));
-  const deferred = candidates.filter(p => hasInteraction(p.id, 'saved_for_later'));
+  // чтобы карточка попалась снова, но не мешала более уместным вариантам.
+  const primary  = ranked.filter(r => !hasInteraction(r.place.id, 'saved_for_later'));
+  const deferred = ranked.filter(r => hasInteraction(r.place.id, 'saved_for_later'));
   queue = [...primary, ...deferred];
-}
-
-// категории мест, которые пользователь уже отметил "понравилось" —
-// используется, чтобы объяснить рекомендацию через реальное совпадение вкуса.
-// Источник — не поле place.cat напрямую, а журнал взаимодействий (реальные
-// свайпы "да" + исторические "loved", восстановленные как seed-события,
-// см. interactions.js:getSeedInteractions). Из-за этого свайп "нравится" на
-// ещё не посещённом месте теперь тоже сразу влияет на объяснения других
-// карточек — раньше учитывались только места со статусом "loved".
-function lovedCatSet(){
-  const likedIds = new Set(
-    getAllInteractions(PLACES).filter(e => e.type === 'liked').map(e => e.placeId));
-  const set = new Set();
-  PLACES.filter(p => likedIds.has(p.id)).forEach(p => p.cats.forEach(c => set.add(c)));
-  return set;
-}
-
-function buildReasons(place){
-  const reasons = [];
-  reasons.push({icon:'🚗', title:`${place.drive} от Загреба`, sub:'реалистичная оценка для выходных'});
-  if(place.wantReturn){
-    reasons.push({icon:'★', title:'Вы отметили — «хотим вернуться»', sub:'осталось только доехать'});
-  }else{
-    reasons.push({icon:'📍', title:'Вы здесь ещё не были', sub:'новое место на карте'});
-  }
-  const overlap = place.cats.filter(c => lovedCatSet().has(c));
-  if(overlap.length){
-    reasons.push({
-      icon:'❤️',
-      title:'Похоже на места, которые вам понравились',
-      sub: overlap.slice(0,3).map(c=>catInfo(c).label).join(', ')
-    });
-  }
-  if(place.season && place.season !== 'all'){
-    reasons.push({icon: seasonInfo(place.season).ico, title: seasonInfo(place.season).label, sub:'подходящий сезон'});
-  }
-  if(place.warn){
-    reasons.push({icon:'⚠️', title:'Проверить перед выездом', sub:place.warn});
-  }
-  return reasons.slice(0,4);
 }
 
 function catArtSrc(catKey){
@@ -86,7 +59,7 @@ function badgesHtml(place){
     </div>`;
 }
 
-function buildCardEl(place, depth){
+function buildCardEl(place, depth, reasons){
   const el = document.createElement('div');
   el.className = 'reco-card';
   el.style.transform = `translateY(${depth*10}px) scale(${1 - depth*0.035})`;
@@ -102,7 +75,7 @@ function buildCardEl(place, depth){
       <img src="${art}" alt="" class="reco-art-img">
     </div>
     <div class="reco-reasons">
-      ${buildReasons(place).map(r => `
+      ${reasons.map(r => `
         <div class="reco-reason">
           <span class="reco-reason-badge">${r.icon}</span>
           <span class="reco-reason-txt"><strong>${r.title}</strong><span>${r.sub}</span></span>
@@ -151,16 +124,16 @@ function renderStack(){
     return;
   }
 
-  queue.slice(0,3).forEach((place, i)=>{
-    const cardEl = buildCardEl(place, i);
+  queue.slice(0,3).forEach((item, i)=>{
+    const cardEl = buildCardEl(item.place, i, item.reasons);
     stackEl.appendChild(cardEl);
-    if(i === 0) attachDrag(cardEl, place);
+    if(i === 0) attachDrag(cardEl, item.place);
   });
 
   const top = queue[0];
-  if(top && !viewedThisSession.has(top.id)){
-    viewedThisSession.add(top.id);
-    logInteraction('viewed', top.id, {source:'recommend_stack'});
+  if(top && !viewedThisSession.has(top.place.id)){
+    viewedThisSession.add(top.place.id);
+    logInteraction('viewed', top.place.id, {source:'recommend_stack', score: top.score});
   }
 }
 
@@ -187,7 +160,7 @@ function swipeTop(dir){
   const top = queue[0];
   const topEl = stackEl && stackEl.querySelector('.reco-card:not(.reco-empty)');
   if(!top || !topEl) return;
-  decide(top, dir);
+  decide(top.place, dir);
   flyAway(topEl, dir, ()=>{
     buildQueue();
     renderStack();
@@ -314,4 +287,9 @@ export async function initRecommend(){
   switchScreen(isMobile ? 'recommend' : 'map');
 
   renderStack();
+
+  // Погода приходит позже первого рендера (сетевой запрос + геолокация) —
+  // когда придёт, просто пересчитываем очередь с уже известной погодой.
+  // Не блокируем открытие экрана ради этого.
+  getWeather().then(w => { weather = w; refreshRecommend(); });
 }
