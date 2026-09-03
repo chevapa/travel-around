@@ -1024,4 +1024,52 @@
   #hero-card .hero-result strong {
     font-size: 11px !important;
   }
+  /* Декоративные наклейки/лента больше не влезают на такой маленький hero-card —
+     на мобильном просто убираем их, чтобы не перекрывали логотип. */
+  #hero-card .atlas-tape,
+  #hero-card .atlas-shell,
+  #hero-card .atlas-star {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   MOBILE FIX 3 — попап места (карточка при клике на маркер)
+   надёжно по центру экрана, а не там, где Leaflet решит его
+   открыть относительно маркера. Leaflet панорамирует карту через
+   CSS-transform на .leaflet-map-pane — а элемент с transformed-
+   предком не может быть по-настоящему position:fixed относительно
+   вьюпорта, только относительно этого предка. Поэтому попап
+   переносится в JS из карты прямо в <body> (см. map.js), а здесь
+   только его позиционирование и размер уже после переноса.
+   ========================================================= */
+@media (max-width: 860px) {
+  .leaflet-popup.popup-mobile-centered {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    bottom: auto !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) !important;
+    width: min(92vw, 420px) !important;
+    max-width: 92vw !important;
+    z-index: 2000 !important;
+  }
+  .popup-mobile-centered .leaflet-popup-tip-container {
+    display: none !important;
+  }
+  .popup-mobile-centered .leaflet-popup-content-wrapper {
+    width: 100% !important;
+  }
+  .popup-mobile-centered .leaflet-popup-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 76vh !important;
+    margin: 16px 18px !important;
+  }
+  .popup-mobile-centered .leaflet-popup-close-button {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 22px !important;
+  }
 }
