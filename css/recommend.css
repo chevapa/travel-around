@@ -8,7 +8,7 @@
 /* ---------- screen switching ---------- */
 #screen-recommend{ display:none; }
 body[data-screen="recommend"] #screen-recommend{ display:flex; }
-body[data-screen="recommend"] #app{ display:none; }
+body[data-screen="recommend"] #app{ display:none !important; }
 
 /* keep #map-actions from ever clipping if it wraps to 2 lines
    (additive safety net — does nothing when it already fits) */
