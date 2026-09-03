@@ -1,44 +1,28 @@
 // ---------- ЭКРАН «КУДА СЕГОДНЯ?» (рекомендации / свайпы) ----------
 // Второй способ смотреть на те же PLACES (первый — карта+фильтры в app.js).
-// Кандидаты — места со статусом "plan" (ещё не были). Сигналы свайпов
-// (нравится / не интересно / на потом) хранятся отдельно от самих мест —
-// они не трогают исходные данные (places/*.json), только локальный "опыт
-// использования" этого экрана, через тот же store, что и custom-места.
-import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo, store } from './places.js';
+// Кандидаты — места со статусом "plan" (ещё не были). Решения по свайпам
+// (нравится / не интересно / на потом) больше не хранятся как отдельные
+// три Set'а — это события в общем журнале взаимодействий (interactions.js),
+// см. data_refactoring.md: raw-события отдельно от того, что из них следует.
+import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo } from './places.js';
 import { flyToPlace, map } from './map.js';
+import { loadInteractions, logInteraction, hasInteraction, clearInteractions } from './interactions.js';
 
-const LIKED_KEY   = 'trip-atlas-reco-liked';
-const SKIPPED_KEY = 'trip-atlas-reco-skipped';
-const LATER_KEY   = 'trip-atlas-reco-later';
-
-let liked = new Set(), skipped = new Set(), later = new Set();
 let queue = [];
 let stackEl, sheetBack, sheetBody;
-
-async function loadSignals(){
-  const [l, s, t] = await Promise.all([
-    store.get(LIKED_KEY).catch(()=>null),
-    store.get(SKIPPED_KEY).catch(()=>null),
-    store.get(LATER_KEY).catch(()=>null),
-  ]);
-  try{ liked   = new Set(l && l.value ? JSON.parse(l.value) : []); }catch(e){ liked = new Set(); }
-  try{ skipped = new Set(s && s.value ? JSON.parse(s.value) : []); }catch(e){ skipped = new Set(); }
-  try{ later   = new Set(t && t.value ? JSON.parse(t.value) : []); }catch(e){ later = new Set(); }
-}
-function persist(){
-  store.set(LIKED_KEY, JSON.stringify([...liked])).catch(()=>{});
-  store.set(SKIPPED_KEY, JSON.stringify([...skipped])).catch(()=>{});
-  store.set(LATER_KEY, JSON.stringify([...later])).catch(()=>{});
-}
+// "Показано" в эту сессию — только чтобы не заспамить журнал повторным
+// логированием 'viewed' при каждом ре-рендере одной и той же верхней
+// карточки (renderStack дергается чаще, чем реально меняется top of stack).
+const viewedThisSession = new Set();
 
 // ---------- ПОДБОР КАНДИДАТОВ ----------
 function buildQueue(){
   const candidates = PLACES.filter(p =>
-    p.cat === 'plan' && !skipped.has(p.id) && !liked.has(p.id));
+    p.cat === 'plan' && !hasInteraction(p.id, 'not_interested') && !hasInteraction(p.id, 'liked'));
   // "На потом" не выкидываем — просто откладываем в конец очереди,
   // чтобы карточка попалась снова, но не мешала свежим вариантам.
-  const primary  = candidates.filter(p => !later.has(p.id));
-  const deferred = candidates.filter(p => later.has(p.id));
+  const primary  = candidates.filter(p => !hasInteraction(p.id, 'saved_for_later'));
+  const deferred = candidates.filter(p => hasInteraction(p.id, 'saved_for_later'));
   queue = [...primary, ...deferred];
 }
 
@@ -152,8 +136,8 @@ function renderStack(){
       <button type="button" class="reco-reset-btn" id="reco-reset">Начать заново</button>
     </div>`;
     document.getElementById('reco-reset').addEventListener('click', ()=>{
-      liked.clear(); skipped.clear(); later.clear();
-      persist();
+      clearInteractions();
+      viewedThisSession.clear();
       buildQueue();
       renderStack();
     });
@@ -165,14 +149,22 @@ function renderStack(){
     stackEl.appendChild(cardEl);
     if(i === 0) attachDrag(cardEl, place);
   });
+
+  const top = queue[0];
+  if(top && !viewedThisSession.has(top.id)){
+    viewedThisSession.add(top.id);
+    logInteraction('viewed', top.id, {source:'recommend_stack'});
+  }
 }
 
 // ---------- СВАЙП: РЕШЕНИЕ + АНИМАЦИЯ ----------
+const DIR_TO_TYPE = { like:'liked', skip:'not_interested', save:'saved_for_later' };
+
 function decide(place, dir){
-  if(dir === 'like'){ liked.add(place.id); showToast(`❤️ «${place.name}» — понравилось, учтём в следующих подборках`); }
-  if(dir === 'skip'){ skipped.add(place.id); showToast(`Скрыли «${place.name}»`); }
-  if(dir === 'save'){ later.add(place.id); showToast(`«${place.name}» — сохранили на потом`); }
-  persist();
+  logInteraction(DIR_TO_TYPE[dir], place.id, {source:'swipe'});
+  if(dir === 'like'){ showToast(`❤️ «${place.name}» — понравилось, учтём в следующих подборках`); }
+  if(dir === 'skip'){ showToast(`Скрыли «${place.name}»`); }
+  if(dir === 'save'){ showToast(`«${place.name}» — сохранили на потом`); }
 }
 
 function flyAway(el, dir, onDone){
@@ -299,7 +291,7 @@ export async function initRecommend(){
   sheetBack = document.getElementById('reco-sheet-back');
   sheetBody = document.getElementById('reco-sheet-body');
 
-  await loadSignals();
+  await loadInteractions();
 
   document.getElementById('reco-skip').addEventListener('click', ()=>swipeTop('skip'));
   document.getElementById('reco-later').addEventListener('click', ()=>swipeTop('save'));
