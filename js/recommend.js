@@ -277,7 +277,14 @@ export function switchScreen(name){
   document.querySelectorAll('.nav-btn[data-screen]').forEach(b=>{
     b.classList.toggle('active', b.dataset.screen === name);
   });
-  if(name === 'map') setTimeout(()=>map.invalidateSize(), 60);
+  if(name === 'map'){
+    setTimeout(()=>map.invalidateSize(), 60);
+  }else{
+    // уходим с карты — если там был открыт попап места, он не должен
+    // "всплывать" поверх следующего экрана (Leaflet считает его открытым
+    // независимо от того, что #app сейчас скрыт через CSS)
+    map.closePopup();
+  }
 }
 
 // app.js вызывает это заново, когда PLACES действительно пополнились
