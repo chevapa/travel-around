@@ -835,7 +835,7 @@
 #hero-card::before{width:58px;height:16px;right:15px;top:-9px;}
 #hero-card::after{font-size:7px;right:-5px;bottom:-10px;padding:3px 6px;box-shadow:3px 3px 0 var(--riso-pink);}
 
-/* Only two decorative pieces touch the viewport edges. Everything else stays clean. */
+/* Три декоративные наклейки трогают края вьюпорта — остальное чисто. */
 .edge-collage{
   position:fixed;
   z-index:1395;
@@ -843,17 +843,26 @@
   user-select:none;
   filter:drop-shadow(3px 4px 0 rgba(23,22,19,.18));
 }
-.edge-collage.star{
-  left:-28px;
-  top:38vh;
-  width:86px;
-  transform:rotate(-13deg);
-}
+/* Пальма — про Истрию/побережье, слева. */
 .edge-collage.palm{
-  right:-32px;
-  bottom:16vh;
-  width:96px;
-  transform:rotate(12deg);
+  left:-30px;
+  top:38vh;
+  width:92px;
+  transform:rotate(-11deg);
+}
+/* Звезда — про море, у нижнего левого угла. */
+.edge-collage.star{
+  left:-26px;
+  top:80vh;
+  width:72px;
+  transform:rotate(-16deg);
+}
+/* Замок — про континентальную Хорватию (Загорье), справа сверху, ниже панели поиска/фильтров. */
+.edge-collage.castle{
+  right:-6px;
+  top:92px;
+  width:78px;
+  transform:rotate(9deg);
 }
 @media(max-width:700px){
   #hero-card{left:10px;top:10px;width:245px;padding:8px 9px 8px;}
@@ -861,8 +870,9 @@
   .hero-question{font-size:8px;margin:2px 0 4px;}
   .hero-result{margin-top:4px;padding:4px 6px 3px;font-size:7.5px;}
   .hero-result strong{font-size:11px;}
-  .edge-collage.star{left:-33px;top:42vh;width:70px;}
-  .edge-collage.palm{right:-35px;bottom:15vh;width:76px;}
+  .edge-collage.palm{left:-34px;top:40vh;width:70px;}
+  .edge-collage.star{left:-30px;top:78vh;width:58px;}
+  .edge-collage.castle{right:-8px;top:0.5vh;width:58px;}
 }
 
 
