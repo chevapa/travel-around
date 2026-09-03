@@ -1,6 +1,6 @@
 [
   {
-    "id": "skopje-mk",
+    "id": "o3rsks02",
     "name": "Скопье",
     "lat": 42.0069,
     "lng": 21.438,
@@ -21,7 +21,7 @@
     "meta": "Источник: Putni Kofer. Статья о местах Северной Македонии."
   },
   {
-    "id": "matka-canyon-mk",
+    "id": "i11oidq7",
     "name": "Каньон Матка",
     "lat": 41.95,
     "lng": 21.3,
@@ -41,7 +41,7 @@
     "meta": "Источник: Putni Kofer. Статья о местах Северной Македонии."
   },
   {
-    "id": "ohrid-mk",
+    "id": "e5m4s41l",
     "name": "Охрид",
     "lat": 41.1231,
     "lng": 20.8016,
@@ -63,7 +63,7 @@
     "meta": "Охрид и Охридское озеро находятся под защитой UNESCO. Источник: Putni Kofer."
   },
   {
-    "id": "sveti-naum-mk",
+    "id": "wux2iksh",
     "name": "Свети-Наум",
     "lat": 40.9125,
     "lng": 20.7397,
@@ -84,7 +84,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "golem-grad-mk",
+    "id": "gco59rtj",
     "name": "Голем-Град",
     "lat": 40.925,
     "lng": 21.05,
@@ -103,7 +103,7 @@
     "meta": "Остров открыт для туристов. Источник: Putni Kofer."
   },
   {
-    "id": "pelister-national-park-mk",
+    "id": "c9gugq9w",
     "name": "Национальный парк Пелистер",
     "lat": 41.032,
     "lng": 21.17,
@@ -122,7 +122,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "galicnik-mk",
+    "id": "ozphn5z4",
     "name": "Галичник",
     "lat": 41.588,
     "lng": 20.658,
@@ -141,7 +141,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "novi-sad-rs",
+    "id": "xp5lplqr",
     "name": "Нови-Сад",
     "lat": 45.2671,
     "lng": 19.8335,
@@ -162,7 +162,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "petrovaradin-fortress-rs",
+    "id": "533ujq8o",
     "name": "Петроварадинская крепость",
     "lat": 45.254,
     "lng": 19.862,
@@ -183,7 +183,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "avolja-varos-rs",
+    "id": "y0qm2xze",
     "name": "Дьявольский город",
     "lat": 42.996,
     "lng": 21.409,
@@ -201,7 +201,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "subotica-rs",
+    "id": "5doghw0m",
     "name": "Суботица",
     "lat": 46.1,
     "lng": 19.667,
@@ -221,7 +221,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "palic-lake-rs",
+    "id": "a9dvgrfh",
     "name": "Озеро Палич",
     "lat": 46.103,
     "lng": 19.758,
@@ -241,7 +241,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "sirogojno-staro-selo-rs",
+    "id": "f7n9ifnl",
     "name": "Сирогойно",
     "lat": 43.848,
     "lng": 19.792,
@@ -261,7 +261,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "erdap-national-park-rs",
+    "id": "e3i7opqs",
     "name": "Национальный парк Джердап",
     "lat": 44.65,
     "lng": 22.35,
@@ -282,7 +282,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "golubac-fortress-rs",
+    "id": "u20se8c6",
     "name": "Крепость Голубац",
     "lat": 44.662,
     "lng": 21.677,
@@ -302,7 +302,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "veliko-ratno-ostrvo-rs",
+    "id": "njld63ii",
     "name": "Большой военный остров",
     "lat": 44.829,
     "lng": 20.442,
@@ -322,7 +322,7 @@
     "meta": "Охраняемая природная территория. Источник: Putni Kofer."
   },
   {
-    "id": "lido-beach-zemun-rs",
+    "id": "lzbk2zdt",
     "name": "Пляж Лидо",
     "lat": 44.839,
     "lng": 20.438,
@@ -341,7 +341,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "berat-al",
+    "id": "nwfku0g8",
     "name": "Берат",
     "lat": 40.7058,
     "lng": 19.9522,
@@ -363,7 +363,7 @@
     "meta": "Исторический центр Берата включён в список Всемирного наследия UNESCO. Источник: Putni Kofer."
   },
   {
-    "id": "berat-castle-al",
+    "id": "qfpgncqm",
     "name": "Замок Берат",
     "lat": 40.709,
     "lng": 19.948,
@@ -383,7 +383,7 @@
     "meta": "История укреплений восходит к античному периоду. Источник: Putni Kofer."
   },
   {
-    "id": "mangalem-berat-al",
+    "id": "kahj2pjh",
     "name": "Мангалем",
     "lat": 40.706,
     "lng": 19.949,
@@ -403,7 +403,7 @@
     "meta": "Часть исторического центра Берата. Источник: Putni Kofer."
   },
   {
-    "id": "gorica-bridge-berat-al",
+    "id": "nck9dva7",
     "name": "Мост Горика",
     "lat": 40.703,
     "lng": 19.944,
@@ -422,7 +422,7 @@
     "meta": "Построен в XVIII веке. Источник: Putni Kofer."
   },
   {
-    "id": "bogove-waterfall-al",
+    "id": "ts6zmw86",
     "name": "Водопад Богова",
     "lat": 40.28,
     "lng": 20.065,
@@ -441,7 +441,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "stanjel-si",
+    "id": "giw6z2d3",
     "name": "Штаньел",
     "lat": 45.823,
     "lng": 13.844,
@@ -464,7 +464,7 @@
     "meta": "Историческое поселение в регионе Kras. Источник: Putni Kofer."
   },
   {
-    "id": "ferrari-garden-stanjel-si",
+    "id": "1eawgsbw",
     "name": "Сад Феррари",
     "lat": 45.822,
     "lng": 13.843,
@@ -483,7 +483,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "otocec-castle-si",
+    "id": "6khzk9nd",
     "name": "Замок Оточец",
     "lat": 45.851,
     "lng": 15.235,
@@ -502,7 +502,7 @@
     "meta": "Один из самых необычных замков Словении. Источник: Putni Kofer."
   },
   {
-    "id": "krnsko-lake-slovenia-si",
+    "id": "7lmiza6f",
     "name": "Крнское озеро",
     "lat": 46.281,
     "lng": 13.725,
@@ -521,7 +521,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "kobarid-si",
+    "id": "n6a2fqz8",
     "name": "Кобарид",
     "lat": 46.2476,
     "lng": 13.5791,
@@ -543,7 +543,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "tromeja-vrh-pec-slovenia-si",
+    "id": "7xa14smq",
     "name": "Тромея — Врх-Печ",
     "lat": 46.547,
     "lng": 13.713,
@@ -561,7 +561,7 @@
     "meta": "Высота около 1508 м. Источник: Putni Kofer."
   },
   {
-    "id": "zelengora-bosnia-ba",
+    "id": "l9r6j9ik",
     "name": "Зеленгора",
     "lat": 43.349,
     "lng": 18.55,
@@ -580,7 +580,7 @@
     "meta": "На Зеленгоре находится несколько вершин выше 2000 метров. Источник: Putni Kofer."
   },
   {
-    "id": "orlovacko-lake-zelengora-ba",
+    "id": "4bo3oo6n",
     "name": "О́рловачко озеро",
     "lat": 43.327,
     "lng": 18.553,
@@ -599,7 +599,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "rakitnica-canyon-bosnia-ba",
+    "id": "3xc5pm4l",
     "name": "Каньон Ракитницы",
     "lat": 43.666,
     "lng": 18.13,
@@ -619,7 +619,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "trebisnjica-river-ba",
+    "id": "xe80i5lc",
     "name": "Река Требишница",
     "lat": 42.711,
     "lng": 18.343,
@@ -638,7 +638,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "daorson-bosnia-herzegovina-ba",
+    "id": "ssgxhelx",
     "name": "Даорсон",
     "lat": 43.086,
     "lng": 17.962,
@@ -656,7 +656,7 @@
     "meta": "Национальный памятник Боснии и Герцеговины. Источник: Putni Kofer."
   },
   {
-    "id": "sana-river-source-bosnia-ba",
+    "id": "9h1w041j",
     "name": "Исток реки Сана",
     "lat": 44.165,
     "lng": 16.75,
@@ -675,7 +675,7 @@
     "meta": "Источник: Putni Kofer."
   },
   {
-    "id": "biogradska-gora-montenegro-me",
+    "id": "zyccnyw0",
     "name": "Биоградская гора",
     "lat": 42.887,
     "lng": 19.602,
