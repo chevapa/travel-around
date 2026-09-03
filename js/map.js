@@ -39,8 +39,11 @@ export function buildMarker(place){
     : `<p class="popup-source">🔎 Источник: подборка (ИИ-ресёрч по моим предпочтениям)</p>`;
   const searchQ = encodeURIComponent(`${place.q || place.name} ${countryInfo(place.country).local}`);
   const searchUrl = `https://www.google.com/search?q=${searchQ}`;
-  const base = BASE_POINTS[document.getElementById('base-select').value] || BASE_POINTS.zagreb;
-  const gmapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${base.lat},${base.lng}&destination=${place.lat},${place.lng}&travelmode=driving`;
+  // Ссылка "нарисовать маршрут" ведёт в Google Maps без указания origin —
+  // Google сам подставляет текущее местоположение пользователя (веб и приложение).
+  // BASE_POINTS/base-select здесь больше не участвуют — они остаются только
+  // для оценки времени в пути через OSRM (loadDriveTime), где нужна конкретная точка отсчёта.
+  const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lng}&travelmode=driving`;
   marker.bindPopup(
     `<div class="popup-badges"><span class="popup-badge ${st.badge}">${st.label}</span>${countryBadge}${seasonBadge}${catBadges}</div>` +
     `<p class="popup-title"><a href="${searchUrl}" target="_blank" rel="noopener" class="title-link">${place.name}<svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>${starMark}</p>` +
