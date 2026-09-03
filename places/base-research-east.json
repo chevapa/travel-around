@@ -1,0 +1,468 @@
+[
+  {
+    "name": "Вараждинске-Топлице (Aquae Iasae)",
+    "lat": 46.2078,
+    "lng": 16.4197,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "museum",
+      "town",
+      "spa",
+      "church"
+    ],
+    "wantReturn": false,
+    "q": "Varaždinske Toplice Aquae Iasae arheološki park",
+    "country": "hr",
+    "season": "all",
+    "warn": "Групповые экскурсии бронировать за 3 дня",
+    "drive": "1 ч 15 мин",
+    "note": "Римский комплекс терм и форума под навесом (~6000 м²) + старейший курорт Хорватии + готическая церковь Св. Мартина с органом 1765 г.",
+    "meta": "~85 км"
+  },
+  {
+    "name": "Лудбрег",
+    "lat": 46.2542,
+    "lng": 16.6183,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "church",
+      "museum",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Ludbreg svetište Predragocjene Krvi Kristove",
+    "country": "hr",
+    "season": "all",
+    "warn": "Свята-Неделя 28 авг – 6 сент 2026: до 100 тыс. паломников, толпы",
+    "drive": "1 ч 20 мин",
+    "note": "Единственное евхаристическое святилище Хорватии, фрески Михаэля Пека в часовне Батьяни, римский Iovia, «Центр мира».",
+    "meta": "~90 км"
+  },
+  {
+    "name": "Дворец Миляна",
+    "lat": 46.0722,
+    "lng": 15.6486,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle"
+    ],
+    "wantReturn": false,
+    "q": "dvorac Miljana",
+    "country": "hr",
+    "season": "all",
+    "warn": "Частное владение — доступ внутрь только по договорённости или на мероприятиях",
+    "drive": "1 ч",
+    "note": "Полностью отреставрированная ренессансно-барочная усадьба с парком.",
+    "meta": "~55 км"
+  },
+  {
+    "name": "Конйщина (водный замок)",
+    "lat": 46.0442,
+    "lng": 16.0489,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle"
+    ],
+    "wantReturn": false,
+    "q": "Stari grad Konjščina",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Внутрь обычно не попасть — смотрят снаружи; проверять календарь событий",
+    "drive": "45 мин",
+    "note": "Редкий низинный замок с рвом (не на холме), сохранившиеся стены и башни, площадка для пикника.",
+    "meta": "~50 км"
+  },
+  {
+    "name": "Стубичке-Топлице (Дианина купель)",
+    "lat": 46.0403,
+    "lng": 15.9161,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "spa",
+      "museum",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Stubičke Toplice Dijanina kupelj",
+    "country": "hr",
+    "season": "all",
+    "drive": "40 мин",
+    "note": "Историческая купальня, ставшая небольшим выставочным пространством, в парке столетних пихт — курорт с архитектурой, а не аквапарк.",
+    "meta": ""
+  },
+  {
+    "name": "Планинарски дом Главица",
+    "lat": 45.8419,
+    "lng": 15.8817,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "view",
+      "food",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Planinarski dom Glavica Medvednica",
+    "country": "hr",
+    "season": "all",
+    "warn": "В будни может открываться только с полудня — звонить заранее",
+    "drive": "35 мин",
+    "note": "Горный дом с панорамой на Загреб и домашней кухней, рядом пещера Ветерница.",
+    "meta": "420 м"
+  },
+  {
+    "name": "Пунтиярка (Сльеме)",
+    "lat": 45.9081,
+    "lng": 15.9631,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "food",
+      "view",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Planinarski dom Puntijarka Sljeme",
+    "country": "hr",
+    "season": "all",
+    "drive": "40 мин",
+    "note": "Классический горный дом: сыр со сметаной, грах, жаркое. Рядом Grofica с полуметровым шницелем.",
+    "meta": "957 м"
+  },
+  {
+    "name": "Джурджевац (Стари град)",
+    "lat": 46.0364,
+    "lng": 17.0631,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "museum",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Đurđevac Stari grad",
+    "country": "hr",
+    "season": "all",
+    "warn": "Валы на реконструкции — уточнять доступ внутрь вне фестиваля",
+    "drive": "1 ч 45 мин",
+    "note": "Кирпичная ренессансная крепость (ок. 1488) с галереей. Фестиваль Пицокияда 26–28 июня 2026.",
+    "meta": "~130 км"
+  },
+  {
+    "name": "Джурджевачки пески («Хорватская Сахара»)",
+    "lat": 46.0287,
+    "lng": 17.0992,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "nature",
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Đurđevački peski",
+    "country": "hr",
+    "season": "warm",
+    "drive": "1 ч 45 мин",
+    "note": "Песчаные дюны — уникальный для Хорватии заповедник (19,33 га, охраняется с 1963), мини-зоопарк с верблюдами. Неожиданный «экстра».",
+    "meta": "~130 км"
+  },
+  {
+    "name": "Хлебине (наивное искусство)",
+    "lat": 46.1114,
+    "lng": 16.9536,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "museum",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Hlebine galerija naivne umjetnosti",
+    "country": "hr",
+    "season": "all",
+    "warn": "Пн закрыто; вт–пт 10–16, сб–вс 10–14",
+    "drive": "1 ч 30 мин",
+    "note": "Родина Хлебинской школы наивной живописи по стеклу: ~1000 работ, парк скульптур, этно-дом Генералича.",
+    "meta": "~110 км"
+  },
+  {
+    "name": "Копривница + озеро Шодерица",
+    "lat": 46.163,
+    "lng": 16.828,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "town",
+      "museum",
+      "water",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Koprivnica stari grad Šoderica",
+    "country": "hr",
+    "season": "warm",
+    "drive": "1 ч 15 мин",
+    "note": "Ренессансные валы, превращённые в парк, барочно-сецессионный центр и музей + «Подравское море» с галечными пляжами.",
+    "meta": "~90 км"
+  },
+  {
+    "name": "Чазма (церковь Св. Марии Магдалины)",
+    "lat": 45.7486,
+    "lng": 16.613,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "church"
+    ],
+    "wantReturn": false,
+    "q": "Čazma crkva svete Marije Magdalene",
+    "country": "hr",
+    "season": "all",
+    "warn": "Действующий приход — вход через жупный уред",
+    "drive": "1 ч",
+    "note": "Романско-готические кости и богатый барочный интерьер (алтари, кафедра, орган рококо) — снаружи скромно, внутри роскошно.",
+    "meta": "~60 км"
+  },
+  {
+    "name": "Подгарич (монумент Джамони)",
+    "lat": 45.6408,
+    "lng": 16.7778,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "museum",
+      "view",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Spomenik revoluciji naroda Moslavine Podgarić",
+    "country": "hr",
+    "season": "all",
+    "warn": "Соседний Гарич-град ЗАКРЫТ на реставрацию — не планировать",
+    "drive": "1 ч 15 мин",
+    "note": "Абстрактный монумент Душана Джамони (1967), 10 м в высоту и 20 в ширину, «крылья победы». Рядом ресторан Vila Garić у озера.",
+    "meta": "~95 км"
+  },
+  {
+    "name": "Крижевцы",
+    "lat": 46.026,
+    "lng": 16.543,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "town",
+      "church",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Križevci crkva svetog Križa",
+    "country": "hr",
+    "season": "all",
+    "warn": "Часть экспозиции городского музея была закрыта на ремонт — проверить",
+    "drive": "55 мин",
+    "note": "Церковь Св. Креста (1232) с раннеготическим порталом и мраморным алтарём Роббы (1756), греко-католический собор. Справисче 5–7 июня 2026.",
+    "meta": "~60 км"
+  },
+  {
+    "name": "Планинарски дом Каменитовац (Билогора)",
+    "lat": 45.9553,
+    "lng": 16.9236,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "view",
+      "food",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Planinarski dom Kamenitovac Maglenča",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Ресторан для групп по предварительной записи — звонить",
+    "drive": "1 ч 30 мин",
+    "note": "Горный дом на Билогоре с видами в сторону Кальника.",
+    "meta": "координаты приблизительные"
+  },
+  {
+    "name": "Мославачка гора — видовая «Вис»",
+    "lat": 45.6001,
+    "lng": 16.7558,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "view",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Moslavačka gora vidikovac Vis",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Еды на горе нет — спускаться к Vila Garić",
+    "drive": "1 ч 15 мин",
+    "note": "Новая видовая с рельефным макетом на тропе Бела Црква, 437 м.",
+    "meta": ""
+  },
+  {
+    "name": "Ружица град (Папук)",
+    "lat": 45.5433,
+    "lng": 17.8925,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "nature",
+      "water",
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Ružica grad Orahovica",
+    "country": "hr",
+    "season": "warm",
+    "drive": "2 ч 20 мин",
+    "note": "Крупнейший сохранившийся средневековый укреплённый город Славонии в геопарке ЮНЕСКО Папук. Рядом Ораховачко озеро, Янковац и водопад Скакавац 36 м.",
+    "meta": "многодневный вариант"
+  },
+  {
+    "name": "Сопотски слап (Жумберак)",
+    "lat": 45.7561,
+    "lng": 15.3403,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "nature",
+      "view",
+      "water"
+    ],
+    "wantReturn": false,
+    "q": "Sopotski slap Sošice Žumberak",
+    "country": "hr",
+    "season": "warm",
+    "warn": "PD Vodice открыт по выходным весна–осень; иначе только родник",
+    "drive": "1 ч",
+    "note": "Крупнейший водопад Жумберака, подъезд почти вплотную по асфальту, луг для пикника. Кольцевой маршрут через вершину Плиеш (977 м).",
+    "meta": ""
+  },
+  {
+    "name": "Долина Слапница (Жумберак)",
+    "lat": 45.73,
+    "lng": 15.37,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "nature",
+      "water",
+      "castle"
+    ],
+    "wantReturn": false,
+    "q": "Slapnica Brisalo Vranjački slap",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Лучше весной/в начале лета — летом каскады мелеют",
+    "drive": "1 ч",
+    "note": "Каньон с чередой туфовых водопадов и купелей, выходит к руинам Стари град Жумберак.",
+    "meta": ""
+  },
+  {
+    "name": "Барачеве пещеры",
+    "lat": 44.9803,
+    "lng": 15.6461,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "cave",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Baraćeve špilje Rakovica",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Заметно меньше Постойны — брать как дополнение к Плитвицам, не самоцелью",
+    "drive": "2 ч",
+    "note": "Оборудованная пещера (верхняя, 492 м, экскурсия ~60 мин, 9°C) + карстовая тропа. Рядом крепость Дрежник над каньоном Кораны.",
+    "meta": "~20 км от Плитвиц"
+  },
+  {
+    "name": "Костаньевица-на-Крки (Словения)",
+    "lat": 45.8425,
+    "lng": 15.4222,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "town",
+      "museum",
+      "food",
+      "water"
+    ],
+    "wantReturn": false,
+    "q": "Kostanjevica na Krki samostan galerija Božidar Jakac",
+    "country": "si",
+    "season": "all",
+    "warn": "Зимние часы уточнять; виньетка не нужна — дорога местная",
+    "drive": "1 ч 15 мин",
+    "note": "Самый маленький город Словении на речном острове. Цистерцианский монастырь (1234) с одним из крупнейших аркадных дворов Европы, галерея, парк скульптур Forma Viva (с 1961).",
+    "meta": "«Доленьская Венеция»"
+  },
+  {
+    "name": "Шкоцянске-Яме (Словения)",
+    "lat": 45.6636,
+    "lng": 13.9903,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "cave",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Škocjanske jame",
+    "country": "si",
+    "season": "all",
+    "warn": "Только с гидом ~1ч30, много мокрых ступеней, съёмка запрещена, билеты заранее",
+    "drive": "2 ч 20 мин",
+    "note": "Объект ЮНЕСКО (1986): подземный каньон реки Реки и мост Черквеник на высоте 47 м над водой. Многие ставят выше Постойны.",
+    "meta": "многодневный вариант"
+  },
+  {
+    "name": "Град Богеншперк (Словения)",
+    "lat": 46.0089,
+    "lng": 14.8656,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Grad Bogenšperk",
+    "country": "si",
+    "season": "all",
+    "warn": "Интерьеры только с экскурсией — проверять сезонные часы",
+    "drive": "2 ч",
+    "note": "Ренессансный замок-музей Вальвазора: обставленный кабинет и библиотека, восстановленная печатня, коллекция о колдовстве. Тише Бледа.",
+    "meta": ""
+  },
+  {
+    "name": "Жичка картузия + Гастуж (Словения)",
+    "lat": 46.2914,
+    "lng": 15.4408,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "church",
+      "museum",
+      "food"
+    ],
+    "wantReturn": false,
+    "q": "Žička kartuzija Gastuž",
+    "country": "si",
+    "season": "warm",
+    "drive": "1 ч 45 мин",
+    "note": "Атмосферные руины средневекового картузианского монастыря в тихой долине + Гастуж, одна из старейших корчм Словении, с локальной кухней.",
+    "meta": ""
+  }
+]
