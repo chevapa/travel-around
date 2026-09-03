@@ -269,6 +269,21 @@ export function initMap(visiblePlacesFn){
   map.on('popupopen', e=>{
     const el = e.popup.getElement();
     if(!el) return;
+
+    // Мобильный экран: Leaflet позиционирует попап абсолютно внутри
+    // .leaflet-map-pane, у которого есть свой CSS-transform (панорамирование
+    // карты) — из-за этого честный «position:fixed по центру экрана» из
+    // styles.css внутри этого дерева не сработает (fixed считается не от
+    // вьюпорта, а от ближайшего трансформированного предка). Поэтому просто
+    // переносим DOM самого попапа в <body>, вне зоны трансформации — дальше
+    // его центрирует styles.css (.popup-mobile-centered). Leaflet не привязан
+    // к месту в DOM для закрытия/пересоздания попапа, так что это безопасно.
+    const popupContainer = el;
+    if(popupContainer && window.matchMedia('(max-width:860px)').matches){
+      document.body.appendChild(popupContainer);
+      popupContainer.classList.add('popup-mobile-centered');
+    }
+
     const nb = el.querySelector('.nearby-btn');
     if(nb && !nb.dataset.wired){
       nb.dataset.wired = '1';
