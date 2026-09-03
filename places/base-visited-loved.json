@@ -1,0 +1,594 @@
+[
+  {
+    "name": "Кумровец (Старо Село)",
+    "lat": 45.9581,
+    "lng": 15.5253,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "museum",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Kumrovec Staro Selo",
+    "country": "hr",
+    "season": "all",
+    "drive": "50 мин",
+    "note": "Целостная этно-деревня, аутентичные дома разного назначения, интерьеры.",
+    "meta": "30 авг · авто"
+  },
+  {
+    "name": "Мария Бистрица",
+    "lat": 45.9989,
+    "lng": 16.0167,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "church",
+      "town",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Marija Bistrica",
+    "country": "hr",
+    "season": "all",
+    "drive": "40 мин",
+    "note": "Необычная церковь «замкового» типа, улица вниз к площади, Кальвария.",
+    "meta": "30 авг · авто"
+  },
+  {
+    "name": "Велики Табор",
+    "lat": 46.1975,
+    "lng": 15.7644,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "castle",
+      "museum"
+    ],
+    "wantReturn": true,
+    "q": "Veliki Tabor dvorac",
+    "country": "hr",
+    "season": "all",
+    "drive": "1 ч 5 мин",
+    "note": "Сохранившиеся стены, двор, местами интерьеры. Хочется доисследовать.",
+    "meta": "март · авто"
+  },
+  {
+    "name": "Грешна Горица",
+    "lat": 46.1958,
+    "lng": 15.7592,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "food",
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Grešna Gorica restoran",
+    "country": "hr",
+    "season": "all",
+    "drive": "1 ч 5 мин",
+    "note": "Локальная кухня, загорские штрукли, вид на замок, царско месо. Обожрались.",
+    "meta": "март · авто"
+  },
+  {
+    "name": "Трakошчан",
+    "lat": 46.2775,
+    "lng": 15.9539,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "castle",
+      "water",
+      "nature"
+    ],
+    "wantReturn": true,
+    "q": "Trakošćan dvorac",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Прогулка вокруг озера лучше в сухую погоду",
+    "drive": "1 ч 15 мин",
+    "note": "Романтический замок, озеро вокруг — хочется повторить прогулку.",
+    "meta": "авг · авто"
+  },
+  {
+    "name": "Вараждин",
+    "lat": 46.3057,
+    "lng": 16.3366,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "castle",
+      "museum"
+    ],
+    "wantReturn": true,
+    "q": "Varaždin",
+    "country": "hr",
+    "season": "all",
+    "warn": "Адвент — отдельный повод; расписание летающего Санты уточнять",
+    "drive": "1 ч 5 мин",
+    "note": "Старый город и замок (внутри не был — надо зайти). Отличный Адвент, кладбище.",
+    "meta": "3× · авто"
+  },
+  {
+    "name": "Самобор",
+    "lat": 45.8025,
+    "lng": 15.7133,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "nature",
+      "food",
+      "bike"
+    ],
+    "wantReturn": true,
+    "q": "Samobor",
+    "country": "hr",
+    "season": "all",
+    "warn": "Фашник (карнавал) — февраль, даты плавающие",
+    "drive": "30 мин",
+    "note": "Ар-нуво площадь, кремшнита в Ливадиче, хайк к руинам замка. Зимой — на Фашник.",
+    "meta": "много раз · авто+вело"
+  },
+  {
+    "name": "Япетич (вершина)",
+    "lat": 45.6103,
+    "lng": 15.5972,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "view",
+      "nature",
+      "food"
+    ],
+    "wantReturn": false,
+    "q": "Japetić vrh",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Дом для путешественников работает не каждый день",
+    "drive": "55 мин",
+    "note": "Супер вид, парковка рядом, дом для путешественников с кофе.",
+    "meta": "окт · авто"
+  },
+  {
+    "name": "Sumski Dvor (ресторан)",
+    "lat": 45.628,
+    "lng": 15.652,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "food",
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Šumski Dvor restoran",
+    "country": "hr",
+    "season": "all",
+    "warn": "Столик лучше бронировать заранее",
+    "drive": "50 мин",
+    "note": "Локальная кухня, потрясающий вид с холмов.",
+    "meta": "окт · авто"
+  },
+  {
+    "name": "Сльеме / Медведница",
+    "lat": 45.8971,
+    "lng": 15.9503,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "nature",
+      "view",
+      "castle"
+    ],
+    "wantReturn": false,
+    "q": "Sljeme Medvednica",
+    "country": "hr",
+    "season": "all",
+    "drive": "35 мин",
+    "note": "Смотровая башня, тропы, крепость Медведград — на удивление хороша.",
+    "meta": "много раз · пешком+авто"
+  },
+  {
+    "name": "Расток",
+    "lat": 45.1103,
+    "lng": 15.5763,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "water",
+      "museum",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Rastoke",
+    "country": "hr",
+    "season": "warm",
+    "drive": "1 ч 30 мин",
+    "note": "Речка, музей, мельницы, остров с домами и водопадиками.",
+    "meta": "1.5 ч · авто"
+  },
+  {
+    "name": "Плитвицкие озёра",
+    "lat": 44.8654,
+    "lng": 15.582,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "nature",
+      "water"
+    ],
+    "wantReturn": true,
+    "q": "Plitvička jezera",
+    "country": "hr",
+    "season": "all",
+    "warn": "Летом толпы и дорогие билеты; осень/зима дешевле и тише",
+    "drive": "2 ч",
+    "note": "Отлично — хочется вернуться в другой сезон (осень/зима).",
+    "meta": "июнь"
+  },
+  {
+    "name": "Фужине",
+    "lat": 45.4667,
+    "lng": 14.7167,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "water",
+      "nature",
+      "bike",
+      "cave"
+    ],
+    "wantReturn": true,
+    "q": "Fužine",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Пещеры закрываются в холодный сезон",
+    "drive": "1 ч 25 мин",
+    "note": "Городок с горным озером, велосипеды до верха, пещеры.",
+    "meta": "нояб · автобус"
+  },
+  {
+    "name": "Любляна",
+    "lat": 46.0569,
+    "lng": 14.5058,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "museum",
+      "food"
+    ],
+    "wantReturn": true,
+    "q": "Ljubljana",
+    "country": "si",
+    "season": "all",
+    "drive": "1 ч 30 мин",
+    "note": "Старый город, шопинг, еда, прогулки, римское городище.",
+    "meta": "много раз"
+  },
+  {
+    "name": "Блед",
+    "lat": 46.3683,
+    "lng": 14.1146,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "water",
+      "nature",
+      "castle"
+    ],
+    "wantReturn": false,
+    "q": "Bled",
+    "country": "si",
+    "season": "all",
+    "drive": "2 ч 15 мин",
+    "note": "Топ место, были на Адвенте.",
+    "meta": ""
+  },
+  {
+    "name": "Бохиньское озеро + Вогель",
+    "lat": 46.2833,
+    "lng": 13.8833,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "water",
+      "nature",
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Bohinjsko jezero Vogel",
+    "country": "si",
+    "season": "all",
+    "warn": "Канатка может не работать в межсезонье и при ветре",
+    "drive": "2 ч 50 мин",
+    "note": "Потрясающе, как и Блед. Канатка на Вогеле, супер прогулка.",
+    "meta": "авто"
+  },
+  {
+    "name": "Постойнска-Яма + Предъямски замок",
+    "lat": 45.783,
+    "lng": 14.2018,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "cave",
+      "castle"
+    ],
+    "wantReturn": false,
+    "q": "Postojnska jama Predjamski grad",
+    "country": "si",
+    "season": "all",
+    "warn": "Замок Предъяма зимой в сокращённом режиме",
+    "drive": "1 ч 50 мин",
+    "note": "Огромная пещера, впечатляющий замок — поражает воображение.",
+    "meta": "июнь · автобус"
+  },
+  {
+    "name": "Триест",
+    "lat": 45.6495,
+    "lng": 13.7768,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "food",
+      "museum",
+      "castle"
+    ],
+    "wantReturn": true,
+    "q": "Trieste",
+    "country": "it",
+    "season": "all",
+    "drive": "2 ч 20 мин",
+    "note": "Шопинг, еда, замок, дворцы, раскопки. Хочется доехать до Мирамаре.",
+    "meta": "авто/автобус"
+  },
+  {
+    "name": "Опатия",
+    "lat": 45.3378,
+    "lng": 14.3053,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "beach",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Opatija",
+    "country": "hr",
+    "season": "all",
+    "drive": "1 ч 50 мин",
+    "note": "Солнечный зимний гетевей, прогулка вдоль моря.",
+    "meta": "янв · авто"
+  },
+  {
+    "name": "Мотовун",
+    "lat": 45.3325,
+    "lng": 13.8347,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "view",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Motovun",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Рестораны выбирать заранее — много туристических",
+    "drive": "2 ч 40 мин",
+    "note": "Супер виды, но ресторан оказался туристической ловушкой.",
+    "meta": "хайк"
+  },
+  {
+    "name": "Вижинада (старт Паренцаны)",
+    "lat": 45.3444,
+    "lng": 13.7469,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "nature",
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Vižinada Parenzana",
+    "country": "hr",
+    "season": "warm",
+    "drive": "2 ч 45 мин",
+    "note": "Пеший маршрут по бывшей ж/д Паренцана до Мотовуна. Ходили 25.04 со Smart Travel, 44€/чел, 7 человек.",
+    "meta": "25 апр · Smart Travel · пешком"
+  },
+  {
+    "name": "Пула",
+    "lat": 44.8666,
+    "lng": 13.8496,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "museum",
+      "beach"
+    ],
+    "wantReturn": false,
+    "q": "Pula",
+    "country": "hr",
+    "season": "warm",
+    "drive": "3 ч 30 мин",
+    "note": "Арена, город, Верудела — многодневное направление.",
+    "meta": "неск. раз"
+  },
+  {
+    "name": "Бриюни",
+    "lat": 44.9333,
+    "lng": 13.7667,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "nature",
+      "beach",
+      "museum"
+    ],
+    "wantReturn": true,
+    "q": "Brijuni",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Только по расписанию катеров, бронь обязательна",
+    "drive": "3 ч 40 мин",
+    "note": "Топ место — не однодневная поездка от Загреба.",
+    "meta": "1×"
+  },
+  {
+    "name": "Ровинь",
+    "lat": 45.0811,
+    "lng": 13.6387,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "beach"
+    ],
+    "wantReturn": true,
+    "q": "Rovinj",
+    "country": "hr",
+    "season": "warm",
+    "drive": "3 ч 20 мин",
+    "note": "Супер понравилось — тоже не однодневная поездка.",
+    "meta": "1×"
+  },
+  {
+    "name": "Мошченицка-Драга",
+    "lat": 45.2989,
+    "lng": 14.2439,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "beach",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Mošćenička Draga",
+    "country": "hr",
+    "season": "summer",
+    "drive": "2 ч",
+    "note": "Интересный городок, пляжный отдых.",
+    "meta": ""
+  },
+  {
+    "name": "Крк (город)",
+    "lat": 45.0247,
+    "lng": 14.575,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "beach",
+      "museum"
+    ],
+    "wantReturn": true,
+    "q": "Krk grad",
+    "country": "hr",
+    "season": "all",
+    "warn": "Музеи работают по сокращённому графику вне сезона",
+    "drive": "2 ч 15 мин",
+    "note": "В музеи не заходили — есть что доисследовать.",
+    "meta": ""
+  },
+  {
+    "name": "Пунат (о. Крк)",
+    "lat": 45.0136,
+    "lng": 14.6178,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "beach"
+    ],
+    "wantReturn": false,
+    "q": "Punat Krk",
+    "country": "hr",
+    "season": "summer",
+    "drive": "2 ч 15 мин",
+    "note": "Ездили вместе с Крком одной поездкой (Autoturist, пример: 15.08, 7 чел.).",
+    "meta": "Autoturist · суббота"
+  },
+  {
+    "name": "Малинска",
+    "lat": 45.1319,
+    "lng": 14.5236,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "beach",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Malinska",
+    "country": "hr",
+    "season": "all",
+    "warn": "Хороша именно в межсезонье",
+    "drive": "2 ч 10 мин",
+    "note": "Супер для прогулок, дышать морем — хороша в межсезонье.",
+    "meta": "зима+весна"
+  },
+  {
+    "name": "Башка",
+    "lat": 44.9739,
+    "lng": 14.7539,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "beach"
+    ],
+    "wantReturn": false,
+    "q": "Baška",
+    "country": "hr",
+    "season": "summer",
+    "drive": "2 ч 45 мин",
+    "note": "Эталон пляжного отдыха: берег, заход, простор, виды.",
+    "meta": ""
+  },
+  {
+    "name": "Караловац",
+    "lat": 45.487,
+    "lng": 15.5478,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "castle",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Karlovac",
+    "country": "hr",
+    "season": "all",
+    "drive": "50 мин",
+    "note": "Архитектурный старый центр, небольшой но занимательный замок.",
+    "meta": "июнь · поезд"
+  },
+  {
+    "name": "Брежице (Словения)",
+    "lat": 45.9058,
+    "lng": 15.5936,
+    "cat": "loved",
+    "src": "journal",
+    "cats": [
+      "town",
+      "museum",
+      "bike"
+    ],
+    "wantReturn": true,
+    "q": "Brežice",
+    "country": "si",
+    "season": "all",
+    "drive": "45 мин",
+    "note": "Крутой музей от римлян до наших дней, улица, доходный дом, кофейня.",
+    "meta": "2× · авто+вело"
+  }
+]
