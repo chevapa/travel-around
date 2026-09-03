@@ -2,12 +2,18 @@ import { PLACES, CATEGORIES, COUNTRIES, SEASONS, STATUSES, SOURCES, catInfo, cou
 import { map, showPlaces, flyToPlace, setReturnBadgeVisible } from './map.js';
 
 // ---------- СОСТОЯНИЕ ФИЛЬТРОВ ----------
+// По умолчанию при открытии сайта показываем только план поездок по Хорватии
+// (это то, что чаще всего актуально смотреть) — остальное включается вручную.
+const DEFAULT_STATUSES = ['plan'];
+const DEFAULT_COUNTRIES = ['hr'];
+const DEFAULT_SOURCES = Object.keys(SOURCES); // источник не ограничиваем
+
 export const state = {
-  statuses: new Set(Object.keys(STATUSES)),
+  statuses: new Set(DEFAULT_STATUSES),
   cats: new Set(Object.keys(CATEGORIES)),
-  countries: new Set(Object.keys(COUNTRIES)),
+  countries: new Set(DEFAULT_COUNTRIES),
   seasons: new Set(Object.keys(SEASONS)),
-  sources: new Set(['journal']), // по умолчанию видно только личный дневник
+  sources: new Set(DEFAULT_SOURCES),
   onlyReturn: false,
   showReturnBadge: true,
   query: "",
@@ -80,9 +86,10 @@ function updateCounts(){
 export function initFilters(){
   const statusList = document.getElementById('status-list');
   Object.entries(STATUSES).forEach(([key, s])=>{
+    const checked = state.statuses.has(key);
     const el = document.createElement('label');
-    el.className = 'check';
-    el.innerHTML = `<input type="checkbox" checked>
+    el.className = 'check' + (checked ? '' : ' off');
+    el.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}>
       <span class="swatch" style="background:${s.color}"></span>
       <span class="txt">${s.label}</span>
       <span class="num" data-status-count="${key}"></span>`;
@@ -113,9 +120,10 @@ export function initFilters(){
 
   const countryList = document.getElementById('country-list');
   Object.entries(COUNTRIES).forEach(([key, c])=>{
+    const checked = state.countries.has(key);
     const el = document.createElement('label');
-    el.className = 'check';
-    el.innerHTML = `<input type="checkbox" checked>
+    el.className = 'check' + (checked ? '' : ' off');
+    el.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}>
       <span class="ico">${c.flag}</span>
       <span class="txt">${c.label}</span>
       <span class="num" data-country-count="${key}"></span>`;
@@ -205,20 +213,31 @@ export function initFilters(){
   document.getElementById('open-filters').addEventListener('click', ()=>setFiltersOpen(!sidebarEl.classList.contains('open')));
   document.getElementById('close-filters').addEventListener('click', ()=>setFiltersOpen(false));
   document.getElementById('reset-filters').addEventListener('click', ()=>{
-    state.statuses = new Set(Object.keys(STATUSES));
-    state.countries = new Set(Object.keys(COUNTRIES));
+    state.statuses = new Set(DEFAULT_STATUSES);
+    state.countries = new Set(DEFAULT_COUNTRIES);
     state.seasons = new Set(Object.keys(SEASONS));
     state.cats = new Set(Object.keys(CATEGORIES));
-    state.sources = new Set(['journal']); // «Сбросить» возвращает к дефолту: только дневник
+    state.sources = new Set(DEFAULT_SOURCES);
     state.onlyReturn = false;
     state.query = '';
     searchEl.value = '';
-    document.querySelectorAll('#controls input[type=checkbox]').forEach(i=>{i.checked=true;i.closest('.check')?.classList.remove('off');});
-    sourceList.querySelectorAll('input').forEach(i=>{
-      const key = i.closest('.check').querySelector('[data-source-count]').dataset.sourceCount;
-      const on = state.sources.has(key);
-      i.checked = on;
-      i.closest('.check').classList.toggle('off', !on);
+    // Сезон/тип места/«хотим вернуться» всегда сбрасываются на «включено всё».
+    document.querySelectorAll('#panel-season input[type=checkbox], #panel-cats input[type=checkbox], #check-return input[type=checkbox]')
+      .forEach(i=>{i.checked=true; i.closest('.check')?.classList.remove('off');});
+    // Статус/страна/источник — сбрасываем к тому же дефолту, что и при
+    // открытии сайта (см. state выше), а не поголовно на «включено всё».
+    [
+      [statusList, 'status-count', 'statusCount'],
+      [countryList, 'country-count', 'countryCount'],
+      [sourceList, 'source-count', 'sourceCount'],
+    ].forEach(([list, attr, dataKey])=>{
+      list.querySelectorAll('.check').forEach(check=>{
+        const key = check.querySelector(`[data-${attr}]`).dataset[dataKey];
+        const stateSet = list===statusList ? state.statuses : list===countryList ? state.countries : state.sources;
+        const on = stateSet.has(key);
+        check.querySelector('input').checked = on;
+        check.classList.toggle('off', !on);
+      });
     });
     refresh();
   });
