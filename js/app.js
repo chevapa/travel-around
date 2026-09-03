@@ -2,6 +2,7 @@ import { loadBasePlaces, loadCustom, loadFolderPlaces } from './places.js';
 import { initMap, rebuildMarkers, loadRouteCache } from './map.js';
 import { initFilters, visiblePlaces, refresh } from './filters.js';
 import { initModal } from './modal.js';
+import { initRecommend, refreshRecommend } from './recommend.js';
 
 // Порядок важен и повторяет прежний монолитный <script>:
 // 1) карта и маркеры (пока PLACES пуст — рисовать нечего, но слушатели уже готовы),
@@ -12,10 +13,12 @@ import { initModal } from './modal.js';
 initMap(visiblePlaces);
 initFilters();
 initModal();
+initRecommend();
 
 function onPlacesLoaded(){
   rebuildMarkers();
   refresh();
+  refreshRecommend();
 }
 
 loadBasePlaces(onPlacesLoaded);
