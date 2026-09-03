@@ -82,6 +82,18 @@ export function getVisiblePlaces(state){
   });
 }
 
+// Подбирает n случайных мест со статусом 'plan' (ещё не пройденных) для
+// будущего онбординг-флоу "познакомиться с предпочтениями" (CLAUDE.md §8).
+export function pickOnboardingPlaces(places, n = 6){
+  const pool = places.filter(p => p.cat === 'plan');
+  const shuffled = [...pool];
+  for(let i = shuffled.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, n);
+}
+
 // ---------- ХРАНИЛИЩЕ ----------
 // Универсальное хранилище: window.storage (артефакт) или localStorage (GitHub Pages/локально)
 export const store = {
