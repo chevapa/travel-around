@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Bungee&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/recommend.css">
 </head>
 <body>
 <div id="app">
@@ -26,6 +27,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
         <input id="place-search" type="search" placeholder="Найти место…" autocomplete="off">
       </label>
+      <button class="map-btn map-btn-quiet nav-btn" id="open-recommend" data-screen="recommend" type="button">✨ Куда?</button>
       <button class="map-btn map-btn-quiet" id="reset-filters" type="button">Сбросить</button>
       <button class="map-btn map-btn-quiet" id="add-place" type="button">+ Место</button><button class="map-btn map-btn-dark" id="open-filters" type="button">Фильтры</button>
     </div>
@@ -135,6 +137,29 @@
     <span id="collapse-txt">Скрыть панель</span>
   </button>
   <div id="pick-hint">Кликните по карте, чтобы поставить точку</div>
+</div>
+
+<div id="screen-recommend">
+  <div class="reco-head">
+    <div class="reco-word">TRAVEL ATLAS</div>
+    <h1 class="reco-title">Куда сегодня?</h1>
+    <p class="reco-sub">Одна рекомендация — решай и двигайся дальше.</p>
+    <button type="button" class="reco-back-map nav-btn" id="reco-back-map" data-screen="map">← Карта и все места</button>
+  </div>
+  <div class="reco-stack" id="reco-stack"></div>
+  <div class="reco-actions">
+    <button type="button" class="reco-btn skip" id="reco-skip" aria-label="Неинтересно">✕</button>
+    <button type="button" class="reco-btn later" id="reco-later" aria-label="На потом">↓</button>
+    <button type="button" class="reco-btn like" id="reco-like" aria-label="Поехали">♥</button>
+  </div>
+  <div class="reco-labels"><span>неинтересно</span><span>на потом</span><span>поехали!</span></div>
+</div>
+
+<div id="reco-sheet-back">
+  <div id="reco-sheet">
+    <button type="button" id="reco-sheet-close" aria-label="Закрыть">×</button>
+    <div id="reco-sheet-body"></div>
+  </div>
 </div>
 
 <div id="modal-back">
