@@ -1,0 +1,296 @@
+[
+  {
+    "name": "Озаль",
+    "lat": 45.6108,
+    "lng": 15.4736,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "museum",
+      "water"
+    ],
+    "wantReturn": false,
+    "q": "Ozalj stari grad",
+    "country": "hr",
+    "season": "all",
+    "warn": "Купание в Купе — только летом",
+    "drive": "50 мин",
+    "note": "Замок на скале с музейным интерьером + «Мунярa», ГЭС-«замок» + прогулка вдоль Купы. Топ-1 из планов.",
+    "meta": "~50 мин"
+  },
+  {
+    "name": "Белец",
+    "lat": 46.1206,
+    "lng": 15.9875,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "church"
+    ],
+    "wantReturn": false,
+    "q": "Belec crkva svete Marije Snježne",
+    "country": "hr",
+    "season": "all",
+    "warn": "Церковь обычно заперта — договариваться через приход заранее",
+    "drive": "1 ч",
+    "note": "Барочная церковь Св. Марии Снежной — фрески Рангера. Звонить заранее, обычно закрыта.",
+    "meta": "~1 ч"
+  },
+  {
+    "name": "Кальник",
+    "lat": 46.1167,
+    "lng": 16.4667,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "view",
+      "food",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Kalnik stari grad planinarski dom",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Горный дом закрыт по понедельникам",
+    "drive": "1 ч 15 мин",
+    "note": "Руины крепости рядом с горным домом — вид + штрукли, как на Япетиче.",
+    "meta": "~1 ч 15"
+  },
+  {
+    "name": "Дворец Оршич (Горня-Стубица)",
+    "lat": 45.9944,
+    "lng": 15.9575,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "dvorac Oršić Gornja Stubica",
+    "country": "hr",
+    "season": "all",
+    "drive": "40 мин",
+    "note": "Барочный дворец с интерьером и парком, музей крестьянских восстаний.",
+    "meta": "~40 мин"
+  },
+  {
+    "name": "Окич + Плешивица",
+    "lat": 45.7311,
+    "lng": 15.7086,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "food",
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Okić grad Plešivica",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Винодельни лучше согласовать заранее",
+    "drive": "45 мин",
+    "note": "Руины на скале + винная дорога с дегустациями и ресторанами.",
+    "meta": "~45–60 мин"
+  },
+  {
+    "name": "Шкофья-Лока (Словения)",
+    "lat": 46.1653,
+    "lng": 14.3057,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "town",
+      "castle",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Škofja Loka",
+    "country": "si",
+    "season": "all",
+    "drive": "1 ч 45 мин",
+    "note": "Средневековый городок + замок-музей — мини-Любляна без толп.",
+    "meta": "~1 ч 45"
+  },
+  {
+    "name": "Турополье (Велика-Млака + Лукавец)",
+    "lat": 45.7139,
+    "lng": 16.0472,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "church",
+      "castle",
+      "bike",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Velika Mlaka crkva svete Barbare Lukavec",
+    "country": "hr",
+    "season": "warm",
+    "warn": "Деревянные капеллы открывают по договорённости",
+    "drive": "30 мин",
+    "note": "Деревянные капеллы + небольшой замок-крепость, плоская вело-местность.",
+    "meta": "~30–40 мин"
+  },
+  {
+    "name": "Чаковец",
+    "lat": 46.3833,
+    "lng": 16.4333,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "museum",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Čakovec Stari grad Zrinski",
+    "country": "hr",
+    "season": "all",
+    "warn": "Часть крыльев музея закрыта на ремонт — проверить, что открыто",
+    "drive": "1 ч 15 мин",
+    "note": "Крепость Зринских с музеем, сокровищницей и тоннелями. Часть крыльев на реконструкции.",
+    "meta": "~1 ч 15"
+  },
+  {
+    "name": "Целе (Словения)",
+    "lat": 46.2311,
+    "lng": 15.2683,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "town",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Celje grad",
+    "country": "si",
+    "season": "all",
+    "drive": "1 ч 50 мин",
+    "note": "Крупнейший средневековый замок Словении с интерьерами + старый город.",
+    "meta": "~1 ч 45–2 ч"
+  },
+  {
+    "name": "Птуй (Словения)",
+    "lat": 46.42,
+    "lng": 15.87,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "town",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Ptuj grad",
+    "country": "si",
+    "season": "all",
+    "drive": "1 ч 50 мин",
+    "note": "Старейший город Словении, замок XII в. с обставленными комнатами.",
+    "meta": "~2 ч"
+  },
+  {
+    "name": "Гргосова пещера (Жумберак)",
+    "lat": 45.7553,
+    "lng": 15.6353,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "cave",
+      "nature"
+    ],
+    "wantReturn": false,
+    "q": "Grgosova špilja Otruševec",
+    "country": "hr",
+    "season": "warm",
+    "warn": "С гидом, вне сезона по договорённости",
+    "drive": "1 ч",
+    "note": "«Самая красивая пещера СЗ Хорватии» — противовес мелкой пещере у Самобора.",
+    "meta": "~1 ч"
+  },
+  {
+    "name": "Свети-Крыж-Зачретье",
+    "lat": 46.0728,
+    "lng": 15.8494,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "castle",
+      "town",
+      "museum"
+    ],
+    "wantReturn": false,
+    "q": "Sveti Križ Začretje dvorac",
+    "country": "hr",
+    "season": "all",
+    "drive": "45 мин",
+    "note": "Отреставрированная усадьба + приятный центр городка.",
+    "meta": "~45 мин"
+  },
+  {
+    "name": "Лоньско-поле (Чигоч)",
+    "lat": 45.2833,
+    "lng": 16.6167,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "nature",
+      "museum",
+      "water"
+    ],
+    "wantReturn": false,
+    "q": "Lonjsko polje Čigoč",
+    "country": "hr",
+    "season": "stork",
+    "warn": "Аисты — примерно конец марта – конец августа",
+    "drive": "1 ч 10 мин",
+    "note": "Живая деревня аистов, деревянная застройка — Кумровец, но природный.",
+    "meta": "~1 ч"
+  },
+  {
+    "name": "Лепоглава",
+    "lat": 46.1967,
+    "lng": 16.0092,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "church",
+      "museum",
+      "town"
+    ],
+    "wantReturn": false,
+    "q": "Lepoglava pavlinski samostan",
+    "country": "hr",
+    "season": "all",
+    "warn": "Фестиваль кружева — отдельный сезонный повод",
+    "drive": "1 ч 15 мин",
+    "note": "Бывший паулинский монастырь с фресками Рангера + традиция кружевоплетения.",
+    "meta": "~1 ч 15"
+  },
+  {
+    "name": "Камник (Словения)",
+    "lat": 46.2256,
+    "lng": 14.6111,
+    "cat": "plan",
+    "src": "research",
+    "cats": [
+      "town",
+      "castle",
+      "nature",
+      "view"
+    ],
+    "wantReturn": false,
+    "q": "Kamnik",
+    "country": "si",
+    "season": "warm",
+    "warn": "Канатка на Велика-Планина — проверять работу",
+    "drive": "1 ч 55 мин",
+    "note": "Городок с двумя руинами замков + канатка на плато Велика-Планина.",
+    "meta": "~2 ч"
+  }
+]
