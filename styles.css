@@ -971,3 +971,57 @@
     ) !important;
   }
 }
+
+/* =========================================================
+   MOBILE FIX 2 — filters were unreachable (JS collapses
+   #controls on narrow screens, but #filters-toggle — the
+   only button that would re-open it — is force-hidden by
+   an unconditional desktop rule later in this file). Since
+   the full-screen drawer above has plenty of room, just
+   always show the filter controls on mobile and skip the
+   collapse step entirely. Also: drastically shrink the
+   hero card/logo so it stops eating map space.
+   ========================================================= */
+@media (max-width: 860px) {
+  #controls.collapsed,
+  #controls {
+    display: block !important;
+  }
+
+  #hero-card {
+    left: 8px !important;
+    top: 8px !important;
+    width: auto !important;
+    max-width: 118px !important;
+    padding: 5px 7px 5px !important;
+    border-width: 2px !important;
+    box-shadow: 3px 3px 0 var(--riso-shadow, rgba(28,26,23,.9)) !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  #hero-card::before,
+  #hero-card::after {
+    display: none !important;
+  }
+  #hero-card .travel-atlas-logo,
+  #hero-card img.travel-atlas-logo {
+    width: 100% !important;
+    max-width: 100px !important;
+    height: auto !important;
+    object-fit: contain !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+  #hero-card .hero-question {
+    display: none !important;
+  }
+  #hero-card .hero-result {
+    margin-top: 3px !important;
+    padding: 2px 5px 2px !important;
+    font-size: 9px !important;
+    line-height: 1.2 !important;
+  }
+  #hero-card .hero-result strong {
+    font-size: 11px !important;
+  }
+}
