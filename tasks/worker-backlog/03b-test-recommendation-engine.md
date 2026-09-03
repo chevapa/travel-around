@@ -91,7 +91,7 @@ CONSTRAINTS
   changes later).
 
 VERIFICATION
-I will save the file and run `node --test tests/` myself, and check all 5
+I will save the file and run `node --test` myself, and check all 5
 tests pass with 0 failures.
 
 DO NOT

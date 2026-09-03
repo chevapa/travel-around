@@ -68,7 +68,7 @@ CONSTRAINTS
 - Use the exact fetch-stub + dynamic-import pattern shown above.
 
 VERIFICATION
-I will save the file and run `node --test tests/` myself, and check all 3
+I will save the file and run `node --test` myself, and check all 3
 tests pass with 0 failures, and running it twice in a row still passes (the
 50-call uniqueness test should never be flaky given the id space, but note
 if you disagree in a comment rather than silently changing the approach).

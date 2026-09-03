@@ -79,7 +79,7 @@ CONSTRAINTS
   out of scope, it needs a browser environment this test doesn't have.
 
 VERIFICATION
-I will save the file and run `node --test tests/` myself, and check it
+I will save the file and run `node --test` myself, and check it
 passes with 1 test, 0 failures, and that running it twice in a row gives the
 same result (no flakiness / hidden shared state).
 
