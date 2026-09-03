@@ -1,11 +1,18 @@
 [
   {
+    "id": "skopje-mk",
     "name": "Скопье",
     "lat": 42.0069,
     "lng": 21.438,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "castle", "church", "museum", "food"],
+    "cats": [
+      "town",
+      "castle",
+      "church",
+      "museum",
+      "food"
+    ],
     "wantReturn": false,
     "q": "Skopje",
     "country": "mk",
@@ -14,12 +21,18 @@
     "meta": "Источник: Putni Kofer. Статья о местах Северной Македонии."
   },
   {
+    "id": "matka-canyon-mk",
     "name": "Каньон Матка",
     "lat": 41.95,
     "lng": 21.3,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "water", "cave", "view"],
+    "cats": [
+      "nature",
+      "water",
+      "cave",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Matka Canyon",
     "country": "mk",
@@ -28,12 +41,20 @@
     "meta": "Источник: Putni Kofer. Статья о местах Северной Македонии."
   },
   {
+    "id": "ohrid-mk",
     "name": "Охрид",
     "lat": 41.1231,
     "lng": 20.8016,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "water", "beach", "church", "culture", "view"],
+    "cats": [
+      "town",
+      "water",
+      "beach",
+      "church",
+      "culture",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Ohrid",
     "country": "mk",
@@ -42,12 +63,19 @@
     "meta": "Охрид и Охридское озеро находятся под защитой UNESCO. Источник: Putni Kofer."
   },
   {
+    "id": "sveti-naum-mk",
     "name": "Свети-Наум",
     "lat": 40.9125,
     "lng": 20.7397,
     "cat": "plan",
     "src": "research",
-    "cats": ["church", "beach", "water", "nature", "view"],
+    "cats": [
+      "church",
+      "beach",
+      "water",
+      "nature",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Sveti Naum",
     "country": "mk",
@@ -56,12 +84,17 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "golem-grad-mk",
     "name": "Голем-Град",
     "lat": 40.925,
     "lng": 21.05,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "church", "view"],
+    "cats": [
+      "nature",
+      "church",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Golem Grad",
     "country": "mk",
@@ -70,12 +103,17 @@
     "meta": "Остров открыт для туристов. Источник: Putni Kofer."
   },
   {
+    "id": "pelister-national-park-mk",
     "name": "Национальный парк Пелистер",
     "lat": 41.032,
     "lng": 21.17,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "water", "view"],
+    "cats": [
+      "nature",
+      "water",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Pelister National Park",
     "country": "mk",
@@ -84,12 +122,17 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "galicnik-mk",
     "name": "Галичник",
     "lat": 41.588,
     "lng": 20.658,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "nature", "culture"],
+    "cats": [
+      "town",
+      "nature",
+      "culture"
+    ],
     "wantReturn": false,
     "q": "Galičnik",
     "country": "mk",
@@ -98,12 +141,19 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "novi-sad-rs",
     "name": "Нови-Сад",
     "lat": 45.2671,
     "lng": 19.8335,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "food", "culture", "museum", "castle"],
+    "cats": [
+      "town",
+      "food",
+      "culture",
+      "museum",
+      "castle"
+    ],
     "wantReturn": false,
     "q": "Novi Sad",
     "country": "rs",
@@ -112,12 +162,19 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "petrovaradin-fortress-rs",
     "name": "Петроварадинская крепость",
     "lat": 45.254,
     "lng": 19.862,
     "cat": "plan",
     "src": "research",
-    "cats": ["castle", "view", "museum", "culture", "food"],
+    "cats": [
+      "castle",
+      "view",
+      "museum",
+      "culture",
+      "food"
+    ],
     "wantReturn": false,
     "q": "Petrovaradin Fortress",
     "country": "rs",
@@ -126,12 +183,16 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "avolja-varos-rs",
     "name": "Дьявольский город",
     "lat": 42.996,
     "lng": 21.409,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "view"],
+    "cats": [
+      "nature",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Đavolja Varoš",
     "country": "rs",
@@ -140,12 +201,18 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "subotica-rs",
     "name": "Суботица",
     "lat": 46.1,
     "lng": 19.667,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "food", "culture", "museum"],
+    "cats": [
+      "town",
+      "food",
+      "culture",
+      "museum"
+    ],
     "wantReturn": false,
     "q": "Subotica",
     "country": "rs",
@@ -154,12 +221,18 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "palic-lake-rs",
     "name": "Озеро Палич",
     "lat": 46.103,
     "lng": 19.758,
     "cat": "plan",
     "src": "research",
-    "cats": ["water", "beach", "nature", "town"],
+    "cats": [
+      "water",
+      "beach",
+      "nature",
+      "town"
+    ],
     "wantReturn": false,
     "q": "Palić Lake",
     "country": "rs",
@@ -168,12 +241,18 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "sirogojno-staro-selo-rs",
     "name": "Сирогойно",
     "lat": 43.848,
     "lng": 19.792,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "museum", "culture", "nature"],
+    "cats": [
+      "town",
+      "museum",
+      "culture",
+      "nature"
+    ],
     "wantReturn": false,
     "q": "Sirogojno Staro Selo",
     "country": "rs",
@@ -182,12 +261,19 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "erdap-national-park-rs",
     "name": "Национальный парк Джердап",
     "lat": 44.65,
     "lng": 22.35,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "water", "view", "castle", "culture"],
+    "cats": [
+      "nature",
+      "water",
+      "view",
+      "castle",
+      "culture"
+    ],
     "wantReturn": false,
     "q": "Đerdap National Park",
     "country": "rs",
@@ -196,12 +282,18 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "golubac-fortress-rs",
     "name": "Крепость Голубац",
     "lat": 44.662,
     "lng": 21.677,
     "cat": "plan",
     "src": "research",
-    "cats": ["castle", "view", "water", "culture"],
+    "cats": [
+      "castle",
+      "view",
+      "water",
+      "culture"
+    ],
     "wantReturn": false,
     "q": "Golubac Fortress",
     "country": "rs",
@@ -210,12 +302,18 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "veliko-ratno-ostrvo-rs",
     "name": "Большой военный остров",
     "lat": 44.829,
     "lng": 20.442,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "water", "beach", "view"],
+    "cats": [
+      "nature",
+      "water",
+      "beach",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Veliko Ratno Ostrvo",
     "country": "rs",
@@ -224,12 +322,17 @@
     "meta": "Охраняемая природная территория. Источник: Putni Kofer."
   },
   {
+    "id": "lido-beach-zemun-rs",
     "name": "Пляж Лидо",
     "lat": 44.839,
     "lng": 20.438,
     "cat": "plan",
     "src": "research",
-    "cats": ["beach", "water", "nature"],
+    "cats": [
+      "beach",
+      "water",
+      "nature"
+    ],
     "wantReturn": false,
     "q": "Lido Beach Zemun",
     "country": "rs",
@@ -238,12 +341,20 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "berat-al",
     "name": "Берат",
     "lat": 40.7058,
     "lng": 19.9522,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "castle", "church", "museum", "view", "food"],
+    "cats": [
+      "town",
+      "castle",
+      "church",
+      "museum",
+      "view",
+      "food"
+    ],
     "wantReturn": false,
     "q": "Berat",
     "country": "al",
@@ -252,12 +363,18 @@
     "meta": "Исторический центр Берата включён в список Всемирного наследия UNESCO. Источник: Putni Kofer."
   },
   {
+    "id": "berat-castle-al",
     "name": "Замок Берат",
     "lat": 40.709,
     "lng": 19.948,
     "cat": "plan",
     "src": "research",
-    "cats": ["castle", "church", "view", "culture"],
+    "cats": [
+      "castle",
+      "church",
+      "view",
+      "culture"
+    ],
     "wantReturn": false,
     "q": "Berat Castle",
     "country": "al",
@@ -266,12 +383,18 @@
     "meta": "История укреплений восходит к античному периоду. Источник: Putni Kofer."
   },
   {
+    "id": "mangalem-berat-al",
     "name": "Мангалем",
     "lat": 40.706,
     "lng": 19.949,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "culture", "view", "food"],
+    "cats": [
+      "town",
+      "culture",
+      "view",
+      "food"
+    ],
     "wantReturn": false,
     "q": "Mangalem Berat",
     "country": "al",
@@ -280,12 +403,17 @@
     "meta": "Часть исторического центра Берата. Источник: Putni Kofer."
   },
   {
+    "id": "gorica-bridge-berat-al",
     "name": "Мост Горика",
     "lat": 40.703,
     "lng": 19.944,
     "cat": "plan",
     "src": "research",
-    "cats": ["water", "view", "culture"],
+    "cats": [
+      "water",
+      "view",
+      "culture"
+    ],
     "wantReturn": false,
     "q": "Gorica Bridge Berat",
     "country": "al",
@@ -294,12 +422,17 @@
     "meta": "Построен в XVIII веке. Источник: Putni Kofer."
   },
   {
+    "id": "bogove-waterfall-al",
     "name": "Водопад Богова",
     "lat": 40.28,
     "lng": 20.065,
     "cat": "plan",
     "src": "research",
-    "cats": ["water", "nature", "view"],
+    "cats": [
+      "water",
+      "nature",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Bogove Waterfall",
     "country": "al",
@@ -308,12 +441,21 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "stanjel-si",
     "name": "Штаньел",
     "lat": 45.823,
     "lng": 13.844,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "castle", "view", "nature", "museum", "church", "food"],
+    "cats": [
+      "town",
+      "castle",
+      "view",
+      "nature",
+      "museum",
+      "church",
+      "food"
+    ],
     "wantReturn": false,
     "q": "Štanjel",
     "country": "si",
@@ -322,12 +464,17 @@
     "meta": "Историческое поселение в регионе Kras. Источник: Putni Kofer."
   },
   {
+    "id": "ferrari-garden-stanjel-si",
     "name": "Сад Феррари",
     "lat": 45.822,
     "lng": 13.843,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "view", "culture"],
+    "cats": [
+      "nature",
+      "view",
+      "culture"
+    ],
     "wantReturn": false,
     "q": "Ferrari Garden Štanjel",
     "country": "si",
@@ -336,12 +483,17 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "otocec-castle-si",
     "name": "Замок Оточец",
     "lat": 45.851,
     "lng": 15.235,
     "cat": "plan",
     "src": "research",
-    "cats": ["castle", "water", "nature"],
+    "cats": [
+      "castle",
+      "water",
+      "nature"
+    ],
     "wantReturn": false,
     "q": "Otočec Castle",
     "country": "si",
@@ -350,12 +502,17 @@
     "meta": "Один из самых необычных замков Словении. Источник: Putni Kofer."
   },
   {
+    "id": "krnsko-lake-slovenia-si",
     "name": "Крнское озеро",
     "lat": 46.281,
     "lng": 13.725,
     "cat": "plan",
     "src": "research",
-    "cats": ["water", "nature", "view"],
+    "cats": [
+      "water",
+      "nature",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Krnsko Lake Slovenia",
     "country": "si",
@@ -364,12 +521,20 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "kobarid-si",
     "name": "Кобарид",
     "lat": 46.2476,
     "lng": 13.5791,
     "cat": "plan",
     "src": "research",
-    "cats": ["town", "nature", "water", "food", "museum", "culture"],
+    "cats": [
+      "town",
+      "nature",
+      "water",
+      "food",
+      "museum",
+      "culture"
+    ],
     "wantReturn": false,
     "q": "Kobarid",
     "country": "si",
@@ -378,12 +543,16 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "tromeja-vrh-pec-slovenia-si",
     "name": "Тромея — Врх-Печ",
     "lat": 46.547,
     "lng": 13.713,
     "cat": "plan",
     "src": "research",
-    "cats": ["view", "nature"],
+    "cats": [
+      "view",
+      "nature"
+    ],
     "wantReturn": false,
     "q": "Tromeja Vrh Peč Slovenia",
     "country": "si",
@@ -392,12 +561,17 @@
     "meta": "Высота около 1508 м. Источник: Putni Kofer."
   },
   {
+    "id": "zelengora-bosnia-ba",
     "name": "Зеленгора",
     "lat": 43.349,
     "lng": 18.55,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "water", "view"],
+    "cats": [
+      "nature",
+      "water",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Zelengora Bosnia",
     "country": "ba",
@@ -406,12 +580,17 @@
     "meta": "На Зеленгоре находится несколько вершин выше 2000 метров. Источник: Putni Kofer."
   },
   {
+    "id": "orlovacko-lake-zelengora-ba",
     "name": "О́рловачко озеро",
     "lat": 43.327,
     "lng": 18.553,
     "cat": "plan",
     "src": "research",
-    "cats": ["water", "nature", "view"],
+    "cats": [
+      "water",
+      "nature",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Orlovačko Lake Zelengora",
     "country": "ba",
@@ -420,12 +599,17 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "rakitnica-canyon-bosnia-ba",
     "name": "Каньон Ракитницы",
     "lat": 43.666,
     "lng": 18.13,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "water", "view"],
+    "cats": [
+      "nature",
+      "water",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Rakitnica Canyon Bosnia",
     "country": "ba",
@@ -435,12 +619,17 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "trebisnjica-river-ba",
     "name": "Река Требишница",
     "lat": 42.711,
     "lng": 18.343,
     "cat": "plan",
     "src": "research",
-    "cats": ["water", "nature", "view"],
+    "cats": [
+      "water",
+      "nature",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Trebišnjica River",
     "country": "ba",
@@ -449,12 +638,16 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "daorson-bosnia-herzegovina-ba",
     "name": "Даорсон",
     "lat": 43.086,
     "lng": 17.962,
     "cat": "plan",
     "src": "research",
-    "cats": ["culture", "view"],
+    "cats": [
+      "culture",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Daorson Bosnia Herzegovina",
     "country": "ba",
@@ -463,12 +656,17 @@
     "meta": "Национальный памятник Боснии и Герцеговины. Источник: Putni Kofer."
   },
   {
+    "id": "sana-river-source-bosnia-ba",
     "name": "Исток реки Сана",
     "lat": 44.165,
     "lng": 16.75,
     "cat": "plan",
     "src": "research",
-    "cats": ["water", "nature", "view"],
+    "cats": [
+      "water",
+      "nature",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Sana River Source Bosnia",
     "country": "ba",
@@ -477,12 +675,17 @@
     "meta": "Источник: Putni Kofer."
   },
   {
+    "id": "biogradska-gora-montenegro-me",
     "name": "Биоградская гора",
     "lat": 42.887,
     "lng": 19.602,
     "cat": "plan",
     "src": "research",
-    "cats": ["nature", "water", "view"],
+    "cats": [
+      "nature",
+      "water",
+      "view"
+    ],
     "wantReturn": false,
     "q": "Biogradska Gora Montenegro",
     "country": "me",

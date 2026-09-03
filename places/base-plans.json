@@ -1,5 +1,6 @@
 [
   {
+    "id": "ozalj-stari-grad-hr",
     "name": "Озаль",
     "lat": 45.6108,
     "lng": 15.4736,
@@ -20,6 +21,7 @@
     "meta": "~50 мин"
   },
   {
+    "id": "belec-crkva-svete-marije-snjezne-hr",
     "name": "Белец",
     "lat": 46.1206,
     "lng": 15.9875,
@@ -38,6 +40,7 @@
     "meta": "~1 ч"
   },
   {
+    "id": "kalnik-stari-grad-planinarski-dom-hr",
     "name": "Кальник",
     "lat": 46.1167,
     "lng": 16.4667,
@@ -59,6 +62,7 @@
     "meta": "~1 ч 15"
   },
   {
+    "id": "dvorac-orsic-gornja-stubica-hr",
     "name": "Дворец Оршич (Горня-Стубица)",
     "lat": 45.9944,
     "lng": 15.9575,
@@ -77,6 +81,7 @@
     "meta": "~40 мин"
   },
   {
+    "id": "okic-grad-plesivica-hr",
     "name": "Окич + Плешивица",
     "lat": 45.7311,
     "lng": 15.7086,
@@ -97,6 +102,7 @@
     "meta": "~45–60 мин"
   },
   {
+    "id": "skofja-loka-si",
     "name": "Шкофья-Лока (Словения)",
     "lat": 46.1653,
     "lng": 14.3057,
@@ -116,6 +122,7 @@
     "meta": "~1 ч 45"
   },
   {
+    "id": "velika-mlaka-crkva-svete-barbare-lukavec-hr",
     "name": "Турополье (Велика-Млака + Лукавец)",
     "lat": 45.7139,
     "lng": 16.0472,
@@ -137,6 +144,7 @@
     "meta": "~30–40 мин"
   },
   {
+    "id": "cakovec-stari-grad-zrinski-hr",
     "name": "Чаковец",
     "lat": 46.3833,
     "lng": 16.4333,
@@ -157,6 +165,7 @@
     "meta": "~1 ч 15"
   },
   {
+    "id": "celje-grad-si",
     "name": "Целе (Словения)",
     "lat": 46.2311,
     "lng": 15.2683,
@@ -176,6 +185,7 @@
     "meta": "~1 ч 45–2 ч"
   },
   {
+    "id": "ptuj-grad-si",
     "name": "Птуй (Словения)",
     "lat": 46.42,
     "lng": 15.87,
@@ -195,6 +205,7 @@
     "meta": "~2 ч"
   },
   {
+    "id": "grgosova-spilja-otrusevec-hr",
     "name": "Гргосова пещера (Жумберак)",
     "lat": 45.7553,
     "lng": 15.6353,
@@ -214,6 +225,7 @@
     "meta": "~1 ч"
   },
   {
+    "id": "sveti-kriz-zacretje-dvorac-hr",
     "name": "Свети-Крыж-Зачретье",
     "lat": 46.0728,
     "lng": 15.8494,
@@ -233,6 +245,7 @@
     "meta": "~45 мин"
   },
   {
+    "id": "lonjsko-polje-cigoc-hr",
     "name": "Лоньско-поле (Чигоч)",
     "lat": 45.2833,
     "lng": 16.6167,
@@ -253,6 +266,7 @@
     "meta": "~1 ч"
   },
   {
+    "id": "lepoglava-pavlinski-samostan-hr",
     "name": "Лепоглава",
     "lat": 46.1967,
     "lng": 16.0092,
@@ -273,6 +287,7 @@
     "meta": "~1 ч 15"
   },
   {
+    "id": "kamnik-si",
     "name": "Камник (Словения)",
     "lat": 46.2256,
     "lng": 14.6111,

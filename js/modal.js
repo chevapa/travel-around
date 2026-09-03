@@ -1,4 +1,4 @@
-import { PLACES, STATUSES, COUNTRIES, SEASONS, CATEGORIES, saveCustom } from './places.js';
+import { PLACES, STATUSES, COUNTRIES, SEASONS, CATEGORIES, saveCustom, ensurePlaceId } from './places.js';
 import { map, rebuildMarkers } from './map.js';
 import { refresh } from './filters.js';
 
@@ -117,7 +117,7 @@ export function initModal(){
     if(editingPlace){
       Object.assign(editingPlace, data);
     } else {
-      PLACES.push(data);
+      PLACES.push(ensurePlaceId(data));
     }
     rebuildMarkers();
     refresh();

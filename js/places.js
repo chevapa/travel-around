@@ -36,6 +36,36 @@ export function sourceKey(p){
   return 'research';
 }
 
+// ---------- СТАБИЛЬНЫЙ ID МЕСТА ----------
+// Большинство мест из places/*.json уже несут свой id (см.
+// scripts/assign-place-ids.mjs). Это подстраховка на рантайме для тех, у
+// кого его ещё нет: новый файл, дропнутый в папку в обход скрипта, или
+// точка, добавленная вручную через модалку до этого рефакторинга.
+// Дальше на этот id опирается история взаимодействий (interactions.js) —
+// без него свайпы/визиты привязывались бы к строке name и ломались
+// при любом переименовании места.
+const CYR_TO_LAT = {
+  а:'a', б:'b', в:'v', г:'g', д:'d', е:'e', ё:'e', ж:'zh', з:'z', и:'i',
+  й:'y', к:'k', л:'l', м:'m', н:'n', о:'o', п:'p', р:'r', с:'s', т:'t',
+  у:'u', ф:'f', х:'h', ц:'ts', ч:'ch', ш:'sh', щ:'sch', ъ:'', ы:'y', ь:'',
+  э:'e', ю:'yu', я:'ya',
+};
+function slugify(str){
+  return String(str).toLowerCase().split('').map(ch => CYR_TO_LAT[ch] ?? ch).join('')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/-{2,}/g, '-');
+}
+const usedIds = new Set();
+export function ensurePlaceId(p){
+  if(p.id){ usedIds.add(p.id); return p; }
+  const base = slugify(p.q || p.name) || 'place';
+  let candidate = `${base}-${p.country || 'xx'}`;
+  let n = 2;
+  while(usedIds.has(candidate)) candidate = `${base}-${p.country || 'xx'}-${n++}`;
+  usedIds.add(candidate);
+  p.id = candidate;
+  return p;
+}
+
 // ---------- КОЛЛЕКЦИЯ МЕСТ ----------
 // Базовый набор мест больше НЕ хранится здесь построчно.
 // Он подгружается асинхронно из репозитория GitHub — файлы
@@ -92,7 +122,7 @@ export async function loadCustom(onLoaded){
     if(r && r.value){
       const arr = JSON.parse(r.value);
       if(Array.isArray(arr) && arr.length){
-        arr.forEach(p=>PLACES.push(p));
+        arr.forEach(p=>PLACES.push(ensurePlaceId(p)));
         onLoaded();
       }
     }
@@ -126,7 +156,7 @@ export async function loadBasePlaces(onLoaded){
       if(!Array.isArray(data)) return;
       data.forEach(p => {
         if(p && p.name && typeof p.lat === 'number' && typeof p.lng === 'number'){
-          PLACES.push(p);
+          PLACES.push(ensurePlaceId(p));
           added++;
         }
       });
@@ -171,7 +201,7 @@ export async function loadFolderPlaces(onLoaded){
       items.forEach(p => {
         if(p && p.name && typeof p.lat === 'number' && typeof p.lng === 'number'){
           p.src = p.src || 'folder';
-          PLACES.push(p);
+          PLACES.push(ensurePlaceId(p));
           added++;
         }
       });
