@@ -52,7 +52,7 @@ export function buildMarker(place){
     (place.meta ? `<p class="popup-meta">${place.meta}</p>` : '') +
     sourceBlock +
     `<p class="popup-drivetime" id="${driveId}"><a href="${gmapsUrl}" target="_blank" rel="noopener" class="drivetime-link">🚗 время в пути: <span class="dt-value">${place.drive}</span> <svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a></p>` +
-    `<div class="nearby-box"><button class="nearby-btn" data-name="${place.name}">Что рядом →</button><div class="nearby-out"></div></div>`
+    `<div class="nearby-box"><button class="nearby-btn" data-id="${place.id}">Что рядом →</button><div class="nearby-out"></div></div>`
   );
   marker.on('popupopen', ()=>loadDriveTime(place, driveId));
   marker.on('add', ()=>{
@@ -103,7 +103,7 @@ export function setReturnBadgeVisible(on){
 // OSRM ниже используется только как уточнение, если сеть доступна.
 async function loadDriveTime(place, driveId){
   const base = BASE_POINTS[document.getElementById('base-select').value];
-  const cacheKey = `${base.name}::${place.name}`;
+  const cacheKey = `${base.name}::${place.id}`;
   const el = document.getElementById(driveId);
   if(!el) return;
   if(driveTimeCache[cacheKey]){
@@ -221,8 +221,8 @@ async function nearbyTimes(origin, visiblePlacesFn){
     .slice(0, MAX_CANDIDATES);
   if(!candidates.length) return [];
 
-  const cached = routeCache[origin.name] || {};
-  const missing = candidates.filter(p => cached[p.name] === undefined);
+  const cached = routeCache[origin.id] || {};
+  const missing = candidates.filter(p => cached[p.id] === undefined);
 
   if(missing.length){
     try{
@@ -238,24 +238,24 @@ async function nearbyTimes(origin, visiblePlacesFn){
       const row = data.durations && data.durations[0];
       if(!row) throw new Error('no durations');
       missing.forEach((p,i)=>{
-        if(row[i]!=null) cached[p.name] = Math.round(row[i]/60);
+        if(row[i]!=null) cached[p.id] = Math.round(row[i]/60);
       });
-      routeCache[origin.name] = cached;
+      routeCache[origin.id] = cached;
       saveRouteCache();
     }catch(err){
       // сеть недоступна — оценка по прямой с поправкой на извилистость
       missing.forEach(p=>{
         const km = airKm(origin,p);
         const kmh = km<40 ? 42 : km<80 ? 58 : 68;
-        cached[p.name] = Math.round(km/kmh*60);
-        cached['__est_'+p.name] = true;
+        cached[p.id] = Math.round(km/kmh*60);
+        cached['__est_'+p.id] = true;
       });
-      routeCache[origin.name] = cached;
+      routeCache[origin.id] = cached;
     }
   }
 
   return candidates
-    .map(p=>({place:p, min:cached[p.name], estimated:!!cached['__est_'+p.name]}))
+    .map(p=>({place:p, min:cached[p.id], estimated:!!cached['__est_'+p.id]}))
     .filter(x=>x.min!=null)
     .sort((a,b)=>a.min-b.min);
 }
@@ -299,7 +299,7 @@ export function initMap(visiblePlacesFn){
     if(nb && !nb.dataset.wired){
       nb.dataset.wired = '1';
       nb.addEventListener('click', async ()=>{
-        const origin = PLACES.find(x=>x.name===nb.dataset.name);
+        const origin = PLACES.find(x=>x.id===nb.dataset.id);
         const out = el.querySelector('.nearby-out');
         if(!origin || !out) return;
         nb.disabled = true;
@@ -314,14 +314,14 @@ export function initMap(visiblePlacesFn){
         out.innerHTML =
           `<p class="nearby-title">Рядом · <span class="${anyEst?'src-est':'src-live'}">${anyEst?'оценка по прямой':'по дорогам, OSRM'}</span></p>` +
           list.slice(0,8).map(x=>
-            `<button class="nearby-item" data-goto="${x.place.name}">
+            `<button class="nearby-item" data-goto="${x.place.id}">
                <span class="ni-dot" style="background:${statusInfo(x.place.cat).color}"></span>
                <span class="ni-name">${x.place.name}</span>
                <span class="ni-min">${fmtMin(x.min)}</span>
              </button>`).join('');
         out.querySelectorAll('[data-goto]').forEach(b=>{
           b.addEventListener('click', ()=>{
-            const t = PLACES.find(x=>x.name===b.dataset.goto);
+            const t = PLACES.find(x=>x.id===b.dataset.goto);
             if(!t) return;
             map.closePopup();
             flyToPlace(t);

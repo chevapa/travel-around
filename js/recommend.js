@@ -34,11 +34,11 @@ function persist(){
 // ---------- ПОДБОР КАНДИДАТОВ ----------
 function buildQueue(){
   const candidates = PLACES.filter(p =>
-    p.cat === 'plan' && !skipped.has(p.name) && !liked.has(p.name));
+    p.cat === 'plan' && !skipped.has(p.id) && !liked.has(p.id));
   // "На потом" не выкидываем — просто откладываем в конец очереди,
   // чтобы карточка попалась снова, но не мешала свежим вариантам.
-  const primary  = candidates.filter(p => !later.has(p.name));
-  const deferred = candidates.filter(p => later.has(p.name));
+  const primary  = candidates.filter(p => !later.has(p.id));
+  const deferred = candidates.filter(p => later.has(p.id));
   queue = [...primary, ...deferred];
 }
 
@@ -169,9 +169,9 @@ function renderStack(){
 
 // ---------- СВАЙП: РЕШЕНИЕ + АНИМАЦИЯ ----------
 function decide(place, dir){
-  if(dir === 'like'){ liked.add(place.name); showToast(`❤️ «${place.name}» — понравилось, учтём в следующих подборках`); }
-  if(dir === 'skip'){ skipped.add(place.name); showToast(`Скрыли «${place.name}»`); }
-  if(dir === 'save'){ later.add(place.name); showToast(`«${place.name}» — сохранили на потом`); }
+  if(dir === 'like'){ liked.add(place.id); showToast(`❤️ «${place.name}» — понравилось, учтём в следующих подборках`); }
+  if(dir === 'skip'){ skipped.add(place.id); showToast(`Скрыли «${place.name}»`); }
+  if(dir === 'save'){ later.add(place.id); showToast(`«${place.name}» — сохранили на потом`); }
   persist();
 }
 
