@@ -689,6 +689,8 @@
 .popup-badge.amber{background:rgba(255,99,51,.18);color:#a43916;}
 .popup-badge.grey{background:rgba(109,77,178,.15);color:#51358F;}
 .popup-badge.cat{background:#EEE4D1;color:var(--riso-ink);}
+.popup-badge.cat-tag-btn{cursor:pointer;}
+.popup-badge.cat-tag-btn:hover{background:var(--riso-yellow);}
 .popup-title{font-family:'Fraunces',serif;font-weight:700;font-size:30px;margin:0 0 7px;line-height:.98;}
 .popup-title .title-link{border-bottom:3px solid var(--riso-pink);}
 .popup-title .title-link:hover{color:var(--riso-teal);border-bottom-color:var(--riso-teal);}
