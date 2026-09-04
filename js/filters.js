@@ -119,6 +119,13 @@ export function initFilters(){
   });
 
   const countryList = document.getElementById('country-list');
+  const countryToggleRow = document.createElement('div');
+  countryToggleRow.className = 'panel-toggle-row';
+  countryToggleRow.innerHTML = `<button type="button" class="panel-toggle-btn" data-toggle="all">Выбрать все</button>
+    <button type="button" class="panel-toggle-btn" data-toggle="none">Снять всё</button>`;
+  countryList.appendChild(countryToggleRow);
+
+  const countryCheckboxes = []; // {key, input, label} — для массового вкл/выкл кнопками выше
   Object.entries(COUNTRIES).forEach(([key, c])=>{
     const checked = state.countries.has(key);
     const el = document.createElement('label');
@@ -127,12 +134,26 @@ export function initFilters(){
       <span class="ico">${c.flag}</span>
       <span class="txt">${c.label}</span>
       <span class="num" data-country-count="${key}"></span>`;
-    el.querySelector('input').addEventListener('change', e=>{
+    const input = el.querySelector('input');
+    input.addEventListener('change', e=>{
       if(e.target.checked) state.countries.add(key); else state.countries.delete(key);
       el.classList.toggle('off', !e.target.checked);
       refresh();
     });
+    countryCheckboxes.push({ key, input, label: el });
     countryList.appendChild(el);
+  });
+
+  countryToggleRow.querySelectorAll('[data-toggle]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const selectAll = btn.dataset.toggle === 'all';
+      countryCheckboxes.forEach(({ key, input, label })=>{
+        if(selectAll) state.countries.add(key); else state.countries.delete(key);
+        input.checked = selectAll;
+        label.classList.toggle('off', !selectAll);
+      });
+      refresh();
+    });
   });
 
   const seasonList = document.getElementById('season-list');
