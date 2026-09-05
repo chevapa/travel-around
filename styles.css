@@ -459,11 +459,10 @@
     .leaflet-popup-content{width:min(300px,calc(100vw - 60px)) !important;max-height:52vh;}
   }
 
-/* V4 — TRAVEL ATLAS brand asset: bold cut-paper Riso masthead */
-.travel-atlas-logo{
-  display:block; width:min(100%,285px); height:auto; margin:0 auto 2px;
-  filter:drop-shadow(5px 6px 0 rgba(28,26,23,.28));
-}
+/* V4 — TRAVEL ATLAS brand mark: #13 (2nd pass) replaced the big illustrated
+   masthead image with the same small .reco-word pink tag already used on
+   the recommend screen (css/recommend.css) — reused directly, not resized,
+   per the issue's own "take literally one from tinder card". */
 .hero-question{
   display:inline-block; margin:4px 0 8px; padding:4px 8px 3px;
   font-family:'Bungee',sans-serif; font-size:11px; letter-spacing:.055em;
@@ -471,7 +470,6 @@
   transform:rotate(-1.5deg); box-shadow:4px 4px 0 var(--riso-pink);
 }
 @media (max-width:700px){
-  .travel-atlas-logo{width:min(100%,245px); margin:0 auto 1px;}
   .hero-question{font-size:9px; margin-bottom:7px;}
 }
 
@@ -758,10 +756,6 @@
   padding:12px 14px 11px;
   box-shadow:6px 6px 0 var(--riso-shadow);
 }
-.travel-atlas-logo{
-  width:min(100%,220px);
-  margin:0 auto 0;
-}
 .hero-question{
   margin:5px 0 6px;
   padding:4px 7px 3px;
@@ -789,7 +783,6 @@
     left:10px; top:10px; width:245px;
     padding:9px 10px 9px;
   }
-  .travel-atlas-logo{width:min(100%,190px);}
   .hero-question{font-size:8px;margin:4px 0 5px;}
   .hero-result{margin-top:6px;padding:5px 7px 4px;}
   #hero-card::after{display:none;}
@@ -827,16 +820,7 @@
   padding:11px 13px 10px;
   left:18px; top:18px;
 }
-#hero-card .travel-atlas-logo{
-  /* #13: was 245x112 — visibly bigger than the same masthead mark shown at
-     sidebar/tinder-card scale (~163x58, matching img012's 700:233 aspect).
-     Shrink to that reference size; hero-question/hero-result are separate
-     sibling elements below and are unaffected by this. */
-  width:163px;
-  height:58px;
-  object-fit:fill;
-  margin:0 auto -2px;
-}
+#hero-card .reco-word{ margin:0 0 6px; }
 .hero-question{
   margin:2px 0 5px;
   font-size:9px;
@@ -882,7 +866,6 @@
 }
 @media(max-width:700px){
   #hero-card{left:10px;top:10px;width:245px;padding:8px 9px 8px;}
-  #hero-card .travel-atlas-logo{width:205px;height:94px;}
   .hero-question{font-size:8px;margin:2px 0 4px;}
   .hero-result{margin-top:4px;padding:4px 6px 3px;font-size:7.5px;}
   .hero-result strong{font-size:11px;}
@@ -1028,15 +1011,6 @@
   #hero-card::before,
   #hero-card::after {
     display: none !important;
-  }
-  #hero-card .travel-atlas-logo,
-  #hero-card img.travel-atlas-logo {
-    width: 100% !important;
-    max-width: 100px !important;
-    height: auto !important;
-    object-fit: contain !important;
-    margin: 0 !important;
-    transform: none !important;
   }
   #hero-card .hero-question {
     display: none !important;
