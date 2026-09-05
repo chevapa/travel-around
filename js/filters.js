@@ -175,7 +175,7 @@ function renderList(places){
       card.innerHTML = `<span class="dot" style="background:${s.color}"></span>
         <span class="info">
           <div class="name">${countryInfo(place.country).flag} ${place.name}${star}${place.warn?' <span title="Проверить перед выездом">⚠️</span>':''}</div>
-          <div class="meta">${catIcons} · 🚗 ${place.drive}${place.meta ? ' · '+place.meta : ''}</div>
+          <div class="meta">${catIcons} · 🚗 ${place.drive || '—'}</div>
         </span>`;
       card.addEventListener('click', ()=>flyToPlace(place));
       wrap.appendChild(card);
