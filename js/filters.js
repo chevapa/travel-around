@@ -62,23 +62,76 @@ export function setFilter(type, value){
   showFilterToast(`${cfg.toastPrefix}: ${cfg.label(value).label}`);
 }
 
+// issue #27: вынесено из initFilters() в отдельную функцию — раньше жило
+// только внутри обработчика клика на #reset-filters, теперь нужно ещё и
+// из ссылки «Сбросить» внутри тоста (см. showFilterToast). Не полагается
+// на локальные переменные initFilters() — сама делает все document.
+// getElementById, чтобы быть вызываемой из любого места.
+function resetFilters(){
+  state.statuses = new Set(DEFAULT_STATUSES);
+  state.countries = new Set(DEFAULT_COUNTRIES);
+  state.seasons = new Set(Object.keys(SEASONS));
+  state.cats = new Set(Object.keys(CATEGORIES));
+  state.sources = new Set(DEFAULT_SOURCES);
+  state.onlyReturn = false;
+  state.query = '';
+  const searchEl = document.getElementById('place-search');
+  if(searchEl) searchEl.value = '';
+  // Сезон/тип места/«хотим вернуться» всегда сбрасываются на «включено всё».
+  document.querySelectorAll('#panel-season input[type=checkbox], #panel-cats input[type=checkbox], #check-return input[type=checkbox]')
+    .forEach(i=>{i.checked=true; i.closest('.check')?.classList.remove('off');});
+  // Статус/страна/источник — сбрасываем к тому же дефолту, что и при
+  // открытии сайта (см. state выше), а не поголовно на «включено всё».
+  const statusList = document.getElementById('status-list');
+  const countryList = document.getElementById('country-list');
+  const sourceList = document.getElementById('source-list');
+  [
+    [statusList, 'status-count', 'statusCount'],
+    [countryList, 'country-count', 'countryCount'],
+    [sourceList, 'source-count', 'sourceCount'],
+  ].forEach(([list, attr, dataKey])=>{
+    list.querySelectorAll('.check').forEach(check=>{
+      const key = check.querySelector(`[data-${attr}]`).dataset[dataKey];
+      const stateSet = list===statusList ? state.statuses : list===countryList ? state.countries : state.sources;
+      const on = stateSet.has(key);
+      check.querySelector('input').checked = on;
+      check.classList.toggle('off', !on);
+    });
+  });
+  refresh();
+}
+
 // issue #16: клик по тегу молча меняет фильтры — на карте это выглядит как
 // «внезапная» смена без объяснения. Короткий тост — самая безопасная часть
 // предложенных в issue вариантов (сообщение о том, что фильтр изменился);
 // автооткрытие сайдбара фильтров и подсветка внутри него сознательно
 // оставлены как отдельная задача, как и разрешает сам issue текстом
 // "if only some part ... implemented leave the rest for a new task".
+//
+// issue #27: 2200ms оказалось мало, чтобы успеть среагировать, а сам тост
+// был чисто информационным — теперь дольше висит (5000ms) и несёт кнопку
+// «Сбросить», сбрасывающую все фильтры к дефолту (та же resetFilters(),
+// что и у #reset-filters в тулбаре) прямо из тоста, без похода к панели
+// фильтров. msg подставляется только из ${cfg.label(value).label} внутри
+// самого filters.js (см. setFilter) — не пользовательский ввод, поэтому
+// innerHTML здесь безопасен.
 let filterToastEl;
 function showFilterToast(msg){
   if(!filterToastEl){
     filterToastEl = document.createElement('div');
     filterToastEl.id = 'filter-toast';
+    filterToastEl.innerHTML = `<span class="filter-toast-msg"></span><button type="button" class="filter-toast-reset">Сбросить</button>`;
+    filterToastEl.querySelector('.filter-toast-reset').addEventListener('click', ()=>{
+      resetFilters();
+      filterToastEl.classList.remove('show');
+      clearTimeout(filterToastEl._hideTimer);
+    });
     document.body.appendChild(filterToastEl);
   }
-  filterToastEl.textContent = msg;
+  filterToastEl.querySelector('.filter-toast-msg').textContent = msg;
   filterToastEl.classList.add('show');
   clearTimeout(filterToastEl._hideTimer);
-  filterToastEl._hideTimer = setTimeout(()=>filterToastEl.classList.remove('show'), 2200);
+  filterToastEl._hideTimer = setTimeout(()=>filterToastEl.classList.remove('show'), 5000);
 }
 
 // ---------- СПИСОК РЕЗУЛЬТАТОВ ----------
@@ -284,35 +337,7 @@ export function initFilters(){
   }
   document.getElementById('open-filters').addEventListener('click', ()=>setFiltersOpen(!sidebarEl.classList.contains('open')));
   document.getElementById('close-filters').addEventListener('click', ()=>setFiltersOpen(false));
-  document.getElementById('reset-filters').addEventListener('click', ()=>{
-    state.statuses = new Set(DEFAULT_STATUSES);
-    state.countries = new Set(DEFAULT_COUNTRIES);
-    state.seasons = new Set(Object.keys(SEASONS));
-    state.cats = new Set(Object.keys(CATEGORIES));
-    state.sources = new Set(DEFAULT_SOURCES);
-    state.onlyReturn = false;
-    state.query = '';
-    searchEl.value = '';
-    // Сезон/тип места/«хотим вернуться» всегда сбрасываются на «включено всё».
-    document.querySelectorAll('#panel-season input[type=checkbox], #panel-cats input[type=checkbox], #check-return input[type=checkbox]')
-      .forEach(i=>{i.checked=true; i.closest('.check')?.classList.remove('off');});
-    // Статус/страна/источник — сбрасываем к тому же дефолту, что и при
-    // открытии сайта (см. state выше), а не поголовно на «включено всё».
-    [
-      [statusList, 'status-count', 'statusCount'],
-      [countryList, 'country-count', 'countryCount'],
-      [sourceList, 'source-count', 'sourceCount'],
-    ].forEach(([list, attr, dataKey])=>{
-      list.querySelectorAll('.check').forEach(check=>{
-        const key = check.querySelector(`[data-${attr}]`).dataset[dataKey];
-        const stateSet = list===statusList ? state.statuses : list===countryList ? state.countries : state.sources;
-        const on = stateSet.has(key);
-        check.querySelector('input').checked = on;
-        check.classList.toggle('off', !on);
-      });
-    });
-    refresh();
-  });
+  document.getElementById('reset-filters').addEventListener('click', resetFilters);
   searchEl.addEventListener('input', ()=>{ state.query = searchEl.value; refresh(); });
 
   // ---------- СВЕРНУТЬ/ПОКАЗАТЬ ВСЮ ЛЕВУЮ ПАНЕЛЬ ----------
