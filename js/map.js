@@ -13,7 +13,27 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
 }).addTo(map);
 
-const markersLayer = L.layerGroup().addTo(map);
+// issue #36 (UX research finding: markers overlap tightly near Zagreb,
+// hard to click the right one): L.markerClusterGroup() is a drop-in
+// replacement for L.layerGroup() here — showPlaces()/rebuildMarkers()
+// below already only ever call .clearLayers()/.addLayer(), both of which
+// markerClusterGroup supports identically. iconCreateFunction replaces
+// the plugin's default blue-circle look with the app's own ink/pink riso
+// styling (see .marker-cluster-riso in styles.css) instead of leaving the
+// stock MarkerCluster.Default.css appearance, which would clash badly.
+const markersLayer = L.markerClusterGroup({
+  maxClusterRadius: 55,
+  spiderfyOnMaxZoom: true,
+  showCoverageOnHover: false,
+  iconCreateFunction(cluster){
+    const count = cluster.getChildCount();
+    const size = count < 10 ? 34 : count < 25 ? 40 : 46;
+    return L.divIcon({
+      html: `<div class="marker-cluster-riso">${count}</div>`,
+      className: '', iconSize: [size, size],
+    });
+  },
+}).addTo(map);
 export const markerRefs = [];
 const driveTimeCache = {};
 let placeIdCounter = 0;
