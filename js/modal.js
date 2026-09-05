@@ -10,6 +10,19 @@ export let pickMode = false;
 
 let modalBack, pickHint, fCats;
 
+// issue #37: один источник правды для текста "координаты указаны/не
+// указаны" — вызывается и при открытии формы (openModal), и после клика
+// по карте (setPickedCoords), и при ручном вводе (см. initModal), чтобы
+// эти три места не разошлись в том, как считают "указано".
+function updateCoordStatus(){
+  const lat = parseFloat(document.getElementById('f-lat').value);
+  const lng = parseFloat(document.getElementById('f-lng').value);
+  const el = document.getElementById('coord-status');
+  const ok = !isNaN(lat) && !isNaN(lng);
+  el.textContent = ok ? `📍 указаны (${lat.toFixed(4)}, ${lng.toFixed(4)})` : 'не указано';
+  el.classList.toggle('set', ok);
+}
+
 function fillSelect(id, obj, labelFn){
   const sel = document.getElementById(id);
   sel.innerHTML = '';
@@ -40,6 +53,8 @@ export function openModal(place){
   });
   document.getElementById('del-wrap').style.display = (place && place.custom) ? 'block' : 'none';
   document.getElementById('form-err').classList.remove('show');
+  document.getElementById('coord-manual').style.display = 'none';
+  updateCoordStatus();
   modalBack.classList.add('open');
 }
 
@@ -61,6 +76,7 @@ function setPickMode(on){
 export function setPickedCoords(lat, lng){
   document.getElementById('f-lat').value = lat.toFixed(4);
   document.getElementById('f-lng').value = lng.toFixed(4);
+  updateCoordStatus();
   setPickMode(false);
 }
 
@@ -85,6 +101,14 @@ export function initModal(){
   document.getElementById('pick-btn').addEventListener('click', ()=>setPickMode(!pickMode));
   document.getElementById('cancel-btn').addEventListener('click', closeModal);
   modalBack.addEventListener('click', e=>{ if(e.target===modalBack) closeModal(); });
+
+  // issue #37: raw fields stay available, just hidden until asked for.
+  document.getElementById('coord-manual-toggle').addEventListener('click', ()=>{
+    const el = document.getElementById('coord-manual');
+    el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+  });
+  document.getElementById('f-lat').addEventListener('input', updateCoordStatus);
+  document.getElementById('f-lng').addEventListener('input', updateCoordStatus);
 
   document.getElementById('save-btn').addEventListener('click', ()=>{
     const err = document.getElementById('form-err');

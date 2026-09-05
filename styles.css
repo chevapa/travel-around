@@ -205,6 +205,10 @@
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;cursor:pointer;white-space:nowrap;color:var(--ink);
   }
   #pick-btn.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+  /* issue #37 */
+  #coord-status{font-size:12.5px;color:var(--ink-soft);flex:1;}
+  #coord-status.set{color:var(--teal);font-weight:600;}
+  #coord-manual{margin-top:8px;}
   .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
   .cat-grid .check{padding:6px 7px;}
   .cat-grid .check .txt{font-size:13px;}
