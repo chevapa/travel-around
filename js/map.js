@@ -139,7 +139,10 @@ async function loadDriveTime(place, driveId){
 }
 
 // ---------- РАДИУСЫ (кольца ~1ч / ~2ч / ~3ч) ----------
-const BASE_POINTS = { zagreb:{name:'Загреб', lat:45.8150, lng:15.9819} };
+// issue #39: exported so filters.js can sort places by distance from the
+// same reference point drawBase() draws rings around — one source of
+// truth, not a second hardcoded Zagreb constant.
+export const BASE_POINTS = { zagreb:{name:'Загреб', lat:45.8150, lng:15.9819} };
 // Расстояния ПО ПРЯМОЙ (не по дорогам), откалиброванные по реальному времени:
 //  1ч — Вараждин 1:05 (61км) · Ново-Место 54мин (63км) · Кутина 55мин (72км) · Караловац 50мин (47км)
 //  2ч — Грац 2:00 (146км) · Постойна 1:58 (137км) · Плитвице 2:00 (107км) · Слав.Брод 1:50 (175км)
