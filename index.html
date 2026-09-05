@@ -177,16 +177,30 @@
         <input type="text" id="f-q" placeholder="Например: Garić grad">
       </div>
 
-      <div class="coord-row">
-        <div class="fg">
-          <label for="f-lat">Широта</label>
-          <input type="text" id="f-lat" placeholder="45.8150">
+      <!-- issue #37: raw lat/lng number fields were the most confusing thing
+           in this whole form for a non-technical user (see the UX research
+           report on #17) — "На карте" is now the primary, always-visible
+           action; the actual numbers are tucked behind "ввести вручную",
+           still there for anyone who genuinely wants to type exact
+           coordinates (editing an existing place, nudging a pin), just not
+           shown by default. -->
+      <div class="fg">
+        <label>Местоположение</label>
+        <div class="coord-row">
+          <button id="pick-btn" type="button">На карте</button>
+          <span id="coord-status">не указано</span>
+          <button id="coord-manual-toggle" type="button" class="panel-toggle-btn">ввести вручную</button>
         </div>
-        <div class="fg">
-          <label for="f-lng">Долгота</label>
-          <input type="text" id="f-lng" placeholder="15.9819">
+        <div class="coord-row" id="coord-manual" style="display:none">
+          <div class="fg">
+            <label for="f-lat">Широта</label>
+            <input type="text" id="f-lat" placeholder="45.8150">
+          </div>
+          <div class="fg">
+            <label for="f-lng">Долгота</label>
+            <input type="text" id="f-lng" placeholder="15.9819">
+          </div>
         </div>
-        <button id="pick-btn" type="button">На карте</button>
       </div>
       <div style="height:15px"></div>
 
