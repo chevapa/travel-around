@@ -38,6 +38,6 @@
   },
   "sources": {
     "journal":  {"label":"Мой дневник поездок", "ico":"📔"},
-    "research": {"label":"Подборка / ИИ-ресёрч", "ico":"🔎"}
+    "research": {"label":"Подборка Travel Around", "ico":"🔎"}
   }
 }
