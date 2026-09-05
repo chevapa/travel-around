@@ -91,6 +91,18 @@ function wireBadgeClicks(container){
   });
 }
 
+// issue #17 (UX research): scorePlace()'s "liked characteristics" reason
+// carries raw category KEYS in .sub (see recommendationEngine.js's comment
+// on why translation doesn't happen there) — rendered as-is before, this
+// leaked untranslated text like "town, castle, view" into otherwise fully
+// Russian UI. Other reason types' .sub is already human-readable text
+// (see recommendationEngine.js's other reasons.push calls), so only the
+// ❤️ reason needs this.
+function reasonSubHtml(r){
+  if(r.icon !== '❤️' || !r.sub) return r.sub;
+  return r.sub.split(', ').map(c => catInfo(c).label).join(', ');
+}
+
 function buildCardEl(place, depth, reasons){
   const el = document.createElement('div');
   el.className = 'reco-card';
@@ -110,7 +122,7 @@ function buildCardEl(place, depth, reasons){
       ${reasons.map(r => `
         <div class="reco-reason">
           <span class="reco-reason-badge">${r.icon}</span>
-          <span class="reco-reason-txt"><strong>${r.title}</strong><span>${r.sub}</span></span>
+          <span class="reco-reason-txt"><strong>${r.title}</strong><span>${reasonSubHtml(r)}</span></span>
         </div>`).join('')}
     </div>
     <div class="reco-card-foot">
