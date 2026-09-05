@@ -6,7 +6,7 @@
 // см. data_refactoring.md: raw-события отдельно от того, что из них следует.
 import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo } from './places.js';
 import { flyToPlace, map } from './map.js';
-import { setCatFilter, setStatusFilter, setCountryFilter } from './filters.js';
+import { setFilter } from './filters.js';
 import { loadInteractions, logInteraction, hasInteraction, clearInteractions } from './interactions.js';
 import { computeProfile } from './profile.js';
 import { currentContext, getWeather, getUserPosition } from './context.js';
@@ -52,17 +52,18 @@ function catArtSrc(catKey){
 // ---------- РЕНДЕР СТОПКИ КАРТОЧЕК ----------
 function badgesHtml(place){
   const st = statusInfo(place.cat);
-  // issue #15: эти теги должны фильтровать так же, как на карте (issue
-  // #14/#1) — .cat-tag-btn даёт тот же CSS-хук (курсор/hover), что и на
-  // карте (styles.css грузится глобально); .reco-link — чтобы клик по тегу
-  // внутри свайп-карточки не запускал драг (см. attachDrag ниже).
+  // issue #15/#1: эти теги фильтруют так же, как на карте, для ЛЮБОГО типа
+  // тега (не только category/status/country — сезон тоже, см. filters.js's
+  // FILTER_TYPES) — .cat-tag-btn даёт тот же CSS-хук (курсор/hover), что и
+  // на карте (styles.css грузится глобально); .reco-link — чтобы клик по
+  // тегу внутри свайп-карточки не запускал драг (см. attachDrag ниже).
   const catBadges = place.cats.slice(0,2).map(c =>
-    `<span class="popup-badge cat cat-tag-btn reco-link" data-cat="${c}" role="button" tabindex="0"><span class="cat-art">${catInfo(c).ico}</span>${catInfo(c).label.replace(' / ',' · ')}</span>`).join('');
+    `<span class="popup-badge cat cat-tag-btn reco-link" data-filter-type="cat" data-filter-value="${c}" role="button" tabindex="0"><span class="cat-art">${catInfo(c).ico}</span>${catInfo(c).label.replace(' / ',' · ')}</span>`).join('');
   const seasonBadge = place.season !== 'all'
-    ? `<span class="popup-badge cat">${seasonInfo(place.season).ico} ${seasonInfo(place.season).label}</span>` : '';
+    ? `<span class="popup-badge cat cat-tag-btn reco-link" data-filter-type="season" data-filter-value="${place.season}" role="button" tabindex="0">${seasonInfo(place.season).ico} ${seasonInfo(place.season).label}</span>` : '';
   return `<div class="popup-badges reco-badges">
-      <span class="popup-badge ${st.badge} cat-tag-btn reco-link" data-status="${place.cat}" role="button" tabindex="0">${st.label}</span>
-      <span class="popup-badge cat cat-tag-btn reco-link" data-country="${place.country}" role="button" tabindex="0">${countryInfo(place.country).flag} ${countryInfo(place.country).label}</span>
+      <span class="popup-badge ${st.badge} cat-tag-btn reco-link" data-filter-type="status" data-filter-value="${place.cat}" role="button" tabindex="0">${st.label}</span>
+      <span class="popup-badge cat cat-tag-btn reco-link" data-filter-type="country" data-filter-value="${place.country}" role="button" tabindex="0">${countryInfo(place.country).flag} ${countryInfo(place.country).label}</span>
       ${seasonBadge}${catBadges}
     </div>`;
 }
@@ -72,12 +73,10 @@ function badgesHtml(place){
 // вставки в DOM (см. buildCardEl/openSheet), поэтому клики навешиваются
 // отдельно на каждый контейнер, а не один раз глобально.
 function wireBadgeClicks(container){
-  container.querySelectorAll('.cat-tag-btn').forEach(tag=>{
+  container.querySelectorAll('.cat-tag-btn[data-filter-type]').forEach(tag=>{
     const activate = (e)=>{
       e.stopPropagation();
-      if(tag.dataset.cat) setCatFilter(tag.dataset.cat);
-      else if(tag.dataset.status) setStatusFilter(tag.dataset.status);
-      else if(tag.dataset.country) setCountryFilter(tag.dataset.country);
+      setFilter(tag.dataset.filterType, tag.dataset.filterValue);
       // "ведут себя так же, как на карте" — там клик по тегу закрывает
       // попап и фильтрует карту под ним; здесь ближайший эквивалент —
       // закрыть шторку деталей, если она открыта (клик мог прийти оттуда),

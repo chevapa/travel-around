@@ -1,4 +1,4 @@
-import { PLACES, CATEGORIES, COUNTRIES, SEASONS, STATUSES, SOURCES, catInfo, countryInfo, statusInfo, sourceKey, getVisiblePlaces } from './places.js';
+import { PLACES, CATEGORIES, COUNTRIES, SEASONS, STATUSES, SOURCES, catInfo, countryInfo, statusInfo, seasonInfo, sourceKey, getVisiblePlaces } from './places.js';
 import { map, showPlaces, flyToPlace, setReturnBadgeVisible } from './map.js';
 
 // ---------- СОСТОЯНИЕ ФИЛЬТРОВ ----------
@@ -30,51 +30,36 @@ export function refresh(){
   updateCounts();
 }
 
-// Изолирует фильтр типов до одной категории — вызывается из map.js по
-// клику на тег категории в попапе места (issue #1: «клик по тегу →
-// показать похожие объекты на карте»). Синхронизирует чекбоксы панели
-// #cat-list с новым состоянием, а не только сам стейт, — иначе при
-// следующем открытии панели она врала бы про то, что реально показано.
-export function setCatFilter(catKey){
-  state.cats = new Set([catKey]);
-  document.getElementById('cat-list').querySelectorAll('input').forEach(input=>{
-    const label = input.closest('.check');
-    const on = label.querySelector('[data-cat-count]').dataset.catCount === catKey;
-    input.checked = on;
-    label.classList.toggle('off', !on);
-  });
-  refresh();
-  showFilterToast(`Фильтр: ${catInfo(catKey).label}`);
-}
+// ---------- ФИЛЬТР ПО КЛИКУ НА ЛЮБОЙ ТЕГ ----------
+// issue #1 (после #14/#15/#16): раньше на каждый тип тега была отдельная,
+// почти одинаковая функция (setCatFilter/setStatusFilter/setCountryFilter)
+// — и сезон остался некликабельным просто потому что четвёртую копию
+// никто не написал. Это ровно то, о чём просил issue: "FILTER SYSTEM > ANY
+// TAG TYPE > CLICK > FILTER BY THIS TAG TYPE" — один источник правды на
+// каждый тип тега (какой ключ в state, какая панель, как читать текущий
+// выбор, как подписать тост) и одна функция setFilter(type, value), общая
+// для всех. Добавить новый тип тега в будущем — это одна запись здесь плюс
+// data-filter-type/-value на самом теге (см. map.js/recommend.js), а не
+// ещё одна копия этой функции.
+const FILTER_TYPES = {
+  cat:     { stateKey:'cats',      listId:'cat-list',     countSelector:'[data-cat-count]',     countProp:'catCount',     label:catInfo,     toastPrefix:'Выбран тип места' },
+  status:  { stateKey:'statuses',  listId:'status-list',  countSelector:'[data-status-count]',  countProp:'statusCount',  label:statusInfo,  toastPrefix:'Выбран статус' },
+  country: { stateKey:'countries', listId:'country-list', countSelector:'[data-country-count]', countProp:'countryCount', label:countryInfo, toastPrefix:'Выбрана страна' },
+  season:  { stateKey:'seasons',   listId:'season-list',  countSelector:'[data-season-count]',  countProp:'seasonCount',  label:seasonInfo,  toastPrefix:'Выбран сезон' },
+};
 
-// Тот же приём, что и setCatFilter — issue #14/#15: клик по тегу статуса
-// («ещё не были» и т.п.) или страны тоже должен фильтровать, а не оставаться
-// декоративным текстом. Отдельная функция на каждый тип фильтра, а не одна
-// общая — сознательно: у каждого своя панель (#status-list/#country-list) и
-// свой ключ в state, обобщение через одну функцию с параметром типа не
-// сделало бы код короче, только менее явным.
-export function setStatusFilter(statusKey){
-  state.statuses = new Set([statusKey]);
-  document.getElementById('status-list').querySelectorAll('input').forEach(input=>{
+export function setFilter(type, value){
+  const cfg = FILTER_TYPES[type];
+  if(!cfg) return; // неизвестный тип тега — молча ничего не делаем, не падаем
+  state[cfg.stateKey] = new Set([value]);
+  document.getElementById(cfg.listId).querySelectorAll('input').forEach(input=>{
     const label = input.closest('.check');
-    const on = label.querySelector('[data-status-count]').dataset.statusCount === statusKey;
+    const on = label.querySelector(cfg.countSelector).dataset[cfg.countProp] === value;
     input.checked = on;
     label.classList.toggle('off', !on);
   });
   refresh();
-  showFilterToast(`Фильтр: ${statusInfo(statusKey).label}`);
-}
-
-export function setCountryFilter(countryKey){
-  state.countries = new Set([countryKey]);
-  document.getElementById('country-list').querySelectorAll('input').forEach(input=>{
-    const label = input.closest('.check');
-    const on = label.querySelector('[data-country-count]').dataset.countryCount === countryKey;
-    input.checked = on;
-    label.classList.toggle('off', !on);
-  });
-  refresh();
-  showFilterToast(`Фильтр: ${countryInfo(countryKey).label}`);
+  showFilterToast(`${cfg.toastPrefix}: ${cfg.label(value).label}`);
 }
 
 // issue #16: клик по тегу молча меняет фильтры — на карте это выглядит как
