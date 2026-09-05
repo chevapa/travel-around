@@ -112,7 +112,7 @@ export function buildMarker(place){
     warnBlock +
     (place.meta ? `<p class="popup-meta">${place.meta}</p>` : '') +
     sourceBlock +
-    `<p class="popup-drivetime" id="${driveId}"><a href="${gmapsUrl}" target="_blank" rel="noopener" class="drivetime-link">🚗 время в пути: <span class="dt-value">${place.drive}</span> <svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a></p>` +
+    `<p class="popup-drivetime" id="${driveId}"><a href="${gmapsUrl}" target="_blank" rel="noopener" class="drivetime-link">🚗 время в пути: <span class="dt-value">${place.drive || '—'}</span> <svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a></p>` +
     `<div class="nearby-box"><button class="nearby-btn" data-id="${place.id}">Что рядом →</button><div class="nearby-out"></div></div>`
   );
   marker.on('popupopen', ()=>loadDriveTime(place, driveId));

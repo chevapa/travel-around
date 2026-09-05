@@ -100,6 +100,10 @@ export function initModal(){
   document.getElementById('add-place').addEventListener('click', ()=>openModal());
   document.getElementById('pick-btn').addEventListener('click', ()=>setPickMode(!pickMode));
   document.getElementById('cancel-btn').addEventListener('click', closeModal);
+  // issue #52/#53: "Отмена" sits at the very bottom of a long form — on
+  // mobile that's a full scroll away. A header close button gives an
+  // always-visible way out without hunting for it.
+  document.getElementById('modal-close').addEventListener('click', closeModal);
   modalBack.addEventListener('click', e=>{ if(e.target===modalBack) closeModal(); });
 
   // issue #37: raw fields stay available, just hidden until asked for.
