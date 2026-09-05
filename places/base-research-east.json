@@ -48,7 +48,8 @@
     "cat": "plan",
     "src": "research",
     "cats": [
-      "castle"
+      "castle",
+      "culture"
     ],
     "wantReturn": false,
     "q": "dvorac Miljana",
@@ -221,7 +222,8 @@
     "cat": "plan",
     "src": "research",
     "cats": [
-      "church"
+      "church",
+      "culture"
     ],
     "wantReturn": false,
     "q": "Čazma crkva svete Marije Magdalene",
