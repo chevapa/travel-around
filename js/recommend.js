@@ -212,11 +212,31 @@ function swipeTop(dir){
   });
 }
 
+// issue #34: raw opacity/90 on a small corner stamp was the only feedback
+// during drag — easy to miss which action was pending until release. Two
+// changes, both driven by the same 0-1 "progress toward commit" value per
+// direction: the stamp now ramps to full opacity + a small scale-pop
+// noticeably before the actual 110px commit threshold (COMMIT_PX), and the
+// whole card gets a colored glow (not just the corner) so the direction is
+// legible at a glance, not just from a small label. Colors match the
+// stamps' own riso-teal/orange/violet (hardcoded as r,g,b here rather than
+// read via getComputedStyle on every pointermove — this runs on every
+// drag frame, and re-parsing CSS custom properties that often isn't free).
+const DRAG_GLOW_RGB = { like:'19,163,154', skip:'255,99,51', save:'109,77,178' };
+const COMMIT_PX = 110;
+
 function attachDrag(el, place){
   let startX=0, startY=0, curX=0, curY=0, dragging=false;
   const like = el.querySelector('.reco-stamp.like');
   const skip = el.querySelector('.reco-stamp.skip');
   const save = el.querySelector('.reco-stamp.save');
+
+  function resetVisuals(){
+    like.style.opacity = 0; like.style.transform = '';
+    skip.style.opacity = 0; skip.style.transform = '';
+    save.style.opacity = 0; save.style.transform = 'translateX(-50%)';
+    el.style.boxShadow = '';
+  }
 
   function down(e){
     if(e.target.closest('.reco-link')) return;
@@ -230,20 +250,31 @@ function attachDrag(el, place){
     const p = e.touches ? e.touches[0] : e;
     curX = p.clientX - startX; curY = p.clientY - startY;
     el.style.transform = `translate(${curX}px, ${curY}px) rotate(${curX/18}deg)`;
-    like.style.opacity = Math.max(0, Math.min(1, curX/90));
-    skip.style.opacity = Math.max(0, Math.min(1, -curX/90));
-    save.style.opacity = curY > 0 ? Math.max(0, Math.min(1, curY/90)) : 0;
+
+    // Ramp against 3/4 of the commit distance, not the full distance — full
+    // and clearly readable well before the card would actually commit.
+    const rampAt = COMMIT_PX * 0.75;
+    const likeP = Math.max(0, Math.min(1, curX / rampAt));
+    const skipP = Math.max(0, Math.min(1, -curX / rampAt));
+    const saveP = (curY > 0 && Math.abs(curX) < 80) ? Math.max(0, Math.min(1, curY / rampAt)) : 0;
+
+    like.style.opacity = likeP; like.style.transform = `scale(${1 + likeP*0.2})`;
+    skip.style.opacity = skipP; skip.style.transform = `scale(${1 + skipP*0.2})`;
+    save.style.opacity = saveP; save.style.transform = `translateX(-50%) scale(${1 + saveP*0.2})`;
+
+    const [dir, p2] = [['like',likeP],['skip',skipP],['save',saveP]].reduce((a,b)=>b[1]>a[1]?b:a);
+    el.style.boxShadow = p2 > 0.03 ? `0 0 0 ${3 + p2*7}px rgba(${DRAG_GLOW_RGB[dir]},${0.12 + p2*0.38})` : '';
   }
   function up(){
     if(!dragging) return;
     dragging = false;
     el.style.transition = 'transform .25s ease';
-    if(curX > 110) swipeTop('like');
-    else if(curX < -110) swipeTop('skip');
-    else if(curY > 110 && Math.abs(curX) < 80) swipeTop('save');
+    if(curX > COMMIT_PX) swipeTop('like');
+    else if(curX < -COMMIT_PX) swipeTop('skip');
+    else if(curY > COMMIT_PX && Math.abs(curX) < 80) swipeTop('save');
     else{
       el.style.transform = 'translate(0,0) rotate(0)';
-      like.style.opacity = 0; skip.style.opacity = 0; save.style.opacity = 0;
+      resetVisuals();
     }
     curX = 0; curY = 0;
   }
