@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Атлас поездок</title>
+</head>
+<body>
+<script>
+// issue #49: GitHub Pages serves this repo as static files with no
+// server-side rewrites, so a shared link like
+// https://chevapa.github.io/travel-around/place/<id> (a path GitHub Pages
+// has no file for) hits this 404 page before any app JS runs. This
+// redirects the two URL shapes described in the issue — /place/<id> and
+// /filter/<type>/<value> (plus the literal "/filter=<value>" form as
+// written in the issue text) — into the ?place=/?filter= query string that
+// js/router.js actually reads on load, then hands off to index.html.
+// Anything else is a genuinely broken link, not something to guess at.
+(function(){
+  var base = '/travel-around/';
+  var path = location.pathname;
+  if(path.indexOf(base) !== 0){ show(); return; }
+  var parts = path.slice(base.length).replace(/\/$/, '').split('/').filter(Boolean);
+  var qs = null;
+  if(parts[0] === 'place' && parts[1]){
+    qs = 'place=' + encodeURIComponent(parts[1]);
+  } else if(parts[0] === 'filter' && parts[1] && parts[2]){
+    qs = 'filter=' + encodeURIComponent(parts[1] + ':' + parts[2]);
+  } else if(parts[0] && parts[0].indexOf('filter=') === 0){
+    qs = 'filter=' + encodeURIComponent(parts[0].slice('filter='.length));
+  }
+  if(qs){
+    location.replace(base + 'index.html?' + qs + location.hash);
+  } else {
+    show();
+  }
+  function show(){ document.getElementById('msg').hidden = false; }
+})();
+</script>
+<p id="msg" hidden>Страница не найдена. <a href="/travel-around/">Вернуться на карту</a></p>
+</body>
+</html>
