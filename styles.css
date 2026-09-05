@@ -617,7 +617,14 @@
   transform:rotate(-1deg);
 }
 #open-filters{transform:rotate(1.6deg);}
-#add-place{background:var(--riso-pink);color:var(--riso-ink);box-shadow:4px 4px 0 var(--riso-teal);}
+/* issue #17 (UX research): was riso-pink + a teal shadow — as visually
+   loud as "Куда?" (riso-yellow) right next to it, and it opens a form with
+   raw lat/lng fields (see modal.js), an easy place for a confused
+   first-time user to end up by accident. Now styled like the equally
+   secondary "Сбросить" — plain paper, no special shadow — so the one
+   button that actually answers "where should I go" is the one that
+   stands out. */
+#add-place{background:var(--riso-paper);}
 #reset-filters{background:var(--riso-paper);}
 .map-btn-dark{background:var(--riso-ink);color:#fff;}
 .map-btn-dark:hover{background:var(--riso-pink);border-color:var(--riso-ink);color:var(--riso-ink);}
@@ -639,7 +646,11 @@
   background:var(--riso-paper);position:sticky;top:0;z-index:10;
 }
 .drawer-head strong{font-family:'Bungee',sans-serif;font-size:14px;letter-spacing:.04em;}
-.drawer-head strong::after{content:" / SORT / CUT / PRINT";color:var(--riso-pink);font-size:8px;margin-left:5px;}
+/* issue #17 (UX research): "SORT" here read as a real, wanted feature that
+   doesn't exist (no sort-by-distance/time anywhere) — unlike CUT/PRINT,
+   which nobody expects a travel app to actually have, so they stay as
+   pure zine-flourish text without creating the same false promise. */
+.drawer-head strong::after{content:" / CUT / PRINT";color:var(--riso-pink);font-size:8px;margin-left:5px;}
 .drawer-close{width:32px;height:30px;border:2px solid var(--riso-ink);border-radius:0;background:var(--riso-yellow);font-size:20px;box-shadow:3px 3px 0 var(--riso-pink);}
 .drawer-close:hover{background:var(--riso-pink);color:var(--riso-ink);}
 

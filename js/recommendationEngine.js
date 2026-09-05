@@ -22,6 +22,14 @@ export function scorePlace(place, profile, ctx, weather, userPos = null){
   if(liked.length){
     const bonus = liked.reduce((sum, c) => sum + profile.characteristicAffinity[c], 0);
     score += bonus;
+    // sub здесь — сырые ключи категорий (не текст для показа как есть):
+    // recommendationEngine.js — чистая логика скоринга без зависимости от
+    // словаря переводов (places.js делает top-level fetch за vocab.json,
+    // который в Node/тестах не резолвится — импортировать catInfo сюда
+    // ломает tests/recommendationEngine.test.mjs). Перевод в человекочитаемые
+    // подписи — дело рендер-слоя, который уже импортирует catInfo (см.
+    // recommend.js: issue #17, UX research — раньше рендерился как есть,
+    // "town, castle, view" вместо перевода).
     reasons.push({ icon:'❤️', title:'Похоже на места, которые вам понравились', sub: liked.slice(0,3).join(', '), weight: bonus });
   }
 
