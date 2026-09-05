@@ -1,5 +1,6 @@
 import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo, sourceKey, store } from './places.js';
 import { pickMode, setPickedCoords } from './modal.js';
+import { setCatFilter } from './filters.js';
 
 // ---------- КАРТА ----------
 // На мобильном стартуем чуть приближенным видом (примерно по кольцу ~1ч
@@ -29,7 +30,8 @@ export function buildMarker(place){
   const starMark = place.wantReturn ? ' <span class="star-mark">★</span>' : '';
   const driveId = `dt-${placeIdCounter++}`;
   const catBadges = place.cats.slice(0,3).map(c=>
-    `<span class="popup-badge cat"><span class="cat-art">${catInfo(c).ico}</span>${catInfo(c).label.replace(' / ',' · ')}</span>`).join('');
+    `<span class="popup-badge cat cat-tag-btn" data-cat="${c}" role="button" tabindex="0">
+      <span class="cat-art">${catInfo(c).ico}</span>${catInfo(c).label.replace(' / ',' · ')}</span>`).join('');
   const countryBadge = `<span class="popup-badge cat">${countryInfo(place.country).flag} ${countryInfo(place.country).label}</span>`;
   const seasonBadge = place.season!=='all'
     ? `<span class="popup-badge cat">${seasonInfo(place.season).ico} ${seasonInfo(place.season).label}</span>` : '';
@@ -329,5 +331,17 @@ export function initMap(visiblePlacesFn){
         });
       });
     }
+
+    // Клик по тегу категории — issue #1: показывает на карте только места
+    // этой категории, вместо того чтобы описание оставалось просто текстом.
+    el.querySelectorAll('.cat-tag-btn').forEach(tag=>{
+      if(tag.dataset.wired) return;
+      tag.dataset.wired = '1';
+      const activate = ()=>{ setCatFilter(tag.dataset.cat); map.closePopup(); };
+      tag.addEventListener('click', activate);
+      tag.addEventListener('keydown', e=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); }
+      });
+    });
   });
 }

@@ -30,6 +30,22 @@ export function refresh(){
   updateCounts();
 }
 
+// Изолирует фильтр типов до одной категории — вызывается из map.js по
+// клику на тег категории в попапе места (issue #1: «клик по тегу →
+// показать похожие объекты на карте»). Синхронизирует чекбоксы панели
+// #cat-list с новым состоянием, а не только сам стейт, — иначе при
+// следующем открытии панели она врала бы про то, что реально показано.
+export function setCatFilter(catKey){
+  state.cats = new Set([catKey]);
+  document.getElementById('cat-list').querySelectorAll('input').forEach(input=>{
+    const label = input.closest('.check');
+    const on = label.querySelector('[data-cat-count]').dataset.catCount === catKey;
+    input.checked = on;
+    label.classList.toggle('off', !on);
+  });
+  refresh();
+}
+
 // ---------- СПИСОК РЕЗУЛЬТАТОВ ----------
 function renderList(places){
   const wrap = document.getElementById('list-wrap');
