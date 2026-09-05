@@ -292,7 +292,6 @@ function openSheet(place){
     <p class="popup-title">${place.name}</p>
     <p class="popup-note">${place.note || ''}</p>
     ${place.warn ? `<p class="popup-warn">⚠️ ${place.warn}</p>` : ''}
-    ${place.meta ? `<p class="popup-meta">${place.meta}</p>` : ''}
     <div class="reco-sheet-actions">
       <button type="button" class="reco-sheet-map-btn" id="reco-sheet-map">Показать на карте →</button>
     </div>`;

@@ -84,9 +84,14 @@ export function buildMarker(place){
   const seasonBadge = place.season!=='all'
     ? `<span class="popup-badge cat cat-tag-btn" data-filter-type="season" data-filter-value="${place.season}" role="button" tabindex="0">${seasonInfo(place.season).ico} ${seasonInfo(place.season).label}</span>` : '';
   const warnBlock = place.warn ? `<p class="popup-warn">⚠️ ${place.warn}</p>` : '';
-  const sourceBlock = sourceKey(place) === 'journal'
+  // issue #43/docs/place-content-model.md: `source` is the new field for
+  // real attribution (e.g. "Putni Kofer") on places imported from an
+  // outside collection — appended when present, distinct from the
+  // journal/research src badge below which answers a different question
+  // ("has the user been here") not "who wrote this description".
+  const sourceBlock = (sourceKey(place) === 'journal'
     ? `<p class="popup-source">📔 Источник: мой дневник поездок</p>`
-    : `<p class="popup-source">🔎 Источник: подборка (ИИ-ресёрч по моим предпочтениям)</p>`;
+    : `<p class="popup-source">🔎 Источник: подборка (ИИ-ресёрч по моим предпочтениям)${place.source ? ' — ' + place.source : ''}</p>`);
   const searchQ = encodeURIComponent(`${place.q || place.name} ${countryInfo(place.country).local}`);
   const searchUrl = `https://www.google.com/search?q=${searchQ}`;
   // Ссылка "нарисовать маршрут" ведёт в Google Maps без указания origin —
@@ -110,7 +115,6 @@ export function buildMarker(place){
     `<p class="popup-title"><a href="${searchUrl}" target="_blank" rel="noopener" class="title-link">${place.name}<svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>${starMark}</p>` +
     `<p class="popup-note">${place.note}</p>` +
     warnBlock +
-    (place.meta ? `<p class="popup-meta">${place.meta}</p>` : '') +
     sourceBlock +
     `<p class="popup-drivetime" id="${driveId}"><a href="${gmapsUrl}" target="_blank" rel="noopener" class="drivetime-link">🚗 время в пути: <span class="dt-value">${place.drive || '—'}</span> <svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a></p>` +
     `<div class="nearby-box"><button class="nearby-btn" data-id="${place.id}">Что рядом →</button><div class="nearby-out"></div></div>`

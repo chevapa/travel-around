@@ -46,7 +46,6 @@ export function openModal(place){
   document.getElementById('f-drive').value = place ? place.drive : '';
   document.getElementById('f-note').value  = place ? place.note : '';
   document.getElementById('f-warn').value  = place && place.warn ? place.warn : '';
-  document.getElementById('f-meta').value  = place && place.meta ? place.meta : '';
   document.getElementById('f-return').checked = place ? !!place.wantReturn : false;
   fCats.querySelectorAll('input').forEach(i=>{
     i.checked = place ? place.cats.includes(i.value) : false;
@@ -136,10 +135,8 @@ export function initModal(){
       custom: true,
     };
     const warn = document.getElementById('f-warn').value.trim();
-    const meta = document.getElementById('f-meta').value.trim();
     const qv = document.getElementById('f-q').value.trim();
     if(warn) data.warn = warn;
-    if(meta) data.meta = meta;
     if(qv) data.q = qv;
 
     if(editingPlace){
