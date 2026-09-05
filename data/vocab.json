@@ -32,9 +32,9 @@
     "stork":  {"label":"Аисты (март–авг)", "ico":"🕊"}
   },
   "statuses": {
-    "loved": {"label":"Понравилось", "color":"#1F8C82", "badge":"green"},
-    "ok":    {"label":"Так себе / нейтрально", "color":"#FF5A2B", "badge":"amber"},
-    "plan":  {"label":"Ещё не были (план)", "color":"#6E4FA0", "badge":"grey"}
+    "loved": {"label":"Были, Понравилось", "color":"#1F8C82", "badge":"green"},
+    "ok":    {"label":"Были, Нейтрально", "color":"#FF5A2B", "badge":"amber"},
+    "plan":  {"label":"Ещё не были", "color":"#6E4FA0", "badge":"grey"}
   },
   "sources": {
     "journal":  {"label":"Мой дневник поездок", "ico":"📔"},
