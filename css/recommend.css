@@ -55,6 +55,21 @@ body[data-screen="recommend"] #screen-recommend{ display:flex; }
 .reco-back-map:hover{ background:var(--riso-yellow); }
 .reco-back-map.active{ display:none; }
 
+/* issue #23: explicit close button, top-right, both mobile and desktop —
+   same position pattern as #reco-sheet-close, red/orange per the issue
+   (this palette's closest "red" — same tone as .reco-btn.skip's "not
+   interested" action, but this button always means "back to map", never
+   a swipe decision). Wired for free by the existing generic
+   .nav-btn[data-screen] delegation in recommend.js — no new JS. */
+.reco-close{
+  position:absolute; right:14px; top:14px; z-index:5;
+  width:34px; height:34px; border-radius:50%;
+  border:2px solid var(--riso-ink); background:var(--riso-orange); color:#fff;
+  font-size:16px; line-height:1; cursor:pointer;
+  box-shadow:2px 2px 0 var(--riso-ink);
+}
+.reco-close:hover{ background:var(--riso-pink); }
+
 /* ---------- card stack ---------- */
 .reco-stack{ position:relative; flex:1; min-height:0; margin-bottom:14px; }
 .reco-card{
