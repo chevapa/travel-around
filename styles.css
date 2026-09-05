@@ -1104,3 +1104,19 @@
   border-radius:2px;
 }
 .filter-toast-reset:hover{ background:var(--riso-pink); border-color:var(--riso-pink); }
+
+/* issue #24: beyond the ~3h ring — decorative only, never blocks map
+   interaction (interactive:false on both parts in map.js). Warm
+   sepia/parchment tone is a deliberate one-off exception to the app's bold
+   riso palette elsewhere — it's standing in for "old explorer's atlas",
+   not a restyle of the product. */
+.terra-incognita-mask{
+  fill:#8a6d4a; fill-opacity:.4;
+}
+.terra-incognita-label{
+  font-family:'Fraunces',serif; font-style:italic; font-size:15px;
+  letter-spacing:.14em; color:#5b4630; white-space:nowrap;
+  text-shadow:0 1px 0 rgba(255,255,255,.5);
+  transform:translate(-50%,-50%) rotate(-6deg);
+  pointer-events:none; user-select:none;
+}
