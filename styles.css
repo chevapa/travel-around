@@ -828,12 +828,14 @@
   left:18px; top:18px;
 }
 #hero-card .travel-atlas-logo{
-  width:245px;
-  height:112px;
+  /* #13: was 245x112 — visibly bigger than the same masthead mark shown at
+     sidebar/tinder-card scale (~163x58, matching img012's 700:233 aspect).
+     Shrink to that reference size; hero-question/hero-result are separate
+     sibling elements below and are unaffected by this. */
+  width:163px;
+  height:58px;
   object-fit:fill;
   margin:0 auto -2px;
-  transform:scaleX(1.06);
-  transform-origin:center;
 }
 .hero-question{
   margin:2px 0 5px;
