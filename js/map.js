@@ -140,10 +140,29 @@ export function rebuildMarkers(){
   PLACES.forEach(buildMarker);
 }
 
+// issue #49 (found while testing the new place/filter URL routing): a
+// clustered marker (see #36's L.markerClusterGroup above) isn't attached
+// to the map directly until it's un-clustered — plain marker.openPopup()
+// silently no-ops when the target place is still hidden inside a cluster
+// at the destination zoom, which zoom level 11 doesn't always clear. This
+// pre-dates #49; it just had no caller that opened a popup for a place the
+// user hadn't already zoomed near by hand ("Что рядом" results were mostly
+// close enough to already be spiderfied/unclustered by then).
+// zoomToShowLayer() is markercluster's own API for this — it zooms/spiderfies
+// exactly as much as needed to reveal the target marker before the callback
+// runs, so openPopup() always has a real marker on the map to act on.
 export function flyToPlace(place){
-  map.flyTo([place.lat,place.lng], 11, {duration:.6});
   const ref = markerRefs.find(r=>r.place===place);
-  if(ref) setTimeout(()=>ref.marker.openPopup(), 650);
+  if(!ref) return;
+  // Tried an extra map.flyTo(...) inside the zoomToShowLayer callback here
+  // first (to match this function's pre-clustering animation) — it
+  // reliably threw a real Leaflet.markercluster bug ("Cannot use 'in'
+  // operator to search for '_leaflet_id' in undefined"), a known upstream
+  // issue from two competing animated zoom/pan transitions racing each
+  // other. zoomToShowLayer already zooms/pans enough to reveal the marker
+  // on its own, so the second flyTo was redundant as well as broken —
+  // dropped it rather than working around the race.
+  markersLayer.zoomToShowLayer(ref.marker, () => ref.marker.openPopup());
 }
 
 // Значок "хотим вернуться" на пинах можно скрыть галочкой в фильтрах —
