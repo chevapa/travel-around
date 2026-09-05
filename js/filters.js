@@ -1,5 +1,6 @@
 import { PLACES, CATEGORIES, COUNTRIES, SEASONS, STATUSES, SOURCES, catInfo, countryInfo, statusInfo, seasonInfo, sourceKey, getVisiblePlaces } from './places.js';
-import { map, showPlaces, flyToPlace, setReturnBadgeVisible } from './map.js';
+import { map, showPlaces, flyToPlace, setReturnBadgeVisible, BASE_POINTS } from './map.js';
+import { haversineDistance } from './context.js';
 
 // ---------- СОСТОЯНИЕ ФИЛЬТРОВ ----------
 // По умолчанию при открытии сайта показываем только план поездок по Хорватии
@@ -17,6 +18,7 @@ export const state = {
   onlyReturn: false,
   showReturnBadge: true,
   query: "",
+  sortByDistance: false, // issue #39
 };
 
 export function visiblePlaces(){
@@ -135,6 +137,22 @@ function showFilterToast(msg){
 }
 
 // ---------- СПИСОК РЕЗУЛЬТАТОВ ----------
+// issue #39: place.drive — захардкоженный текст ("50 мин"), не число, и
+// парсить его ненадёжно (формат "X ч Y мин (Z км по дорогам)" не всегда
+// одинаковый). Сортируем по прямому расстоянию от той же базовой точки,
+// вокруг которой рисуются кольца ~1ч/~2ч/~3ч (map.js's BASE_POINTS) — это
+// уже настоящее число для каждого места (lat/lng есть всегда).
+function distanceKm(place){
+  // BASE_POINTS.zagreb accessed lazily, not cached at module top level —
+  // map.js and filters.js import each other (map.js needs setFilter,
+  // filters.js needs BASE_POINTS), and dereferencing BASE_POINTS eagerly
+  // at module init time hit "Cannot access 'BASE_POINTS' before
+  // initialization" depending on which module's top-level code ran first.
+  // Every other cross-import here was already lazy (used inside click
+  // handlers) for the same reason.
+  const zagreb = BASE_POINTS.zagreb;
+  return haversineDistance(zagreb.lat, zagreb.lng, place.lat, place.lng);
+}
 function renderList(places){
   const wrap = document.getElementById('list-wrap');
   wrap.innerHTML = '';
@@ -145,6 +163,7 @@ function renderList(places){
   Object.entries(STATUSES).forEach(([key, s])=>{
     const items = places.filter(p=>p.cat===key);
     if(!items.length) return;
+    if(state.sortByDistance) items.sort((a,b)=>distanceKm(a)-distanceKm(b));
     const h = document.createElement('div');
     h.className='group-title'; h.textContent = s.label;
     wrap.appendChild(h);
@@ -166,7 +185,7 @@ function renderList(places){
 
 function updateCounts(){
   const vis = visiblePlaces();
-  document.getElementById('result-count').textContent = `${vis.length} мест${state.query ? ' по запросу «'+state.query+'»' : ' подходит'}`;
+  document.getElementById('result-count-text').textContent = `${vis.length} мест${state.query ? ' по запросу «'+state.query+'»' : ' подходит'}`;
   document.getElementById('hero-count').textContent = vis.length;
   document.querySelectorAll('[data-status-count]').forEach(el=>{
     el.textContent = PLACES.filter(p=>p.cat===el.dataset.statusCount).length;
@@ -196,7 +215,8 @@ export function initFilters(){
     el.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}>
       <span class="swatch" style="background:${s.color}"></span>
       <span class="txt">${s.label}</span>
-      <span class="num" data-status-count="${key}"></span>`;
+      <span class="num" data-status-count="${key}"></span>
+      <button type="button" class="panel-toggle-btn only-btn" data-filter-type="status" data-filter-value="${key}">только</button>`;
     el.querySelector('input').addEventListener('change', e=>{
       if(e.target.checked) state.statuses.add(key); else state.statuses.delete(key);
       el.classList.toggle('off', !e.target.checked);
@@ -237,7 +257,8 @@ export function initFilters(){
     el.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}>
       <span class="ico">${c.flag}</span>
       <span class="txt">${c.label}</span>
-      <span class="num" data-country-count="${key}"></span>`;
+      <span class="num" data-country-count="${key}"></span>
+      <button type="button" class="panel-toggle-btn only-btn" data-filter-type="country" data-filter-value="${key}">только</button>`;
     const input = el.querySelector('input');
     input.addEventListener('change', e=>{
       if(e.target.checked) state.countries.add(key); else state.countries.delete(key);
@@ -267,7 +288,8 @@ export function initFilters(){
     el.innerHTML = `<input type="checkbox" checked>
       <span class="ico">${s.ico}</span>
       <span class="txt">${s.label}</span>
-      <span class="num" data-season-count="${key}"></span>`;
+      <span class="num" data-season-count="${key}"></span>
+      <button type="button" class="panel-toggle-btn only-btn" data-filter-type="season" data-filter-value="${key}">только</button>`;
     el.querySelector('input').addEventListener('change', e=>{
       if(e.target.checked) state.seasons.add(key); else state.seasons.delete(key);
       el.classList.toggle('off', !e.target.checked);
@@ -283,7 +305,8 @@ export function initFilters(){
     el.innerHTML = `<input type="checkbox" checked>
       <span class="ico">•</span>
       <span class="txt">${c.label}</span>
-      <span class="num" data-cat-count="${key}"></span>`;
+      <span class="num" data-cat-count="${key}"></span>
+      <button type="button" class="panel-toggle-btn only-btn" data-filter-type="cat" data-filter-value="${key}">только</button>`;
     el.querySelector('input').addEventListener('change', e=>{
       if(e.target.checked) state.cats.add(key); else state.cats.delete(key);
       el.classList.toggle('off', !e.target.checked);
@@ -300,6 +323,28 @@ export function initFilters(){
   document.getElementById('cats-none').addEventListener('click', ()=>{
     state.cats.clear();
     catList.querySelectorAll('input').forEach(i=>{i.checked=false; i.closest('.check').classList.add('off');});
+    refresh();
+  });
+
+  // issue #38: одна делегированная точка на все .only-btn сразу — они уже
+  // несут data-filter-type/-value (см. status/country/season/cat блоки
+  // выше), так что isolate-to-one — это ровно тот же setFilter(), что уже
+  // используют клики по тегам на карте/рекомендациях. preventDefault/
+  // stopPropagation обязательны: кнопка лежит внутри <label>, клик по
+  // которому иначе ещё и переключил бы сам чекбокс.
+  document.querySelectorAll('.only-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      setFilter(btn.dataset.filterType, btn.dataset.filterValue);
+    });
+  });
+
+  // issue #39
+  const sortToggle = document.getElementById('sort-toggle');
+  sortToggle.addEventListener('click', ()=>{
+    state.sortByDistance = !state.sortByDistance;
+    sortToggle.classList.toggle('active', state.sortByDistance);
     refresh();
   });
 

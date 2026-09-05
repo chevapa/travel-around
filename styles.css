@@ -674,11 +674,28 @@
 .check .txt{font-size:12.5px;font-weight:600;}
 .check .num{font-family:'Bungee',sans-serif;font-size:8px;letter-spacing:.03em;}
 
+/* issue #38: isolate-to-one shortcut on every checkbox row — quiet by
+   default (still visible, so it's discoverable without a mouse), clearer
+   on row hover. flex-shrink:0 so it never gets squeezed by long labels. */
+.only-btn{flex-shrink:0; font-size:10px !important; opacity:.55;}
+.check:hover .only-btn{opacity:1;}
+
 /* Place list: looks like catalog slips rather than SaaS rows. */
 #result-count{
   padding:10px 15px 8px;background:var(--riso-ink);color:var(--riso-paper);
   font-family:'Bungee',sans-serif;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
 }
+/* issue #39: same dark bar as the count text, quiet border by default —
+   'active' (state.sortByDistance on) fills solid so the current mode
+   reads at a glance, not just from the label text. */
+#sort-toggle{
+  flex-shrink:0;border:1px solid var(--riso-paper);border-radius:2px;padding:3px 8px;
+  font-family:'Bungee',sans-serif;font-size:8px;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--riso-paper);text-decoration:none;
+}
+#sort-toggle:hover{background:rgba(247,243,231,.15);}
+#sort-toggle.active{background:var(--riso-yellow);border-color:var(--riso-yellow);color:var(--riso-ink);}
 #list-wrap{padding:8px 10px 22px;}
 .group-title{
   margin:9px 6px 5px;font-family:'Bungee',sans-serif;font-size:9px;
