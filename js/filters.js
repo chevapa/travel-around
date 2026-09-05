@@ -44,6 +44,56 @@ export function setCatFilter(catKey){
     label.classList.toggle('off', !on);
   });
   refresh();
+  showFilterToast(`Фильтр: ${catInfo(catKey).label}`);
+}
+
+// Тот же приём, что и setCatFilter — issue #14/#15: клик по тегу статуса
+// («ещё не были» и т.п.) или страны тоже должен фильтровать, а не оставаться
+// декоративным текстом. Отдельная функция на каждый тип фильтра, а не одна
+// общая — сознательно: у каждого своя панель (#status-list/#country-list) и
+// свой ключ в state, обобщение через одну функцию с параметром типа не
+// сделало бы код короче, только менее явным.
+export function setStatusFilter(statusKey){
+  state.statuses = new Set([statusKey]);
+  document.getElementById('status-list').querySelectorAll('input').forEach(input=>{
+    const label = input.closest('.check');
+    const on = label.querySelector('[data-status-count]').dataset.statusCount === statusKey;
+    input.checked = on;
+    label.classList.toggle('off', !on);
+  });
+  refresh();
+  showFilterToast(`Фильтр: ${statusInfo(statusKey).label}`);
+}
+
+export function setCountryFilter(countryKey){
+  state.countries = new Set([countryKey]);
+  document.getElementById('country-list').querySelectorAll('input').forEach(input=>{
+    const label = input.closest('.check');
+    const on = label.querySelector('[data-country-count]').dataset.countryCount === countryKey;
+    input.checked = on;
+    label.classList.toggle('off', !on);
+  });
+  refresh();
+  showFilterToast(`Фильтр: ${countryInfo(countryKey).label}`);
+}
+
+// issue #16: клик по тегу молча меняет фильтры — на карте это выглядит как
+// «внезапная» смена без объяснения. Короткий тост — самая безопасная часть
+// предложенных в issue вариантов (сообщение о том, что фильтр изменился);
+// автооткрытие сайдбара фильтров и подсветка внутри него сознательно
+// оставлены как отдельная задача, как и разрешает сам issue текстом
+// "if only some part ... implemented leave the rest for a new task".
+let filterToastEl;
+function showFilterToast(msg){
+  if(!filterToastEl){
+    filterToastEl = document.createElement('div');
+    filterToastEl.id = 'filter-toast';
+    document.body.appendChild(filterToastEl);
+  }
+  filterToastEl.textContent = msg;
+  filterToastEl.classList.add('show');
+  clearTimeout(filterToastEl._hideTimer);
+  filterToastEl._hideTimer = setTimeout(()=>filterToastEl.classList.remove('show'), 2200);
 }
 
 // ---------- СПИСОК РЕЗУЛЬТАТОВ ----------

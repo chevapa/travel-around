@@ -1,6 +1,6 @@
 import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo, sourceKey, store } from './places.js';
 import { pickMode, setPickedCoords } from './modal.js';
-import { setCatFilter } from './filters.js';
+import { setCatFilter, setStatusFilter, setCountryFilter } from './filters.js';
 
 // ---------- КАРТА ----------
 // На мобильном стартуем чуть приближенным видом (примерно по кольцу ~1ч
@@ -32,7 +32,7 @@ export function buildMarker(place){
   const catBadges = place.cats.slice(0,3).map(c=>
     `<span class="popup-badge cat cat-tag-btn" data-cat="${c}" role="button" tabindex="0">
       <span class="cat-art">${catInfo(c).ico}</span>${catInfo(c).label.replace(' / ',' · ')}</span>`).join('');
-  const countryBadge = `<span class="popup-badge cat">${countryInfo(place.country).flag} ${countryInfo(place.country).label}</span>`;
+  const countryBadge = `<span class="popup-badge cat cat-tag-btn" data-country="${place.country}" role="button" tabindex="0">${countryInfo(place.country).flag} ${countryInfo(place.country).label}</span>`;
   const seasonBadge = place.season!=='all'
     ? `<span class="popup-badge cat">${seasonInfo(place.season).ico} ${seasonInfo(place.season).label}</span>` : '';
   const warnBlock = place.warn ? `<p class="popup-warn">⚠️ ${place.warn}</p>` : '';
@@ -47,7 +47,7 @@ export function buildMarker(place){
   // для оценки времени в пути через OSRM (loadDriveTime), где нужна конкретная точка отсчёта.
   const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lng}&travelmode=driving`;
   marker.bindPopup(
-    `<div class="popup-badges"><span class="popup-badge ${st.badge}">${st.label}</span>${countryBadge}${seasonBadge}${catBadges}</div>` +
+    `<div class="popup-badges"><span class="popup-badge ${st.badge} cat-tag-btn" data-status="${place.cat}" role="button" tabindex="0">${st.label}</span>${countryBadge}${seasonBadge}${catBadges}</div>` +
     `<p class="popup-title"><a href="${searchUrl}" target="_blank" rel="noopener" class="title-link">${place.name}<svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>${starMark}</p>` +
     `<p class="popup-note">${place.note}</p>` +
     warnBlock +
@@ -332,12 +332,21 @@ export function initMap(visiblePlacesFn){
       });
     }
 
-    // Клик по тегу категории — issue #1: показывает на карте только места
-    // этой категории, вместо того чтобы описание оставалось просто текстом.
+    // Клик по тегу — issue #1 сделал это для категории; issue #14/#15
+    // расширяют то же самое на теги статуса («ещё не были» и т.п.) и страны,
+    // которые до этого оставались декоративным текстом. Одна и та же
+    // .cat-tag-btn — общий CSS-хук «это кликабельный тег» независимо от
+    // типа; какой именно фильтр применить, решает то, какой data-атрибут
+    // реально проставлен на конкретном теге (см. buildMarker выше).
     el.querySelectorAll('.cat-tag-btn').forEach(tag=>{
       if(tag.dataset.wired) return;
       tag.dataset.wired = '1';
-      const activate = ()=>{ setCatFilter(tag.dataset.cat); map.closePopup(); };
+      const activate = ()=>{
+        if(tag.dataset.cat) setCatFilter(tag.dataset.cat);
+        else if(tag.dataset.status) setStatusFilter(tag.dataset.status);
+        else if(tag.dataset.country) setCountryFilter(tag.dataset.country);
+        map.closePopup();
+      };
       tag.addEventListener('click', activate);
       tag.addEventListener('keydown', e=>{
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); }
