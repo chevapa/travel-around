@@ -736,6 +736,14 @@
 .popup-note{font-size:14px;line-height:1.4;color:var(--riso-ink);margin:0 0 8px;}
 .popup-meta{font-family:'Bungee',sans-serif;font-size:8px;color:var(--riso-ink);text-transform:uppercase;letter-spacing:.04em;}
 .popup-source{font-family:'Bungee',sans-serif;font-size:7.5px;color:var(--riso-ink);opacity:.6;text-transform:uppercase;letter-spacing:.03em;margin-top:4px;}
+/* issue #24 section 6: same sepia tone as the map's Terra Incognita
+   layer, not a generic warning color — this is "you've gone beyond the
+   known area", not an error state. */
+.popup-terra-badge{
+  font-family:'Fraunces',serif; font-style:italic; font-size:12px;
+  letter-spacing:.1em; color:#8a6d4a; margin:0 0 3px;
+}
+.popup-terra-note{font-size:11px; color:var(--ink-soft); margin:0 0 8px; font-style:italic;}
 .popup-drivetime{font-size:13px;padding-top:10px;margin-top:10px;border-top:2px solid var(--riso-ink);font-weight:700;}
 .drivetime-link{color:inherit;display:inline-flex;align-items:center;text-decoration:none;border-bottom:2px dotted var(--riso-ink);}
 .drivetime-link:hover{color:var(--riso-teal);border-bottom-color:var(--riso-teal);}
@@ -753,6 +761,15 @@
 .pin-wrap{width:32px;height:32px;}
 .pin-dot{width:18px;height:18px;border-radius:50%;left:7px;top:7px;border:3px solid var(--riso-paper);box-shadow:2px 2px 0 var(--riso-ink);}
 .pin-badge{right:-4px;top:-5px;width:15px;height:15px;border-radius:0;background:var(--riso-pink);color:var(--riso-ink);font-size:10px;border:2px solid var(--riso-ink);transform:rotate(10deg);box-shadow:2px 2px 0 var(--riso-yellow);}
+/* issue #24 section 5: places beyond the ~3h ring get an "unexplored
+   location on an old map" mark instead of the modern filled pin-dot circle
+   — an outlined, rotated (diamond-like) ink symbol, still clearly
+   clickable at the same size/tap-target as the normal pin. */
+.pin-terra{
+  position:absolute; left:9px; top:9px; width:14px; height:14px;
+  border:2.5px solid; background:rgba(138,109,74,.18);
+  transform:rotate(45deg); box-shadow:1px 1px 0 rgba(74,58,40,.4);
+}
 
 /* Small paper labels for radius. */
 .radius-label{background:var(--riso-paper) !important;border:2px solid var(--riso-ink) !important;border-radius:0 !important;box-shadow:3px 3px 0 var(--riso-pink) !important;font-family:'Bungee',sans-serif !important;font-size:9px !important;letter-spacing:.04em !important;padding:4px 7px !important;}
@@ -867,34 +884,46 @@
 #hero-card::before{width:58px;height:16px;right:15px;top:-9px;}
 #hero-card::after{font-size:7px;right:-5px;bottom:-10px;padding:3px 6px;box-shadow:3px 3px 0 var(--riso-pink);}
 
-/* Три декоративные наклейки трогают края вьюпорта — остальное чисто. */
+/* Три декоративные наклейки трогают края вьюпорта — остальное чисто.
+   issue #24: они participate в переходе Terra Incognita — по мере зума
+   "наружу" (map.js's updateTerraIncognitaZoom() пишет --terra-t на
+   <html>, от 0 до 1) каждая наклейка смещается к своему предопределённому
+   якорю в Terra Incognita, слегка теряя цвет и прозрачность, и плавно
+   возвращается при зуме обратно — calc() внутри transform/filter, не
+   переписывание позиции на каждый кадр из JS. */
 .edge-collage{
   position:fixed;
   z-index:1395;
   pointer-events:none;
   user-select:none;
-  filter:drop-shadow(3px 4px 0 rgba(23,22,19,.18));
+  transition:transform .25s ease-out, opacity .25s ease-out, filter .25s ease-out;
 }
-/* Пальма — про Истрию/побережье, слева. */
+/* Пальма — про Истрию/побережье, слева. Якорь: дальше влево-вниз. */
 .edge-collage.palm{
   left:-30px;
   top:38vh;
   width:92px;
-  transform:rotate(-11deg);
+  transform:translate(calc(var(--terra-t,0) * -46px), calc(var(--terra-t,0) * 52px)) rotate(-11deg);
+  opacity:calc(1 - var(--terra-t,0) * 0.15);
+  filter:drop-shadow(3px 4px 0 rgba(23,22,19,.18)) grayscale(calc(var(--terra-t,0) * 65%)) sepia(calc(var(--terra-t,0) * 45%));
 }
-/* Звезда — про море, у нижнего левого угла. */
+/* Звезда — про море, у нижнего левого угла. Якорь: ещё ниже. */
 .edge-collage.star{
   left:-26px;
   top:80vh;
   width:72px;
-  transform:rotate(-16deg);
+  transform:translate(calc(var(--terra-t,0) * -38px), calc(var(--terra-t,0) * 44px)) rotate(-16deg);
+  opacity:calc(1 - var(--terra-t,0) * 0.15);
+  filter:drop-shadow(3px 4px 0 rgba(23,22,19,.18)) grayscale(calc(var(--terra-t,0) * 65%)) sepia(calc(var(--terra-t,0) * 45%));
 }
-/* Замок — про континентальную Хорватию (Загорье), справа сверху, ниже панели поиска/фильтров. */
+/* Замок — про континентальную Хорватию (Загорье), справа сверху. Якорь: дальше вправо-вверх. */
 .edge-collage.castle{
   right:-6px;
   top:92px;
   width:78px;
-  transform:rotate(9deg);
+  transform:translate(calc(var(--terra-t,0) * 42px), calc(var(--terra-t,0) * -38px)) rotate(9deg);
+  opacity:calc(1 - var(--terra-t,0) * 0.15);
+  filter:drop-shadow(3px 4px 0 rgba(23,22,19,.18)) grayscale(calc(var(--terra-t,0) * 65%)) sepia(calc(var(--terra-t,0) * 45%));
 }
 @media(max-width:700px){
   #hero-card{left:10px;top:10px;width:245px;padding:8px 9px 8px;}
@@ -1137,18 +1166,25 @@
 }
 .filter-toast-reset:hover{ background:var(--riso-pink); border-color:var(--riso-pink); }
 
-/* issue #24: beyond the ~3h ring — decorative only, never blocks map
-   interaction (interactive:false on both parts in map.js). Warm
-   sepia/parchment tone is a deliberate one-off exception to the app's bold
-   riso palette elsewhere — it's standing in for "old explorer's atlas",
-   not a restyle of the product. */
+/* issue #24 (reopened — multiple gradient rings now, not one flat tint,
+   see map.js's TERRA_GRADIENT): beyond the ~3h ring — decorative only,
+   never blocks map interaction (interactive:false on every part in
+   map.js). Warm sepia/parchment tone is a deliberate one-off exception to
+   the app's bold riso palette elsewhere — standing in for "old explorer's
+   atlas", not a restyle of the product.
+   fill-opacity is deliberately NOT set here — map.js's
+   updateTerraIncognitaZoom() sets it per-ring via Leaflet's setStyle(),
+   and a CSS rule for the same property on the same element would win over
+   that (SVG presentation attributes lose to stylesheet rules), silently
+   overriding every ring to one flat value regardless of the JS. */
 .terra-incognita-mask{
-  fill:#8a6d4a; fill-opacity:.4;
+  fill:#8a6d4a;
 }
 .terra-incognita-label{
-  font-family:'Fraunces',serif; font-style:italic; font-size:15px;
-  letter-spacing:.14em; color:#5b4630; white-space:nowrap;
-  text-shadow:0 1px 0 rgba(255,255,255,.5);
+  font-family:'Fraunces',serif; font-style:italic; font-size:22px;
+  letter-spacing:.16em; color:#4a3a28; white-space:nowrap;
+  text-shadow:0 1px 0 rgba(255,255,255,.4);
   transform:translate(-50%,-50%) rotate(-6deg);
   pointer-events:none; user-select:none;
+  transition:opacity .15s linear;
 }

@@ -1,13 +1,18 @@
 import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo, sourceKey, store } from './places.js';
 import { pickMode, setPickedCoords } from './modal.js';
 import { setFilter } from './filters.js';
+import { haversineDistance } from './context.js';
 
 // ---------- КАРТА ----------
 // На мобильном стартуем чуть приближенным видом (примерно по кольцу ~1ч
 // вокруг Загреба), а не тем же зумом, что на десктопе — иначе на маленьком
 // экране полезная область карты выглядит слишком мелкой и далёкой.
 const isMobileViewport = window.matchMedia('(max-width:860px)').matches;
-export const map = L.map('map', {zoomControl:false}).setView([45.85, 15.60], isMobileViewport ? 9 : 8);
+// issue #24: тот же дефолтный зум нужен и для Terra Incognita zoom-fade
+// ниже (полная интенсивность на этом зуме и дальше наружу), поэтому вынесен
+// в константу, а не остаётся магическим числом только внутри setView.
+const DEFAULT_ZOOM = isMobileViewport ? 9 : 8;
+export const map = L.map('map', {zoomControl:false}).setView([45.85, 15.60], DEFAULT_ZOOM);
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors', maxZoom: 19
@@ -18,9 +23,29 @@ export const markerRefs = [];
 const driveTimeCache = {};
 let placeIdCounter = 0;
 
+// issue #24 section 5/6: место за пределами дальнего кольца должно
+// выглядеть и открываться иначе — "неисследованная точка на старой карте",
+// а не обычное место с той же иконкой. Азимут считается тем же плоским
+// приближением, что destPoint/ringKmAt ниже (та же геометрия, что рисует
+// сам овал кольца), а не честной геодезией — иначе "внутри/снаружи" не
+// совпадало бы с тем, что реально нарисовано на карте.
+function bearingFlat(from, to){
+  const latR = from.lat * Math.PI/180;
+  const dLat = to.lat - from.lat, dLng = to.lng - from.lng;
+  return (Math.atan2(dLng*Math.cos(latR), dLat) * 180/Math.PI + 360) % 360;
+}
+function isTerraIncognita(place){
+  const base = BASE_POINTS.zagreb, outermost = RING_DATA.zagreb[RING_DATA.zagreb.length-1];
+  const boundaryKm = ringKmAt(outermost, bearingFlat(base, place));
+  return haversineDistance(base.lat, base.lng, place.lat, place.lng) > boundaryKm;
+}
+
 export function buildMarker(place){
   const color = statusInfo(place.cat).color;
-  const html = `<div class="pin-wrap">
+  const terra = isTerraIncognita(place);
+  const html = terra
+    ? `<div class="pin-wrap"><div class="pin-terra" style="border-color:${color}"></div></div>`
+    : `<div class="pin-wrap">
       <div class="pin-dot" style="background:${color}"></div>
       ${place.wantReturn ? `<div class="pin-badge">★</div>` : ''}
     </div>`;
@@ -49,7 +74,18 @@ export function buildMarker(place){
   // BASE_POINTS/base-select здесь больше не участвуют — они остаются только
   // для оценки времени в пути через OSRM (loadDriveTime), где нужна конкретная точка отсчёта.
   const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lng}&travelmode=driving`;
+  // issue #24 section 6: место за пределами ~3ч должно чётко сообщать об
+  // этом при открытии — не удалять и не занижать данные, просто явно
+  // обозначить контекст перед обычным содержимым попапа.
+  // place.drive is missing on some research-sourced places (pre-existing
+  // data gap, not introduced here — see EXPERIMENT-LOG-style note: caught
+  // while testing this exact block against Каньон Матка) — falls back
+  // rather than interpolating "undefined" into the popup.
+  const terraBlock = terra
+    ? `<p class="popup-terra-badge">TERRA INCOGNITA</p><p class="popup-terra-note">За пределами ~3 ч от Загреба${place.drive ? ' · ' + place.drive : ''}</p>`
+    : '';
   marker.bindPopup(
+    terraBlock +
     `<div class="popup-badges"><span class="popup-badge ${st.badge} cat-tag-btn" data-filter-type="status" data-filter-value="${place.cat}" role="button" tabindex="0">${st.label}</span>${countryBadge}${seasonBadge}${catBadges}</div>` +
     `<p class="popup-title"><a href="${searchUrl}" target="_blank" rel="noopener" class="title-link">${place.name}<svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>${starMark}</p>` +
     `<p class="popup-note">${place.note}</p>` +
@@ -178,18 +214,75 @@ function ovalPoints(c,d,steps=144){
 }
 
 // Огромный прямоугольник «весь мир» (не буквально ±90 — полюса ломают
-// проекцию Меркатора) — внешнее кольцо полигона-«бублика» ниже. Leaflet
-// рисует многокольцевые полигоны по правилу evenodd, так что второе кольцо
-// (граница дальнего радиуса) вырезает в этом прямоугольнике дыру — саму
-// «неисследованную территорию» красит именно внешнее кольцо, а не дыра.
+// проекцию Меркатора) — внешнее кольцо каждого «бублика» градиента ниже.
+// Leaflet рисует многокольцевые полигоны по правилу evenodd, так что
+// внутреннее кольцо каждого шага вырезает дыру — но только у ПОСЛЕДНЕГО
+// (самого дальнего) шага внешним кольцом служит WORLD_BOUNDS; у остальных
+// внешнее кольцо — это граница СЛЕДУЮЩЕГО шага (см. TERRA_GRADIENT ниже).
 const WORLD_BOUNDS = [[85,-180],[85,180],[-85,180],[-85,-180]];
 // Четыре диагональных азимута — не совпадают с N/E/S/W (0/90/180/270), где
 // уже сидят подписи самих колец ("~1 ч" и т.п.), поэтому не перекрываются.
 const TERRA_INCOGNITA_BEARINGS = [45, 135, 225, 315];
+
+// issue #24 (переоткрыт: "make area out of town really not visible" — один
+// плоский тон поверх чётких тайлов читался просто как лёгкий цветной
+// фильтр, а не как «карта растворяется в неизвестность»). Вместо одной
+// заливки — несколько концентрических шагов НАРАСТАЮЩЕЙ непрозрачности,
+// от границы дальнего кольца наружу: дешёвый, но настоящий градиент без
+// canvas/SVG-градиентов и второго тайл-слоя (issue просил не переписывать
+// архитектуру карты). mult — во сколько раз дальше исходного кольца
+// проходит внешняя граница шага; opacity — целевая fillOpacity ПРИ ПОЛНОЙ
+// интенсивности (см. zoom-фейд ниже — реальная непрозрачность = opacity*t).
+// ВАЖНО: диапазон mult подобран под то, что реально попадает в вьюпорт на
+// DEFAULT_ZOOM — граница дальнего кольца уже занимает большую часть экрана
+// (см. скриншот в issue), так что "снаружи" остаётся только узкая кайма.
+// Первая версия растягивала градиент до 3.2x — на практике вся сильная
+// часть уходила за пределы экрана, а видимый край держался на 0.14
+// (слабее старой плоской заливки в 0.4) — issue reopened именно из-за
+// этого. Сжато до 1.0-1.8x, с высокой стартовой непрозрачностью.
+const TERRA_GRADIENT = [
+  { mult:1.00, opacity:.35 },
+  { mult:1.15, opacity:.55 },
+  { mult:1.30, opacity:.72 },
+  { mult:1.50, opacity:.88 },
+  { mult:1.80, opacity:.96 },
+];
+// Полная интенсивность на дефолтном зуме и дальше наружу (меньше число —
+// дальше от камеры) — это и есть тот зум, на котором пользователь впервые
+// видит карту и жалуется, что эффект не виден. Спадает к нулю только когда
+// пользователь зумится куда ближе дефолта — тогда он явно разглядывает
+// конкретное место, а не общий вид "известный мир / неизвестность".
+const TERRA_ZOOM_FULL = DEFAULT_ZOOM;
+const TERRA_ZOOM_NONE = DEFAULT_ZOOM + 3;
+
+let terraRings = [];      // [{layer, baseOpacity}] — для пересчёта на зум
+let terraLabelEls = [];   // DOM-узлы подписей — тоже проявляются по мере зума
+
+function terraZoomFactor(){
+  const z = map.getZoom();
+  const t = (TERRA_ZOOM_NONE - z) / (TERRA_ZOOM_NONE - TERRA_ZOOM_FULL);
+  return Math.max(0, Math.min(1, t));
+}
+
+// Вызывается и на каждый тик зума (map.on('zoom', ...) ниже), и один раз
+// сразу после drawBase() — пересчитывает уже СОЗДАННЫЕ слои (setStyle /
+// прямая запись в style), а не создаёт их заново: полигоны с их геометрией
+// трогать на каждый кадр зума было бы намного дороже.
+export function updateTerraIncognitaZoom(){
+  const t = terraZoomFactor();
+  terraRings.forEach(({layer, baseOpacity})=>{
+    layer.setStyle({fillOpacity: baseOpacity * t});
+  });
+  terraLabelEls.forEach(el=>{ if(el) el.style.opacity = t; });
+  document.documentElement.style.setProperty('--terra-t', t);
+}
+
 function drawBase(key){
   const base = BASE_POINTS[key], rings = RING_DATA[key]||[];
   radiusShapes.forEach(s=>map.removeLayer(s));
   radiusShapes = [];
+  terraRings = [];
+  terraLabelEls = [];
   if(baseMarker) map.removeLayer(baseMarker);
   rings.forEach(ring=>{
     const shape = L.polygon(ovalPoints(base,ring), {
@@ -204,18 +297,26 @@ function drawBase(key){
   // территория, в духе старых атласов (issue приложил антикварную карту
   // Тасмана как референс) — чисто декоративно, реальную карту/фильтрацию
   // мест это не трогает, просто визуально отмечает «сюда за день не
-  // доедешь». interactive:false у обеих частей — маска не должна перехватывать
+  // доедешь». interactive:false у всех частей — маска не должна перехватывать
   // клики/панорамирование карты под собой.
   const outermost = rings[rings.length-1];
   if(outermost){
-    const hole = ovalPoints(base, outermost);
-    const mask = L.polygon([WORLD_BOUNDS, hole], {
-      className:'terra-incognita-mask', stroke:false, interactive:false,
-    }).addTo(map);
-    radiusShapes.push(mask);
+    TERRA_GRADIENT.forEach((step, i)=>{
+      const innerRing = { N:outermost.N*step.mult, E:outermost.E*step.mult, S:outermost.S*step.mult, W:outermost.W*step.mult };
+      const inner = ovalPoints(base, innerRing);
+      const next = TERRA_GRADIENT[i+1];
+      const outer = next
+        ? ovalPoints(base, { N:outermost.N*next.mult, E:outermost.E*next.mult, S:outermost.S*next.mult, W:outermost.W*next.mult })
+        : WORLD_BOUNDS;
+      const layer = L.polygon([outer, inner], {
+        className:'terra-incognita-mask', stroke:false, interactive:false, fillOpacity:0,
+      }).addTo(map);
+      radiusShapes.push(layer);
+      terraRings.push({layer, baseOpacity: step.opacity});
+    });
 
     TERRA_INCOGNITA_BEARINGS.forEach(brg=>{
-      const km = ringKmAt(outermost, brg) * 1.3; // заведомо за пределами кольца
+      const km = ringKmAt(outermost, brg) * 1.15; // within the visible strong-tint band, not off-screen
       const [lat,lng] = destPoint(base.lat, base.lng, km, brg);
       const label = L.marker([lat,lng], {
         icon: L.divIcon({
@@ -224,6 +325,7 @@ function drawBase(key){
         }),
         interactive:false,
       }).addTo(map);
+      label.on('add', ()=>{ terraLabelEls.push(label.getElement()); });
       radiusShapes.push(label);
     });
   }
@@ -232,6 +334,7 @@ function drawBase(key){
     icon:L.divIcon({html:'<div class="base-pin"></div>',className:'',iconSize:[16,16],iconAnchor:[8,8]}),
     interactive:false, zIndexOffset:1000
   }).addTo(map);
+  updateTerraIncognitaZoom();
 }
 
 // ---------- ЛЕНИВЫЙ ПОИСК СОСЕДЕЙ (OSRM /table, sources=0) ----------
@@ -319,6 +422,10 @@ export function initMap(visiblePlacesFn){
   drawBase('zagreb');
   document.getElementById('base-select').addEventListener('change', e=>drawBase(e.target.value));
   document.getElementById('mode-select').addEventListener('change', ()=>drawBase(document.getElementById('base-select').value));
+  // issue #24: 'zoom' (not 'zoomend') fires continuously through an
+  // animated zoom, not just once at the end — needed for a smooth,
+  // continuously-interpolated fade rather than a sudden jump.
+  map.on('zoom', updateTerraIncognitaZoom);
 
   map.on('click', e=>{
     if(!pickMode) return;
