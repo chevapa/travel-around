@@ -775,8 +775,26 @@
 .radius-label{background:var(--riso-paper) !important;border:2px solid var(--riso-ink) !important;border-radius:0 !important;box-shadow:3px 3px 0 var(--riso-pink) !important;font-family:'Bungee',sans-serif !important;font-size:9px !important;letter-spacing:.04em !important;padding:4px 7px !important;}
 
 /* Modal follows the same cut-paper system. */
-#modal{border:3px solid var(--riso-ink);border-radius:0;background:var(--riso-paper);box-shadow:10px 10px 0 var(--riso-teal);}
-#modal h2{font-family:'Bungee',sans-serif;font-size:20px;letter-spacing:.03em;background:var(--riso-pink);padding:14px 20px;margin:0;border-bottom:3px solid var(--riso-ink);}
+#modal{border:3px solid var(--riso-ink);border-radius:0;background:var(--riso-paper);box-shadow:10px 10px 0 var(--riso-teal);position:relative;}
+/* issue #52: the riso restyle above gave h2 a solid --riso-pink background
+   but kept the older amber-text/star-text-shadow combo from line ~186,
+   which was tuned for a transparent h2 on the light paper modal body, not a
+   solid hot-pink one — amber-on-pink plus a pink text-shadow made "Новое
+   место" essentially unreadable. --riso-ink matches every other
+   riso-pink-background element in the app (see .pin-badge, .nearby-btn:hover
+   etc.) and gives real contrast. */
+#modal h2{font-family:'Bungee',sans-serif;font-size:20px;letter-spacing:.03em;background:var(--riso-pink);color:var(--riso-ink);text-shadow:none;padding:14px 44px 14px 20px;margin:0;border-bottom:3px solid var(--riso-ink);}
+/* issue #52/#53: on mobile the only way to close either the "New place"
+   modal or the recommendation sheet was to scroll all the way down to
+   "Отмена" / use a close button easy to miss against its background — add a
+   always-visible, high-contrast close control pinned to the header instead
+   of relying on scroll position. */
+#modal-close{
+  position:absolute;top:10px;right:10px;width:32px;height:32px;
+  border:2px solid var(--riso-ink);background:var(--riso-paper);color:var(--riso-ink);
+  font-size:18px;line-height:1;cursor:pointer;box-shadow:2px 2px 0 var(--riso-ink);
+}
+#modal-close:hover{background:var(--riso-pink);}
 .form-actions button{border:2px solid var(--riso-ink);border-radius:0;box-shadow:3px 3px 0 var(--riso-ink);font-family:'Bungee',sans-serif;font-size:9px;letter-spacing:.04em;text-transform:uppercase;}
 #save-btn{background:var(--riso-yellow);color:var(--riso-ink);}
 #cancel-btn{background:#F8F0E0;color:var(--riso-ink);}

@@ -51,9 +51,20 @@ export function isSeasonSuitable(seasonKey, ctx = currentContext()){
   return ctx.month >= range[0] && ctx.month <= range[1];
 }
 
+// issue #47: приложение просило геолокацию сразу при загрузке экрана
+// рекомендаций, ещё до того, как пользователь вообще что-то сделал —
+// нежелательный браузерный permission-prompt "на входе". Пока в проекте нет
+// экрана/действия, которое явно объясняет пользователю, зачем нужна геолокация
+// (см. CLAUDE.md §9 — геолокация как один из сигналов контекста, не более),
+// реальный запрос выключен флагом ниже, а функция всегда отдаёт fallback-
+// координаты. Вся остальная логика (кэш, таймаут, промис-интерфейс) сохранена
+// специально, чтобы возврат к реальной геолокации был одной строкой, когда
+// появится подходящий момент/UI её запрашивать.
+const GEOLOCATION_ENABLED = false;
+
 export function getUserPosition(){
   return new Promise(resolve => {
-    if(!navigator.geolocation){ resolve(FALLBACK_COORDS); return; }
+    if(!GEOLOCATION_ENABLED || !navigator.geolocation){ resolve(FALLBACK_COORDS); return; }
     const timer = setTimeout(() => resolve(FALLBACK_COORDS), 4000);
     navigator.geolocation.getCurrentPosition(
       pos => { clearTimeout(timer); resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }); },
