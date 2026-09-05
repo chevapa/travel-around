@@ -8,7 +8,7 @@ import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo } from './places.j
 import { flyToPlace, map } from './map.js';
 import { loadInteractions, logInteraction, hasInteraction, clearInteractions } from './interactions.js';
 import { computeProfile } from './profile.js';
-import { currentContext, getWeather } from './context.js';
+import { currentContext, getWeather, getUserPosition } from './context.js';
 import { rankPlaces } from './recommendationEngine.js';
 
 let queue = [];               // элементы {place, score, reasons} — см. buildQueue()
@@ -16,6 +16,9 @@ let stackEl, sheetBack, sheetBody;
 // Погода — один запрос на сессию (см. context.js), приходит асинхронно
 // уже после первого рендера; когда придёт, просто пересчитываем очередь.
 let weather = null;
+// Позиция пользователя — тот же принцип, что и погода: один запрос на
+// сессию, приходит асинхронно; когда придёт, просто пересчитываем очередь.
+let userPos = null;
 // "Показано" в эту сессию — только чтобы не заспамить журнал повторным
 // логированием 'viewed' при каждом ре-рендере одной и той же верхней
 // карточки (renderStack дергается чаще, чем реально меняется top of stack).
@@ -31,7 +34,7 @@ function buildQueue(){
     p.cat === 'plan' && !hasInteraction(p.id, 'not_interested') && !hasInteraction(p.id, 'liked'));
   const profile = computeProfile(PLACES);
   const ctx = currentContext();
-  const ranked = rankPlaces(candidates, profile, ctx, weather);
+  const ranked = rankPlaces(candidates, profile, ctx, weather, userPos);
   // "На потом" не выкидываем — просто откладываем в конец очереди,
   // чтобы карточка попалась снова, но не мешала более уместным вариантам.
   const primary  = ranked.filter(r => !hasInteraction(r.place.id, 'saved_for_later'));
@@ -292,4 +295,5 @@ export async function initRecommend(){
   // когда придёт, просто пересчитываем очередь с уже известной погодой.
   // Не блокируем открытие экрана ради этого.
   getWeather().then(w => { weather = w; refreshRecommend(); });
+  getUserPosition().then(p => { userPos = p; refreshRecommend(); });
 }

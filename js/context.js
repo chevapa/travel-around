@@ -13,6 +13,18 @@
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast';
 const FALLBACK_COORDS = { lat: 45.8150, lng: 15.9819 }; // Загреб
 
+// Расстояние по дуге большого круга между двумя точками (км) — используется
+// рекомендательным движком для сигнала "подходящее расстояние" (CLAUDE.md §9).
+export function haversineDistance(lat1, lng1, lat2, lng2){
+  const R = 6371; // радиус Земли, км
+  const toRad = deg => deg * (Math.PI / 180);
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 // Грубые месячные окна под уже существующий словарь сезонов (data/vocab.json).
 // 0-индексация месяцев, как у Date#getMonth().
 const SEASON_MONTH_RANGES = {
@@ -39,7 +51,7 @@ export function isSeasonSuitable(seasonKey, ctx = currentContext()){
   return ctx.month >= range[0] && ctx.month <= range[1];
 }
 
-function getPosition(){
+export function getUserPosition(){
   return new Promise(resolve => {
     if(!navigator.geolocation){ resolve(FALLBACK_COORDS); return; }
     const timer = setTimeout(() => resolve(FALLBACK_COORDS), 4000);
@@ -71,7 +83,7 @@ let cached = null;
 export async function getWeather(){
   if(cached) return cached;
   try{
-    const { lat, lng } = await getPosition();
+    const { lat, lng } = await getUserPosition();
     const url = `${WEATHER_URL}?latitude=${lat}&longitude=${lng}&current_weather=true`;
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 5000);

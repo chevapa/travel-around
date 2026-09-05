@@ -9,11 +9,11 @@
 // каждую рекомендацию можно было объяснить (CLAUDE.md §9: не просто
 // «Жумберак», а «Жумберак — потому что…»). profile приходит из profile.js
 // (взаимодействия), ctx/weather — из context.js (объективная реальность).
-import { isSeasonSuitable } from './context.js';
+import { isSeasonSuitable, haversineDistance } from './context.js';
 
 const OUTDOOR_CATS = ['nature', 'beach', 'view', 'water', 'cave', 'bike'];
 
-export function scorePlace(place, profile, ctx, weather){
+export function scorePlace(place, profile, ctx, weather, userPos = null){
   let score = 0;
   const reasons = [];
 
@@ -59,6 +59,13 @@ export function scorePlace(place, profile, ctx, weather){
     if(weather.key === 'bad'){ score -= 1.5; reasons.push({ icon: weather.icon, title:'Ожидаются осадки', sub:'может быть неудачный день для природы', weight:-1.5 }); }
   }
 
+  // 7) Расстояние — далеко ли ехать от текущего местоположения.
+  if(userPos){
+    const distanceKm = haversineDistance(userPos.lat, userPos.lng, place.lat, place.lng);
+    if(distanceKm <= 50){ score += 1; reasons.push({ icon:'🚗', title:'Подходящее расстояние', sub:'рядом, можно съездить на день', weight:1 }); }
+    if(distanceKm >= 200){ score -= 1; reasons.push({ icon:'🚗', title:'Далековато', sub:'потребует больше времени в пути', weight:-1 }); }
+  }
+
   // Важная информация, не влияющая на score.
   if(place.warn){
     reasons.push({ icon:'⚠️', title:'Проверить перед выездом', sub: place.warn, weight:0 });
@@ -68,8 +75,8 @@ export function scorePlace(place, profile, ctx, weather){
   return { score, reasons: reasons.slice(0, 4) };
 }
 
-export function rankPlaces(places, profile, ctx, weather){
+export function rankPlaces(places, profile, ctx, weather, userPos = null){
   return places
-    .map(place => ({ place, ...scorePlace(place, profile, ctx, weather) }))
+    .map(place => ({ place, ...scorePlace(place, profile, ctx, weather, userPos) }))
     .sort((a, b) => b.score - a.score);
 }
