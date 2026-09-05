@@ -156,19 +156,33 @@ function destPoint(lat0,lng0,km,brg){
   const r=brg*Math.PI/180, latR=lat0*Math.PI/180;
   return [lat0 + (km*Math.cos(r))/111.32, lng0 + (km*Math.sin(r))/(111.32*Math.cos(latR))];
 }
+// Вынесено из ovalPoints (было одно тело цикла) — issue #24 переиспользует
+// это же интерполирование, чтобы понять, на каком расстоянии по конкретному
+// азимуту проходит граница кольца, а не только для рисования самого овала.
+function ringKmAt(d,b){
+  if(b<=90) return smoothLerp(d.N,d.E,b/90);
+  if(b<=180) return smoothLerp(d.E,d.S,(b-90)/90);
+  if(b<=270) return smoothLerp(d.S,d.W,(b-180)/90);
+  return smoothLerp(d.W,d.N,(b-270)/90);
+}
 function ovalPoints(c,d,steps=144){
   const pts=[];
   for(let i=0;i<steps;i++){
     const b=i*360/steps;
-    let km;
-    if(b<=90) km=smoothLerp(d.N,d.E,b/90);
-    else if(b<=180) km=smoothLerp(d.E,d.S,(b-90)/90);
-    else if(b<=270) km=smoothLerp(d.S,d.W,(b-180)/90);
-    else km=smoothLerp(d.W,d.N,(b-270)/90);
-    pts.push(destPoint(c.lat,c.lng,km,b));
+    pts.push(destPoint(c.lat,c.lng,ringKmAt(d,b),b));
   }
   return pts;
 }
+
+// Огромный прямоугольник «весь мир» (не буквально ±90 — полюса ломают
+// проекцию Меркатора) — внешнее кольцо полигона-«бублика» ниже. Leaflet
+// рисует многокольцевые полигоны по правилу evenodd, так что второе кольцо
+// (граница дальнего радиуса) вырезает в этом прямоугольнике дыру — саму
+// «неисследованную территорию» красит именно внешнее кольцо, а не дыра.
+const WORLD_BOUNDS = [[85,-180],[85,180],[-85,180],[-85,-180]];
+// Четыре диагональных азимута — не совпадают с N/E/S/W (0/90/180/270), где
+// уже сидят подписи самих колец ("~1 ч" и т.п.), поэтому не перекрываются.
+const TERRA_INCOGNITA_BEARINGS = [45, 135, 225, 315];
 function drawBase(key){
   const base = BASE_POINTS[key], rings = RING_DATA[key]||[];
   radiusShapes.forEach(s=>map.removeLayer(s));
@@ -182,6 +196,35 @@ function drawBase(key){
     shape.openTooltip(destPoint(base.lat,base.lng,ring.N,0));
     radiusShapes.push(shape);
   });
+
+  // issue #24: за пределами самого дальнего кольца — «ещё не открытая»
+  // территория, в духе старых атласов (issue приложил антикварную карту
+  // Тасмана как референс) — чисто декоративно, реальную карту/фильтрацию
+  // мест это не трогает, просто визуально отмечает «сюда за день не
+  // доедешь». interactive:false у обеих частей — маска не должна перехватывать
+  // клики/панорамирование карты под собой.
+  const outermost = rings[rings.length-1];
+  if(outermost){
+    const hole = ovalPoints(base, outermost);
+    const mask = L.polygon([WORLD_BOUNDS, hole], {
+      className:'terra-incognita-mask', stroke:false, interactive:false,
+    }).addTo(map);
+    radiusShapes.push(mask);
+
+    TERRA_INCOGNITA_BEARINGS.forEach(brg=>{
+      const km = ringKmAt(outermost, brg) * 1.3; // заведомо за пределами кольца
+      const [lat,lng] = destPoint(base.lat, base.lng, km, brg);
+      const label = L.marker([lat,lng], {
+        icon: L.divIcon({
+          html:'<div class="terra-incognita-label">Terra Incognita</div>',
+          className:'', iconSize:[0,0],
+        }),
+        interactive:false,
+      }).addTo(map);
+      radiusShapes.push(label);
+    });
+  }
+
   baseMarker = L.marker([base.lat,base.lng],{
     icon:L.divIcon({html:'<div class="base-pin"></div>',className:'',iconSize:[16,16],iconAnchor:[8,8]}),
     interactive:false, zIndexOffset:1000
