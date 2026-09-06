@@ -313,13 +313,17 @@ const TERRA_GRADIENT = [
   { mult:1.50, opacity:.50 },
   { mult:1.80, opacity:.55 },
 ];
-// Полная интенсивность на дефолтном зуме и дальше наружу (меньше число —
-// дальше от камеры) — это и есть тот зум, на котором пользователь впервые
-// видит карту и жалуется, что эффект не виден. Спадает к нулю только когда
-// пользователь зумится куда ближе дефолта — тогда он явно разглядывает
-// конкретное место, а не общий вид "известный мир / неизвестность".
-const TERRA_ZOOM_FULL = DEFAULT_ZOOM;
-const TERRA_ZOOM_NONE = DEFAULT_ZOOM + 3;
+// issue #83: "Terra incognita words literally stuck to screen even when
+// user on a regular map" — the previous thresholds (see git history) made
+// the label FULL STRENGTH at the default zoom itself, i.e. visible on the
+// very first, completely normal view every user starts on, not just when
+// zooming out further than that. Flipped: invisible at the default zoom
+// and any closer view (a normal map, no "known world" framing needed —
+// the user is just looking at their places); fades in only once the user
+// actually zooms OUT further than the default, which is when "there's
+// more world past what I keep track of" is the honest thing to communicate.
+const TERRA_ZOOM_NONE = DEFAULT_ZOOM;
+const TERRA_ZOOM_FULL = DEFAULT_ZOOM - 3;
 
 let terraRings = [];      // [{layer, baseOpacity}] — для пересчёта на зум
 
