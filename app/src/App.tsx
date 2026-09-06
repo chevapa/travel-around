@@ -1,6 +1,7 @@
 import { AtlasGallery } from "./components/atlas/AtlasGallery";
 import { CoreGallery } from "./components/core/CoreGallery";
 import { GrainOverlay } from "./components/core/GrainOverlay";
+import { TopBar } from "./components/shell/TopBar";
 
 /**
  * Component-gallery scaffold: every primitive built so far, actually
@@ -10,6 +11,7 @@ import { GrainOverlay } from "./components/core/GrainOverlay";
 export default function App() {
   return (
     <div style={{ position: "relative" }}>
+      <TopBar meta="Zagreb · 42 printed / 74 not" filterCount={2} />
       <CoreGallery />
       <AtlasGallery />
       <GrainOverlay />
