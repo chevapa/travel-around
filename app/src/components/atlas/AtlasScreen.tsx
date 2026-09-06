@@ -6,7 +6,7 @@ import photoStack from "../../assets/images/photo-stack.jpeg";
 import rawFrames from "../../data/frames.json";
 import { countsByState, formatDrive, formatMeta, type Frame, type FrameState } from "../../model/frame";
 import { averageSpeedKmh } from "./isochrone";
-import { HOME } from "../../model/migrate";
+import { haversineKm, HOME } from "../../model/migrate";
 import { MOBILE_BREAKPOINT_QUERY, useMediaQuery } from "../../lib/motion";
 import { Button } from "../core/Button";
 import { GrainOverlay } from "../core/GrainOverlay";
@@ -14,6 +14,7 @@ import { IconButton } from "../core/IconButton";
 import { ContactSheet } from "../shell/ContactSheet";
 import { FrameCard } from "../shell/FrameCard";
 import { IndexPanel, type IndexSection } from "../shell/IndexPanel";
+import { NewFrameForm } from "../shell/NewFrameForm";
 import { MOBILE_SHEET_MAX_HEIGHT_VH, PanelSlot } from "../shell/PanelSlot";
 import { usePanelSlot } from "../shell/panelSlotReducer";
 import { TopBar } from "../shell/TopBar";
@@ -98,7 +99,13 @@ export interface AtlasScreenProps {
 }
 
 export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
-  const data = framesProp ?? frames;
+  const baseFrames = framesProp ?? frames;
+  // Task 10: frames added via the New Frame flow live only in this
+  // session's state — there's no write API in this static site (the
+  // legacy site's equivalent is a manual commit of a new places/*.json
+  // file). Persisting new frames for real is a separate, future task.
+  const [extraFrames, setExtraFrames] = useState<Frame[]>([]);
+  const data = useMemo(() => [...baseFrames, ...extraFrames], [baseFrames, extraFrames]);
   const slot = usePanelSlot();
   const [viewMode, setViewMode] = useState<"atlas" | "sheet">("atlas");
   const [iso, setIso] = useState<FrameState | null>(null);
@@ -143,13 +150,32 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
     setRolled(null);
   };
 
+  const saveNewFrame = ({ name, lat, lon }: { name: string; lat: number; lon: number }) => {
+    const distanceKm = haversineKm(HOME, { lat, lon });
+    const newFrame: Frame = {
+      // crypto.randomUUID() is a real place id, same as everywhere else in
+      // the dataset — just generated client-side instead of coming from
+      // migrate.ts's own id assignment.
+      id: crypto.randomUUID(),
+      name,
+      state: "unprinted",
+      lat,
+      lon,
+      distanceKm: Math.round(distanceKm * 10) / 10,
+      driveMinutes: Math.round((distanceKm / avgSpeed) * 60),
+      tags: [],
+    };
+    setExtraFrames((prev) => [...prev, newFrame]);
+    slot.close();
+  };
+
   return (
     <div style={{ position: "relative", height: "100vh", overflow: "hidden", background: "var(--paper-3)" }}>
       {/* Print CSS (styles/print.css) hides everything with this class —
           the real map, every marker, all chrome — so only the Contact
           Sheet (a genuine sibling, not nested in here) prints. */}
       <div className="riso-print-hide" style={{ position: "absolute", inset: 0 }}>
-        <MapBase initialBounds={bounds}>
+        <MapBase initialBounds={bounds} onLongPress={(point) => slot.openNewFrame(point.lat, point.lon)}>
           {(map) => {
           const clusterIndex = buildClusterIndex(shown);
           const clusters = getClustersAtZoom(clusterIndex, map.zoom);
@@ -268,7 +294,18 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
               </div>
 
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: Z_CHROME, pointerEvents: "auto" }}>
-                <TopBar brand="The Atlas" meta={formatMeta("Zagreb", counts)} filterCount={filterCount} onIndex={toggleIndex} onPrint={rollOne} />
+                <TopBar
+                  brand="The Atlas"
+                  meta={formatMeta("Zagreb", counts)}
+                  filterCount={filterCount}
+                  onIndex={toggleIndex}
+                  onPrint={rollOne}
+                  // Long-press is the decided way to start New Frame
+                  // (epic #84) — this button is a fallback for anyone who
+                  // doesn't find/use the gesture, opening the form at the
+                  // map's current centre instead of a pressed point.
+                  onNewFrame={() => slot.openNewFrame(map.center.lat, map.center.lon)}
+                />
               </div>
 
               {/* Task 11: "Legend moves above the sheet, stays visible" —
@@ -311,6 +348,7 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                     />
                   ) : null
                 }
+                renderNewFrame={(lat, lon) => <NewFrameForm lat={lat} lon={lon} onSave={saveNewFrame} onCancel={() => slot.close()} style={{ width: "100%" }} />}
               />
             </>
           );

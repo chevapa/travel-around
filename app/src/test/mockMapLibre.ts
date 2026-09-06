@@ -49,8 +49,18 @@ export class FakeMapLibreMap {
     return { x: 200 + lon * 4, y: 200 - lat * 4 };
   }
 
+  // The exact inverse of project() above, so a simulated long-press at a
+  // given fake pixel position round-trips to a sensible lat/lon in tests.
+  unproject([x, y]: [number, number]) {
+    return { lng: (x - 200) / 4, lat: (200 - y) / 4 };
+  }
+
   getZoom() {
     return this.zoomLevel;
+  }
+
+  getCenter() {
+    return { lat: 45.815, lng: 15.9819 }; // Zagreb — matches HOME in migrate.ts
   }
 
   zoomIn() {

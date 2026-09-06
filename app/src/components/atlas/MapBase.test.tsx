@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { render, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MapBase, type MapView } from "./MapBase";
 
 const BOUNDS = { minLat: 42.0, maxLat: 46.0, minLon: 14.5, maxLon: 21.4 };
@@ -66,5 +66,45 @@ describe("MapBase", () => {
     const { unmount } = render(<MapBase initialBounds={BOUNDS}>{() => <div>ok</div>}</MapBase>);
     expect(() => unmount()).not.toThrow();
     await waitFor(() => expect(true).toBe(true)); // flush any pending effects
+  });
+
+  it("exposes the real map centre", () => {
+    render(
+      <MapBase initialBounds={BOUNDS}>
+        {(view) => {
+          expect(typeof view.center.lat).toBe("number");
+          expect(typeof view.center.lon).toBe("number");
+          return <div>ok</div>;
+        }}
+      </MapBase>,
+    );
+  });
+});
+
+// Task 10: "adding a place starts from a map long-press."
+describe("MapBase — long-press (Task 10)", () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  it("fires onLongPress with a real lat/lon after holding on the map container", () => {
+    const onLongPress = vi.fn();
+    const { getByTestId } = render(<MapBase initialBounds={BOUNDS} onLongPress={onLongPress} />);
+    const mapContainer = getByTestId("riso-map-container");
+    // The fake's unproject() is the exact inverse of its project() — see
+    // mockMapLibre.ts — so this specific clientX/Y round-trips predictably.
+    mapContainer.getBoundingClientRect = () => ({ left: 0, top: 0 }) as DOMRect;
+    mapContainer.dispatchEvent(new PointerEvent("pointerdown", { clientX: 200, clientY: 200, pointerType: "touch" }));
+    vi.advanceTimersByTime(500);
+    expect(onLongPress).toHaveBeenCalledWith({ lat: 0, lon: 0 });
+  });
+
+  it("does not fire for a quick tap", () => {
+    const onLongPress = vi.fn();
+    const { getByTestId } = render(<MapBase initialBounds={BOUNDS} onLongPress={onLongPress} />);
+    const mapContainer = getByTestId("riso-map-container");
+    mapContainer.dispatchEvent(new PointerEvent("pointerdown", { clientX: 200, clientY: 200 }));
+    mapContainer.dispatchEvent(new PointerEvent("pointerup"));
+    vi.advanceTimersByTime(500);
+    expect(onLongPress).not.toHaveBeenCalled();
   });
 });

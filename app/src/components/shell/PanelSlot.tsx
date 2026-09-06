@@ -21,9 +21,11 @@ export interface PanelSlotProps {
   state: PanelSlotState;
   renderIndex: () => ReactNode;
   renderCard: (frameId: string) => ReactNode;
+  /** Task 10: the New Frame form, given the long-pressed coordinates. Optional — callers with no New Frame flow (e.g. ShellGallery's demo) simply never produce a "newFrame" state. */
+  renderNewFrame?: (lat: number, lon: number) => ReactNode;
 }
 
-export function PanelSlot({ state, renderIndex, renderCard }: PanelSlotProps) {
+export function PanelSlot({ state, renderIndex, renderCard, renderNewFrame }: PanelSlotProps) {
   const isMobile = useMediaQuery(MOBILE_BREAKPOINT_QUERY);
   const reducedMotion = usePrefersReducedMotion();
   const occupied = state.kind !== "empty";
@@ -67,7 +69,13 @@ export function PanelSlot({ state, renderIndex, renderCard }: PanelSlotProps) {
         ...layoutStyle,
       }}
     >
-      {state.kind === "index" ? renderIndex() : state.kind === "card" ? renderCard(state.frameId) : null}
+      {state.kind === "index"
+        ? renderIndex()
+        : state.kind === "card"
+          ? renderCard(state.frameId)
+          : state.kind === "newFrame"
+            ? (renderNewFrame?.(state.lat, state.lon) ?? null)
+            : null}
     </div>
   );
 }
