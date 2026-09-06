@@ -11,6 +11,7 @@ import { loadInteractions, logInteraction, hasInteraction, clearInteractions } f
 import { computeProfile } from './profile.js';
 import { currentContext, getWeather, getUserPosition } from './context.js';
 import { rankPlaces } from './recommendationEngine.js';
+import { fetchPlacePhoto } from './photos.js';
 
 let queue = [];               // элементы {place, score, reasons} — см. buildQueue()
 let stackEl, sheetBack, sheetBody;
@@ -189,6 +190,22 @@ function buildCardEl(place, depth, reasons){
     flyToPlace(place);
   });
   wireBadgeClicks(el);
+
+  // issue #35: the card starts with the generic category icon (art,
+  // above) — same fail-soft progressive-enhancement pattern as
+  // loadDriveTime() in map.js: render synchronously with what's known now,
+  // swap in something better when/if it arrives. el.isConnected guards
+  // against updating a card the user has already swiped past by the time
+  // the Wikipedia lookup resolves (stackEl.innerHTML='' on every
+  // renderStack() detaches old card elements, but doesn't cancel this
+  // in-flight fetch).
+  fetchPlacePhoto(place).then(photoUrl => {
+    if(!photoUrl || !el.isConnected) return;
+    const artBox = el.querySelector('.reco-art');
+    const img = el.querySelector('.reco-art-img');
+    img.src = photoUrl;
+    artBox.classList.add('reco-art-photo');
+  });
 
   return el;
 }
