@@ -1,11 +1,18 @@
+import { AtlasGallery } from "./components/atlas/AtlasGallery";
 import { CoreGallery } from "./components/core/CoreGallery";
+import { GrainOverlay } from "./components/core/GrainOverlay";
 
 /**
- * Task 3 scaffold: mounts the core-primitives gallery so every variant is
- * actually viewable, not just asserted in tests. Task 4+ replaces this with
- * the real Atlas screen (see
- * https://github.com/chevapa/travel-around/issues/93, Task 8).
+ * Component-gallery scaffold: every primitive built so far, actually
+ * viewable, not just asserted in tests. Task 8 replaces this with the real
+ * Atlas screen (see https://github.com/chevapa/travel-around/issues/93).
  */
 export default function App() {
-  return <CoreGallery />;
+  return (
+    <div style={{ position: "relative" }}>
+      <CoreGallery />
+      <AtlasGallery />
+      <GrainOverlay />
+    </div>
+  );
 }
