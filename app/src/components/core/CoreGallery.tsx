@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "./Button";
-import { GrainOverlay } from "./GrainOverlay";
 import { IconButton } from "./IconButton";
 import { Paper } from "./Paper";
 import { StampCheck } from "./StampCheck";
@@ -98,8 +97,6 @@ export function CoreGallery() {
           Not printed
         </label>
       </Row>
-
-      <GrainOverlay />
     </div>
   );
 }
