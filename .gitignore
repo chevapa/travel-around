@@ -5,3 +5,10 @@ dist/
 test-results/
 playwright-report/
 __pycache__/
+
+# Generated at build time by app/scripts/bundle-maplibre-worker.mjs — a
+# flattened, dependency-free copy of maplibre-gl's worker script (see that
+# script's own comment for why it can't just be a plain `?url` import of
+# the vendored file). Regenerated on every `npm run dev`/`build`, so it
+# doesn't need to be committed.
+app/src/vendor/maplibre-gl-worker.bundled.mjs
