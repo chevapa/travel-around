@@ -39,6 +39,15 @@ describe("FrameCard — fixed order: name -> print -> description -> drive time 
   });
 });
 
+describe("FrameCard — Same roll is not variant=primary (Task 8 fix: TopBar already owns the one screen-wide primary)", () => {
+  it("renders Same roll with the accent (pink) fill, not the primary (yellow) one", () => {
+    render(<FrameCard name="Krapina" state="loved" src="p.jpg" onNearby={() => {}} />);
+    const button = screen.getByText("Same roll →");
+    expect(button.getAttribute("style")).toContain("var(--action-accent)");
+    expect(button.getAttribute("style")).not.toContain("var(--action-primary)");
+  });
+});
+
 describe("FrameCard — unprinted state", () => {
   it("shows the blank-frame placeholder, not a photo", () => {
     const { container } = render(<FrameCard name="Ozalj" state="unprinted" />);

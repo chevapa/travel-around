@@ -14,17 +14,17 @@ import type { FrameState } from "../../model/frame";
  * its surroundings stay visible — "anchored, never floating" is satisfied
  * structurally by only ever being mounted inside that slot.
  *
- * Ported from DESIGN_RISO1/components/shell/FrameCard.jsx.
- *
- * Known cross-component collision, not fixed here: this card's "Same roll"
- * button is variant="primary" (matching the reference), and so is
- * TopBar's "To Print" (Task 6) — both yellow, both visible at once once a
- * card is open alongside the bar. That's two primaries on screen, which
- * breaks the "exactly one" rule Button's own dev-mode warning checks for.
- * Flagged on issue #93 (Task 8, composing the real screen) rather than
- * guessed at here, since resolving it means deciding product intent (does
- * opening a card temporarily demote the bar's primary?), not a component
- * detail.
+ * Ported from DESIGN_RISO1/components/shell/FrameCard.jsx, with one fix
+ * from Task 8 (composing the real screen, issue #93): the reference makes
+ * "Same roll" variant="primary", same as TopBar's "To Print" (Task 6) —
+ * both yellow, both visible at once once a card is open, which breaks the
+ * "exactly one primary per screen" rule (Button's own dev-mode warning
+ * catches this; it fired for real once this was wired into AtlasScreen).
+ * TopBar's primary is the screen-wide "give me somewhere to go" action, so
+ * it keeps the yellow; "Same roll" — an explore action scoped to one
+ * frame, not a replacement for it — became variant="accent" (pink)
+ * instead. Still the loudest thing in the card, just not competing for
+ * the one yellow slot.
  */
 export interface FrameCardProps extends HTMLAttributes<HTMLDivElement> {
   name: string;
@@ -147,7 +147,7 @@ export function FrameCard({
         ) : null}
       </div>
       <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 8, flex: "0 0 auto" }}>
-        <Button variant="primary" onClick={onNearby} style={{ width: "100%" }}>
+        <Button variant="accent" onClick={onNearby} style={{ width: "100%" }}>
           Same roll →
         </Button>
         <div style={{ display: "flex", gap: 8 }}>
