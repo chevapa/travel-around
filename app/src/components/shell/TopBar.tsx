@@ -1,4 +1,5 @@
-import type { HTMLAttributes, ReactNode } from "react";
+import { useState, type HTMLAttributes, type ReactNode } from "react";
+import { MOBILE_BREAKPOINT_QUERY, useMediaQuery } from "../../lib/motion";
 import { Button } from "../core/Button";
 import { IconButton } from "../core/IconButton";
 
@@ -18,6 +19,10 @@ import { IconButton } from "../core/IconButton";
  * testable rule and ships the wordmark flat. Also: the reference's raw
  * white hex literal on the wordmark text became var(--paper-print) to
  * satisfy the hex-colour gate.
+ *
+ * Task 11 addition: on mobile, TopBar keeps only the primary action
+ * visible in the main row; New Frame and The Index collapse behind the
+ * search glyph, revealed by tapping it. Desktop is unchanged.
  */
 export interface TopBarProps extends HTMLAttributes<HTMLDivElement> {
   /** Wordmark text, set in the pink display chip. */
@@ -50,6 +55,15 @@ export function TopBar({
       `[TopBar] meta was passed a bare number (${meta}) — every count must be labelled (see src/model/frame.ts's formatMeta). Wrap it in a string like "Zagreb · 42 printed / 74 not".`,
     );
   }
+
+  const isMobile = useMediaQuery(MOBILE_BREAKPOINT_QUERY);
+  const [expanded, setExpanded] = useState(false);
+  const showSecondaryActions = !isMobile || expanded;
+
+  const handleSearchClick = () => {
+    if (isMobile) setExpanded((e) => !e);
+    onSearch?.();
+  };
 
   return (
     <div
@@ -101,13 +115,22 @@ export function TopBar({
       </div>
       <div style={{ flex: 1, minWidth: 8 }} />
       <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-        <IconButton glyph="⌕" label="Search frames" onClick={onSearch} />
-        <Button variant="secondary" size="sm" onClick={onNewFrame}>
-          New Frame
-        </Button>
-        <Button variant="invert" size="sm" badge={filterCount || undefined} onClick={onIndex}>
-          The Index
-        </Button>
+        <IconButton
+          glyph="⌕"
+          label={isMobile ? (expanded ? "Hide more actions" : "Show more actions") : "Search frames"}
+          aria-expanded={isMobile ? expanded : undefined}
+          onClick={handleSearchClick}
+        />
+        {showSecondaryActions ? (
+          <>
+            <Button variant="secondary" size="sm" onClick={onNewFrame}>
+              New Frame
+            </Button>
+            <Button variant="invert" size="sm" badge={filterCount || undefined} onClick={onIndex}>
+              The Index
+            </Button>
+          </>
+        ) : null}
         <Button variant="primary" size="md" onClick={onPrint}>
           {primaryLabel}
         </Button>

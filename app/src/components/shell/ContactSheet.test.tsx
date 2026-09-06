@@ -41,6 +41,13 @@ describe("ContactSheet — unprinted frames stay as dashed blanks", () => {
     expect(container.querySelectorAll("img")).toHaveLength(1);
     expect(screen.getByText("?")).toBeInTheDocument();
   });
+
+  it("marks every cell — printed or not — for print (Task 11: no clipped rows)", () => {
+    const { container } = render(
+      <ContactSheet frames={[{ name: "A", src: "a.jpg", state: "loved" }, { name: "B", state: "unprinted" }]} />,
+    );
+    expect(container.querySelectorAll(".riso-contact-cell")).toHaveLength(2);
+  });
 });
 
 describe("ContactSheet — sort control", () => {
