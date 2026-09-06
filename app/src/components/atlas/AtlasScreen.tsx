@@ -8,12 +8,14 @@ import { countsByState, formatDrive, formatMeta, type Frame, type FrameState } f
 import { haversineKm } from "../../model/migrate";
 import { Button } from "../core/Button";
 import { GrainOverlay } from "../core/GrainOverlay";
+import { IconButton } from "../core/IconButton";
 import { ContactSheet } from "../shell/ContactSheet";
 import { FrameCard } from "../shell/FrameCard";
 import { IndexPanel, type IndexSection } from "../shell/IndexPanel";
 import { PanelSlot } from "../shell/PanelSlot";
 import { usePanelSlot } from "../shell/panelSlotReducer";
 import { TopBar } from "../shell/TopBar";
+import { buildClusterIndex, getClustersAtZoom, isCluster, MAX_ZOOM, MIN_ZOOM } from "./clustering";
 import { FrameStack } from "./FrameStack";
 import { averageSpeedKmh, computeIsochroneRings } from "./isochrone";
 import { Legend } from "./Legend";
@@ -69,6 +71,26 @@ const RING_SPECS = [
   { minutes: 60, label: "1 H" },
 ];
 
+/**
+ * A middling default: on the real 116-frame dataset this resolves to
+ * roughly 95 features (~17 clusters, ~78 leaves) — enough clustering to be
+ * visibly doing something, not so much the map reads as empty. See the
+ * empirical sweep in clustering.test.ts's real-dataset test and this
+ * task's PR description for the full zoom/feature-count table.
+ */
+const DEFAULT_ZOOM = 9;
+
+/**
+ * Print size shrinks as zoom decreases, down to 25% of full size — low
+ * enough that a base 84px print (loved/fine) crosses --print-min (28px,
+ * Print.tsx) and collapses to Task 4's plain-square rendering, so
+ * "zoomed out" and "collapsed" are the same real mechanism, not two.
+ */
+function scaleForZoom(zoom: number): number {
+  const clamped = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+  return 0.25 + 0.75 * (clamped / MAX_ZOOM);
+}
+
 export interface AtlasScreenProps {
   /** Defaults to the full migrated dataset; overridable for tests/stories. */
   frames?: Frame[];
@@ -81,6 +103,7 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   const [iso, setIso] = useState<FrameState | null>(null);
   const [checks, setChecks] = useState<Record<FrameState, boolean>>({ loved: true, fine: true, unprinted: true });
   const [rolled, setRolled] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
 
   const bounds = useMemo(() => computeBounds(data.map((f) => ({ lat: f.lat, lon: f.lon }))), [data]);
 
@@ -100,6 +123,14 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
 
   const counts = countsByState(data);
   const shown = data.filter((f) => (!iso || f.state === iso) && checks[f.state]);
+  const shownById = useMemo(() => new Map(shown.map((f) => [f.id, f])), [shown]);
+
+  // Task 9: real clustering (supercluster) over whatever's currently
+  // shown (after the legend isolate + state-filter above) — a frame the
+  // filters hide shouldn't still occupy a cluster slot.
+  const clusterIndex = useMemo(() => buildClusterIndex(shown), [shown]);
+  const clusters = useMemo(() => getClustersAtZoom(clusterIndex, zoom), [clusterIndex, zoom]);
+  const printScale = scaleForZoom(zoom);
   const slotState = slot.state; // local const so TS narrows `kind` through the closure below
   const openFrame = slotState.kind === "card" ? data.find((f) => f.id === slotState.frameId) : undefined;
   const activeCheckCount = Object.values(checks).filter(Boolean).length;
@@ -125,6 +156,10 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
     if (pool.length === 0) return;
     const pick = pool[Math.floor(Math.random() * pool.length)];
     setRolled(pick.id);
+    // Zoom fully in so the rolled frame is guaranteed to render as its own
+    // leaf, never buried inside a cluster it'd otherwise be highlighted
+    // inside of without being individually visible.
+    setZoom(MAX_ZOOM);
     slot.openCard(pick.id);
     setView("atlas");
   };
@@ -145,9 +180,30 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
       <RingSet rings={rings} />
 
       {view === "atlas"
-        ? shown.map((f, i) => {
-            const { x, y } = projectToPercent({ lat: f.lat, lon: f.lon }, bounds);
+        ? clusters.map((feature) => {
+            const [lon, lat] = feature.geometry.coordinates;
+            const { x, y } = projectToPercent({ lat, lon }, bounds);
+
+            if (isCluster(feature)) {
+              const { cluster_id: clusterId, point_count: count } = feature.properties;
+              const { tilt } = derivePrintTransform(`cluster-${clusterId}`);
+              return (
+                <div key={`cluster-${clusterId}`} style={{ position: "absolute", left: `${x}%`, top: `${y}%`, transform: "translate(-50%,-50%)", zIndex: Z_PRINT }}>
+                  <FrameStack
+                    count={count}
+                    tilt={tilt}
+                    onClick={() => setZoom(Math.min(MAX_ZOOM, clusterIndex.getClusterExpansionZoom(clusterId)))}
+                  />
+                </div>
+              );
+            }
+
+            const f = shownById.get(feature.properties.frameId);
+            if (!f) return null;
+            const i = data.indexOf(f);
             const { edge, tilt } = derivePrintTransform(f.id);
+            const baseWidth = f.state === "unprinted" ? 56 : 84;
+            const baseHeight = f.state === "unprinted" ? 42 : 62;
             return (
               <div
                 key={f.id}
@@ -162,8 +218,8 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                   pin
                   tilt={tilt}
                   edge={edge}
-                  width={f.state === "unprinted" ? 56 : 84}
-                  height={f.state === "unprinted" ? 42 : 62}
+                  width={Math.round(baseWidth * printScale)}
+                  height={Math.round(baseHeight * printScale)}
                   onClick={() => slot.openCard(f.id)}
                   style={rolled === f.id ? { outline: "3px solid var(--yellow)", outlineOffset: 4 } : undefined}
                 />
@@ -171,6 +227,11 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
             );
           })
         : null}
+
+      <div style={{ position: "absolute", right: 16, bottom: 16, zIndex: Z_CHROME, display: "flex", flexDirection: "column", gap: 6 }}>
+        <IconButton glyph="+" label="Zoom in" onClick={() => setZoom((z) => Math.min(MAX_ZOOM, z + 1))} />
+        <IconButton glyph="−" label="Zoom out" onClick={() => setZoom((z) => Math.max(MIN_ZOOM, z - 1))} />
+      </div>
 
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: Z_CHROME }}>
         <TopBar brand="The Atlas" meta={formatMeta("Zagreb", counts)} filterCount={filterCount} onIndex={toggleIndex} onPrint={rollOne} />
@@ -217,10 +278,3 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   );
 }
 
-/**
- * FrameStack is deliberately unused directly by AtlasScreen right now:
- * clustering (which is what actually decides when several frames collapse
- * into a stack) is Task 9's job, not Task 8's. Imported and re-exported
- * here so it isn't flagged as dead code before Task 9 wires it in.
- */
-export { FrameStack };
