@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeBounds, projectToPercent } from "./projection";
+import { computeBounds, metersPerPixel, projectToPercent } from "./projection";
 
 describe("computeBounds", () => {
   it("finds the min/max of a set of points", () => {
@@ -63,5 +63,28 @@ describe("projectToPercent", () => {
     expect(p.x).toBeLessThanOrEqual(90);
     expect(p.y).toBeGreaterThanOrEqual(10);
     expect(p.y).toBeLessThanOrEqual(90);
+  });
+});
+
+describe("metersPerPixel", () => {
+  it("matches the well-known value at the equator, zoom 0 (~156543m/px)", () => {
+    expect(metersPerPixel(0, 0)).toBeCloseTo(156543.03392, 0);
+  });
+
+  it("halves with every zoom level increase", () => {
+    const z10 = metersPerPixel(45, 10);
+    const z11 = metersPerPixel(45, 11);
+    expect(z10 / z11).toBeCloseTo(2, 5);
+  });
+
+  it("is smaller at higher latitude (mercator's own distortion) for the same zoom", () => {
+    const equator = metersPerPixel(0, 8);
+    const zagreb = metersPerPixel(45.8, 8);
+    expect(zagreb).toBeLessThan(equator);
+  });
+
+  it("is always positive for any real latitude", () => {
+    expect(metersPerPixel(89, 5)).toBeGreaterThan(0);
+    expect(metersPerPixel(-45, 5)).toBeGreaterThan(0);
   });
 });

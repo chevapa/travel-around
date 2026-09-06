@@ -34,6 +34,12 @@ export function PanelSlot({ state, renderIndex, renderCard }: PanelSlotProps) {
         // unindexed panel. See AtlasScreen.tsx's Z_CHROME for the fuller
         // explanation of why this isn't just theoretical.
         zIndex: 10,
+        // Real map integration (AtlasScreen) nests this inside a
+        // pointer-events:none overlay layer (so map-drag gestures pass
+        // through empty areas) — pointer-events is inherited in CSS, so
+        // without this override the panel would inherit "none" and become
+        // unclickable.
+        pointerEvents: "auto",
       }}
     >
       {state.kind === "index" ? renderIndex() : renderCard(state.frameId)}

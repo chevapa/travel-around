@@ -52,6 +52,19 @@ export interface ProjectedPoint {
  * inset by `marginPercent` on every side so points at the extreme edge of
  * the data aren't drawn flush against the container's edge.
  */
+/**
+ * Standard web-mercator ground resolution: real-world metres covered by
+ * one screen pixel at a given latitude and zoom level. 156543.03392 is the
+ * well-known constant (2·π·6378137 / 256, Earth's circumference in metres
+ * divided by the 256px tile size). Used to size real-world distances (an
+ * isochrone ring's radius) correctly on a real, zoomable map — see
+ * AtlasScreen.tsx.
+ */
+export function metersPerPixel(latDeg: number, zoom: number): number {
+  const latRad = (latDeg * Math.PI) / 180;
+  return (156543.03392 * Math.cos(latRad)) / 2 ** zoom;
+}
+
 export function projectToPercent(point: GeoPoint, bounds: GeoBounds, marginPercent = 8): ProjectedPoint {
   const latRange = bounds.maxLat - bounds.minLat;
   const lonRange = bounds.maxLon - bounds.minLon;
