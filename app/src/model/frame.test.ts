@@ -64,15 +64,15 @@ describe("countsByState", () => {
 });
 
 describe("formatMeta", () => {
-  it("labels every number — matches the plan's own example exactly", () => {
+  it("labels every number — issue 127's plainer wording ('visited', not 'printed')", () => {
     expect(formatMeta("Zagreb", { loved: 31, fine: 11, unprinted: 74 })).toBe(
-      "Zagreb · 42 printed / 74 not",
+      "Zagreb · 42 visited / 74 not",
     );
   });
 
   it("never emits a bare number even at zero", () => {
     expect(formatMeta("Zagreb", { loved: 0, fine: 0, unprinted: 0 })).toBe(
-      "Zagreb · 0 printed / 0 not",
+      "Zagreb · 0 visited / 0 not",
     );
   });
 });

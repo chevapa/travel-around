@@ -2,7 +2,6 @@ import { useState } from "react";
 import photoStack from "../../assets/images/photo-stack.jpeg";
 import collage from "../../assets/images/collage.jpeg";
 import collage2 from "../../assets/images/collage2.webp";
-import photoBeach from "../../assets/images/photo-beach.jpeg";
 import { FrameStack } from "./FrameStack";
 import { computeIsochroneRings } from "./isochrone";
 import { Legend } from "./Legend";
@@ -46,7 +45,7 @@ export function AtlasGallery() {
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--s-9)", padding: "var(--s-9)", background: "var(--surface-ground)" }}>
       <Row label="TornGround + RingSet + Legend — a miniature Atlas">
         <div style={{ position: "relative", width: 520, height: 340, border: "var(--stroke-heavy)" }}>
-          <TornGround fragments={[collage2, collage, photoStack, photoBeach]} />
+          <TornGround fragments={[collage2, collage, photoStack]} />
           <RingSet rings={DEMO_RINGS} />
           <div style={{ position: "absolute", left: "42%", top: "48%" }}>
             <Print state="loved" src={photoStack} width={56} height={42} pin tilt={-3} />

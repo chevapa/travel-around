@@ -21,10 +21,19 @@ import type { FrameState } from "../../model/frame";
  * "exactly one primary per screen" rule (Button's own dev-mode warning
  * catches this; it fired for real once this was wired into AtlasScreen).
  * TopBar's primary is the screen-wide "give me somewhere to go" action, so
- * it keeps the yellow; "Same roll" — an explore action scoped to one
- * frame, not a replacement for it — became variant="accent" (pink)
- * instead. Still the loudest thing in the card, just not competing for
- * the one yellow slot.
+ * it keeps the yellow; the explore-nearby action — scoped to one frame,
+ * not a replacement for it — became variant="accent" (pink) instead.
+ * Still the loudest thing in the card, just not competing for the one
+ * yellow slot.
+ *
+ * Issue 133: these two buttons rendered but did nothing (AtlasScreen
+ * never wired `onNearby`/`onToPrint`/`onRoute`) and their labels ("Same
+ * roll", "To Print") read as jargon — renamed to plain verbs describing
+ * what each one actually does. Issue 128: tags are now a real filter
+ * control (`onTagClick`), not inert labels. Issue 122: an unprinted frame
+ * with a recognised category now shows that category's illustration
+ * instead of the "not visited yet" hatch box (still the fallback when no
+ * category is recognised, e.g. a brand-new frame with no tags yet).
  */
 export interface FrameCardProps extends HTMLAttributes<HTMLDivElement> {
   name: string;
@@ -37,10 +46,15 @@ export interface FrameCardProps extends HTMLAttributes<HTMLDivElement> {
   /** Typical time spent at the place, e.g. "~45 min". */
   stay?: string;
   tags?: string[];
+  /** The tag currently driving the map filter, if any — shows which chip is active. */
+  activeTag?: string | null;
+  /** Issue 109 checklist: "link to Google for a place" — when set, the name itself opens a web search for it. */
+  searchUrl?: string;
   onClose?: () => void;
   onNearby?: () => void;
   onToPrint?: () => void;
   onRoute?: () => void;
+  onTagClick?: (tag: string) => void;
 }
 
 export function FrameCard({
@@ -52,14 +66,22 @@ export function FrameCard({
   distance,
   stay,
   tags = [],
+  activeTag,
+  searchUrl,
   onClose,
   onNearby,
   onToPrint,
   onRoute,
+  onTagClick,
   style,
   ...rest
 }: FrameCardProps) {
   const unprinted = state === "unprinted";
+  // An unprinted frame with a recognised category shows that illustration
+  // rather than the hatch placeholder (issue 122) — `src` is already
+  // resolved to a category image by the caller (AtlasScreen's photoFor)
+  // when one exists, so "unprinted but src is set" is exactly that case.
+  const showPlaceholder = unprinted && !src;
   return (
     <div
       {...rest}
@@ -85,12 +107,18 @@ export function FrameCard({
               textTransform: "uppercase",
             }}
           >
-            {name}
+            {searchUrl ? (
+              <a href={searchUrl} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline" }}>
+                {name}
+              </a>
+            ) : (
+              name
+            )}
           </h3>
           <IconButton glyph="✕" label="Close frame" size={26} onClick={onClose} style={{ border: "none", background: "transparent", minWidth: 26, minHeight: 26 }} />
         </div>
         <div style={{ height: 5, background: "var(--pink)", width: 88, flex: "0 0 auto" }} />
-        {unprinted ? (
+        {showPlaceholder ? (
           <div style={{ padding: "5px 5px 20px", background: "var(--paper-1)", border: "var(--stroke-dashed)", flex: "0 0 auto" }}>
             <div
               style={{
@@ -108,9 +136,9 @@ export function FrameCard({
                 padding: "0 8px",
               }}
             >
-              frame not
+              not visited
               <br />
-              printed yet
+              yet
             </div>
           </div>
         ) : (
@@ -123,7 +151,7 @@ export function FrameCard({
                 width: "100%",
                 height: 96,
                 objectFit: "cover",
-                filter: state === "fine" ? "grayscale(1) contrast(1.15)" : "saturate(1.2) contrast(1.05)",
+                filter: state === "fine" ? "grayscale(1) contrast(1.15)" : unprinted ? "grayscale(0.35) brightness(1.05)" : "saturate(1.2) contrast(1.05)",
               }}
             />
           </div>
@@ -141,18 +169,20 @@ export function FrameCard({
         {tags.length ? (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: "0 0 auto" }}>
             {tags.map((t) => (
-              <Tag key={t}>{t}</Tag>
+              <Tag key={t} active={activeTag === t} onClick={onTagClick ? () => onTagClick(t) : undefined}>
+                {t}
+              </Tag>
             ))}
           </div>
         ) : null}
       </div>
       <div style={{ padding: "12px 16px 16px", display: "flex", flexDirection: "column", gap: 8, flex: "0 0 auto" }}>
         <Button variant="accent" onClick={onNearby} style={{ width: "100%" }}>
-          Same roll →
+          Similar places →
         </Button>
         <div style={{ display: "flex", gap: 8 }}>
           <Button variant="secondary" size="sm" onClick={onToPrint} style={{ flex: 1 }}>
-            ★ To Print
+            ★ Want to go
           </Button>
           <Button variant="secondary" size="sm" onClick={onRoute} style={{ flex: 1 }}>
             ↗ Route

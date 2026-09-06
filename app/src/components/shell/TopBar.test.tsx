@@ -2,18 +2,19 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
+import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TopBar } from "./TopBar";
 
 describe("TopBar — action hierarchy", () => {
   it("orders actions icon -> secondary -> invert -> primary, left to right", () => {
-    render(<TopBar meta="Zagreb · 42 printed / 74 not" filterCount={2} />);
+    render(<TopBar meta="Zagreb · 42 visited / 74 not" filterCount={2} />);
     const buttons = screen.getAllByRole("button");
     expect(buttons.map((b) => b.textContent)).toEqual([
       "⌕", // IconButton — aria-hidden only affects the a11y tree, not textContent
       "New Frame",
       "The Index2", // badge renders as a sibling span inside the button
-      "To Print →",
+      "Where to? →",
     ]);
   });
 
@@ -25,7 +26,7 @@ describe("TopBar — action hierarchy", () => {
       (b.getAttribute("style") ?? "").includes("var(--action-primary)"),
     );
     expect(primaryLikeButtons).toHaveLength(1);
-    expect(primaryLikeButtons[0].textContent).toBe("To Print →");
+    expect(primaryLikeButtons[0].textContent).toBe("Where to? →");
   });
 
   it("shows the filter badge on The Index when filterCount is set", () => {
@@ -50,14 +51,14 @@ const TRANSFORM_DECLARATION = /(^|;)\s*transform\s*:/;
 // an element that doesn't exist can't overflow anything.
 describe("TopBar — no collage image (CRIT 01 regression)", () => {
   it("never renders an img — the wordmark is type on a chip, not a photo", () => {
-    const { container } = render(<TopBar meta="Zagreb · 42 printed / 74 not" />);
+    const { container } = render(<TopBar meta="Zagreb · 42 visited / 74 not" />);
     expect(container.querySelector("img")).toBeNull();
   });
 });
 
 describe("TopBar — never rotates", () => {
   it("sets no transform on the bar or any of its direct children", () => {
-    const { container } = render(<TopBar meta="Zagreb · 42 printed / 74 not" filterCount={1} />);
+    const { container } = render(<TopBar meta="Zagreb · 42 visited / 74 not" filterCount={1} />);
     const bar = container.firstElementChild as HTMLElement;
     expect(bar.getAttribute("style") ?? "").not.toMatch(TRANSFORM_DECLARATION);
     const allDescendants = bar.querySelectorAll("*");
@@ -97,14 +98,14 @@ describe("TopBar — meta must be labelled", () => {
 
   it("does not warn when meta is a labelled string", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    render(<TopBar meta="Zagreb · 42 printed / 74 not" />);
+    render(<TopBar meta="Zagreb · 42 visited / 74 not" />);
     expect(warn).not.toHaveBeenCalled();
   });
 });
 
 describe("TopBar — accessibility", () => {
   it("has no axe violations", async () => {
-    const { container } = render(<TopBar meta="Zagreb · 42 printed / 74 not" filterCount={2} />);
+    const { container } = render(<TopBar meta="Zagreb · 42 visited / 74 not" filterCount={2} />);
     expect(await axe(container)).toHaveNoViolations();
   });
 });
@@ -131,7 +132,7 @@ describe("TopBar — mobile collapse", () => {
     render(<TopBar />);
     expect(screen.queryByText("New Frame")).toBeNull();
     expect(screen.queryByText("The Index")).toBeNull();
-    expect(screen.getByText("To Print →")).toBeInTheDocument();
+    expect(screen.getByText("Where to? →")).toBeInTheDocument();
   });
 
   it("shows all actions on desktop (unchanged from Task 6)", () => {
@@ -166,5 +167,44 @@ describe("TopBar — mobile collapse", () => {
     render(<TopBar onSearch={onSearch} />);
     await user.click(screen.getByLabelText("Show more actions"));
     expect(onSearch).toHaveBeenCalled();
+  });
+});
+
+// Issue 131: "when click on search button nothing happens" — the glyph
+// used to only ever call onSearch, with nowhere for a caller to put an
+// actual search box.
+describe("TopBar — search field (issue 131)", () => {
+  it("does not render a search field until onSearchChange is provided", async () => {
+    const user = userEvent.setup();
+    render(<TopBar />);
+    await user.click(screen.getByLabelText("Search frames"));
+    expect(screen.queryByPlaceholderText("Search frames…")).toBeNull();
+  });
+
+  it("opens an inline search field on click and reports typed text", async () => {
+    const user = userEvent.setup();
+    // A real controlled round-trip needs searchValue to actually advance as
+    // onSearchChange fires — a fixed prop + a bare vi.fn() would reset the
+    // field to "" after every keystroke and only ever report one character.
+    function Controlled() {
+      const [value, setValue] = useState("");
+      return <TopBar searchValue={value} onSearchChange={setValue} />;
+    }
+    render(<Controlled />);
+    await user.click(screen.getByLabelText("Search frames"));
+    const field = screen.getByPlaceholderText("Search frames…");
+    await user.type(field, "Krap");
+    expect(field).toHaveValue("Krap");
+  });
+
+  it("closes the field and clears the query on a second click", async () => {
+    const user = userEvent.setup();
+    const onSearchChange = vi.fn();
+    render(<TopBar searchValue="Krapina" onSearchChange={onSearchChange} />);
+    await user.click(screen.getByLabelText("Search frames"));
+    expect(screen.getByPlaceholderText("Search frames…")).toBeInTheDocument();
+    await user.click(screen.getByLabelText("Close search"));
+    expect(onSearchChange).toHaveBeenCalledWith("");
+    expect(screen.queryByPlaceholderText("Search frames…")).toBeNull();
   });
 });

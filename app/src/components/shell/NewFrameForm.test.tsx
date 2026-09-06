@@ -64,7 +64,7 @@ describe("NewFrameForm — no photo required at creation (Task 10 decision)", ()
 
   it("shows the same unprinted placeholder FrameCard uses — a new frame starts life there", () => {
     render(<NewFrameForm lat={45.8} lon={15.9} onSave={vi.fn()} onCancel={vi.fn()} />);
-    expect(screen.getByText("not printed yet")).toBeInTheDocument();
+    expect(screen.getByText("not visited yet")).toBeInTheDocument();
   });
 });
 

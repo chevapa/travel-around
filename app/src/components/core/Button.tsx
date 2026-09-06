@@ -105,7 +105,11 @@ export function Button({ variant = "secondary", size = "md", badge, disabled = f
             height: 19,
             borderRadius: "50%",
             background: "var(--pink)",
-            color: "var(--paper-print)",
+            // Issue 105 (found in Task 7-8): white text on --pink measures
+            // 3.51:1 at this 9px size — below the 4.5:1 AA bar Task 7 set
+            // for every filter label, and this badge (TopBar's "The Index"
+            // counter) is on every screen. --ink on --pink is 5.18:1.
+            color: "var(--ink)",
             border: "var(--stroke)",
             font: "var(--label-sm)",
             fontSize: 9,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { averageSpeedKmh, computeIsochroneRings } from "./isochrone";
+import { averageSpeedKmh, computeIsochroneRings, destPoint, ovalOutline, ringKmAt, ZAGREB_DRIVE_RINGS } from "./isochrone";
+import { HOME } from "../../model/migrate";
 
 describe("averageSpeedKmh", () => {
   it("computes the average implied speed from distance/time pairs", () => {
@@ -60,5 +61,85 @@ describe("computeIsochroneRings", () => {
   it("throws for a non-positive map scale rather than silently producing nonsense", () => {
     expect(() => computeIsochroneRings([{ minutes: 60, label: "1 H" }], 60, 0)).toThrow();
     expect(() => computeIsochroneRings([{ minutes: 60, label: "1 H" }], 60, -5)).toThrow();
+  });
+});
+
+// Issue 126: "the circles are wrong completely, there are only 2 and
+// should be 3... study exactly how the circles on old map being drawn" —
+// ported directly from js/map.js's RING_DATA/destPoint/ringKmAt/ovalPoints.
+describe("ZAGREB_DRIVE_RINGS", () => {
+  it("has exactly three rings, not two", () => {
+    expect(ZAGREB_DRIVE_RINGS).toHaveLength(3);
+    expect(ZAGREB_DRIVE_RINGS.map((r) => r.label)).toEqual(["1 H", "2 H", "3 H"]);
+  });
+
+  it("is calibrated so the 1h ring's due-south edge sits closer to home than the 2h ring's does, in every direction", () => {
+    const [oneHour, twoHour] = ZAGREB_DRIVE_RINGS;
+    for (const bearing of [0, 90, 180, 270]) {
+      expect(ringKmAt(oneHour, bearing)).toBeLessThan(ringKmAt(twoHour, bearing));
+    }
+  });
+});
+
+describe("ringKmAt", () => {
+  const ring = { label: "test", n: 100, e: 200, s: 300, w: 400 };
+
+  it("returns the exact calibrated value at each cardinal bearing", () => {
+    expect(ringKmAt(ring, 0)).toBeCloseTo(100, 5); // N
+    expect(ringKmAt(ring, 90)).toBeCloseTo(200, 5); // E
+    expect(ringKmAt(ring, 180)).toBeCloseTo(300, 5); // S
+    expect(ringKmAt(ring, 270)).toBeCloseTo(400, 5); // W
+  });
+
+  it("interpolates smoothly (monotonically) between two cardinal points, not linearly-with-a-kink", () => {
+    const quarterStep = ringKmAt(ring, 45);
+    expect(quarterStep).toBeGreaterThan(100);
+    expect(quarterStep).toBeLessThan(200);
+  });
+
+  it("wraps at 360°, matching the same bearing modulo 360", () => {
+    expect(ringKmAt(ring, 360)).toBeCloseTo(ringKmAt(ring, 0), 5);
+    expect(ringKmAt(ring, 405)).toBeCloseTo(ringKmAt(ring, 45), 5);
+  });
+});
+
+describe("destPoint", () => {
+  it("moving due north increases latitude only", () => {
+    const p = destPoint(HOME, 100, 0);
+    expect(p.lat).toBeGreaterThan(HOME.lat);
+    expect(p.lon).toBeCloseTo(HOME.lon, 5);
+  });
+
+  it("moving due east increases longitude only", () => {
+    const p = destPoint(HOME, 100, 90);
+    expect(p.lon).toBeGreaterThan(HOME.lon);
+    expect(p.lat).toBeCloseTo(HOME.lat, 5);
+  });
+
+  it("0 km is a no-op regardless of bearing", () => {
+    const p = destPoint(HOME, 0, 137);
+    expect(p.lat).toBeCloseTo(HOME.lat, 9);
+    expect(p.lon).toBeCloseTo(HOME.lon, 9);
+  });
+});
+
+describe("ovalOutline", () => {
+  it("returns `steps` points, each a valid lat/lon", () => {
+    const points = ovalOutline(HOME, ZAGREB_DRIVE_RINGS[0], 36);
+    expect(points).toHaveLength(36);
+    for (const p of points) {
+      expect(Number.isFinite(p.lat)).toBe(true);
+      expect(Number.isFinite(p.lon)).toBe(true);
+    }
+  });
+
+  it("every point is roughly centred on the origin, not off to one side", () => {
+    const points = ovalOutline(HOME, ZAGREB_DRIVE_RINGS[1]);
+    const lats = points.map((p) => p.lat);
+    const lons = points.map((p) => p.lon);
+    expect(Math.min(...lats)).toBeLessThan(HOME.lat);
+    expect(Math.max(...lats)).toBeGreaterThan(HOME.lat);
+    expect(Math.min(...lons)).toBeLessThan(HOME.lon);
+    expect(Math.max(...lons)).toBeGreaterThan(HOME.lon);
   });
 });

@@ -57,6 +57,24 @@ export function formatDrive(mins: number): string {
   return `${hours} h ${String(remainder).padStart(2, "0")}`;
 }
 
+/**
+ * Display labels for `FrameState` — issue 127: "PRINTED/NOT PRINTED seems
+ * hard to understand, lets get back to visited" and "TO PRINT — absolutely
+ * hard to understand what does this means, lets get back to simple words
+ * for now." The internal state union (`FrameState` itself, and every
+ * 'loved' | 'fine' | 'unprinted' value in the model) is unchanged — the
+ * "print" lexicon still applies to the rest of the product's naming (The
+ * Atlas, The Index, The Contact Sheet, a Frame) — only the specific pieces
+ * of copy called out in issue 127 as "hard to understand" changed to
+ * plainer words. One shared source rather than each of
+ * Legend/IndexPanel/AtlasScreen re-typing the same three strings.
+ */
+export const STATE_LABEL: Record<FrameState, string> = {
+  loved: "Visited · loved",
+  fine: "Visited · fine",
+  unprinted: "Not visited",
+};
+
 export interface StateCounts {
   loved: number;
   fine: number;
@@ -73,10 +91,11 @@ export function countsByState(frames: Frame[]): StateCounts {
 
 /**
  * Every number is labelled (RISO1 content rule) — never a bare count.
- * "Zagreb · 42 printed / 74 not", matching the plan's example exactly:
- * printed = loved + fine, not = unprinted.
+ * "Zagreb · 42 visited / 74 not", matching the plan's original "printed"
+ * example in shape, but in issue 127's plainer words: visited = loved +
+ * fine, not = unprinted.
  */
 export function formatMeta(location: string, counts: StateCounts): string {
-  const printed = counts.loved + counts.fine;
-  return `${location} · ${printed} printed / ${counts.unprinted} not`;
+  const visited = counts.loved + counts.fine;
+  return `${location} · ${visited} visited / ${counts.unprinted} not`;
 }

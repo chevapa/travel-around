@@ -151,7 +151,19 @@ export function MapBase({ initialBounds, styleUrl = DEFAULT_STYLE_URL, onLongPre
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <div ref={containerRef} data-testid="riso-map-container" style={{ position: "absolute", inset: 0 }} />
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>{ready ? children?.(view) : null}</div>
+      {/*
+       * Always call children, even before "load" fires — the chrome
+       * (TopBar, Legend, the panel slot) is composed from this render-prop
+       * (AtlasScreen.tsx), and `view` already degrades gracefully before
+       * ready (project() returns null, zoom/center fall back to sane
+       * defaults; see MapView above) precisely so its callers can render
+       * without a live map. Gating the whole subtree on `ready` meant a
+       * slow/failed tile load didn't just leave the map canvas blank (as
+       * intended) — every button, and the entire filter/search/panel UI,
+       * disappeared with it, with no way to recover. `ready` still exists
+       * for anyone who genuinely needs to know.
+       */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>{children?.(view)}</div>
     </div>
   );
 }

@@ -86,7 +86,7 @@ export function NewFrameForm({ lat, lon, onSave, onCancel, style, ...rest }: New
               padding: "0 8px",
             }}
           >
-            not printed yet
+            not visited yet
           </div>
         </div>
 
