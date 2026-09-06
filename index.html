@@ -141,6 +141,17 @@
   <img class="edge-collage palm" src="assets/img013.png" alt="" aria-hidden="true">
   <img class="edge-collage castle" src="assets/img015.png" alt="" aria-hidden="true">
   <div id="map"></div>
+  <!-- issue #54 step 5: "TERRA INCOGNITA" must NOT be a geographic
+       lat/lng-anchored Leaflet label that scales/clusters with the map —
+       the previous implementation did exactly that, and at full zoom-out
+       the 4 lat/lng-anchored copies collapsed visually on top of each
+       other into unreadable overlapping text (confirmed by screenshot
+       while testing this issue). Fixed-viewport-position elements instead,
+       opacity driven by the same --terra-t custom property
+       updateTerraIncognitaZoom() (js/map.js) already sets on
+       documentElement — no per-zoom JS needed for these specifically. -->
+  <div class="terra-incognita-label corner-a" aria-hidden="true">Terra Incognita</div>
+  <div class="terra-incognita-label corner-b" aria-hidden="true">Terra Incognita</div>
   <button id="sidebar-collapse" title="Скрыть/показать панель">
     <svg id="collapse-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
     <span id="collapse-txt">Скрыть панель</span>
