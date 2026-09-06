@@ -4,7 +4,7 @@
 // (нравится / не интересно / на потом) больше не хранятся как отдельные
 // три Set'а — это события в общем журнале взаимодействий (interactions.js),
 // см. data_refactoring.md: raw-события отдельно от того, что из них следует.
-import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo } from './places.js';
+import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo, pickOnboardingPlaces, store } from './places.js';
 import { flyToPlace, map } from './map.js';
 import { setFilter } from './filters.js';
 import { loadInteractions, logInteraction, hasInteraction, clearInteractions } from './interactions.js';
@@ -25,12 +25,60 @@ let userPos = null;
 // карточки (renderStack дергается чаще, чем реально меняется top of stack).
 const viewedThisSession = new Set();
 
+// ---------- ЗНАКОМСТВО (первый заход) ----------
+// issue #33/#59: "для возвращающегося пользователя не нужно, а для первого
+// нужен выбор опросник" — CLAUDE.md §8 is explicit that this isn't a form
+// with sliders, it's the exact same swipe mechanic run a few times up
+// front: place → reaction → next place → reaction. pickOnboardingPlaces()
+// (js/places.js) already existed for this but was never wired to any
+// screen — this is that wiring. A real gap only for a genuinely fresh
+// visitor: this deployment's own 116 places already carry legacy
+// cat/wantReturn data that getSeedInteractions() (interactions.js) turns
+// into real profile signal, so the site's actual owner is never truly
+// cold — but a friend opening the same link on their own browser/device
+// has zero of that, and this is for them.
+const ONBOARDING_KEY = 'trip-atlas-onboarded';
+const ONBOARDING_COUNT = 5;
+let onboarding = true;      // pessimistic default until checkOnboarding() resolves
+let onboardingIds = null;   // fixed set for this session, picked once, lazily (needs PLACES loaded)
+
+async function checkOnboarding(){
+  try{
+    const r = await store.get(ONBOARDING_KEY);
+    onboarding = !(r && r.value === 'done');
+  }catch(e){ onboarding = true; } // storage unavailable — safest default is still showing it once
+}
+
+function markOnboardingDone(){
+  onboarding = false;
+  store.set(ONBOARDING_KEY, 'done').catch(()=>{
+    /* storage unavailable — onboarding just reappears next visit, not fatal */
+  });
+}
+
 // ---------- ПОДБОР И РАНЖИРОВАНИЕ КАНДИДАТОВ ----------
 // Реализация "Place → Interaction → Derived signals → Recommendation" из
 // data_refactoring.md: candidates — сырые кандидаты (места-планы, на
 // которые ещё нет решения), profile/ctx/weather — производные сигналы и
 // объективная реальность, rankPlaces — сама формула score.
 function buildQueue(){
+  if(onboarding && PLACES.length){
+    if(onboardingIds === null){
+      onboardingIds = pickOnboardingPlaces(PLACES, ONBOARDING_COUNT).map(p => p.id);
+    }
+    const remaining = onboardingIds
+      .map(id => PLACES.find(p => p.id === id))
+      .filter(p => p && !hasInteraction(p.id, 'liked') && !hasInteraction(p.id, 'not_interested') && !hasInteraction(p.id, 'saved_for_later'));
+    if(remaining.length){
+      // score:0/reasons:[] — onboarding cards intentionally skip "why this
+      // place" reasoning (there's no profile yet to explain from); the
+      // header text (see renderStack) carries the explanation instead.
+      queue = remaining.map(place => ({ place, score: 0, reasons: [] }));
+      return;
+    }
+    markOnboardingDone(); // exhausted the onboarding set — fall through to the real ranked queue below
+  }
+
   const candidates = PLACES.filter(p =>
     p.cat === 'plan' && !hasInteraction(p.id, 'not_interested') && !hasInteraction(p.id, 'liked'));
   const profile = computeProfile(PLACES);
@@ -145,9 +193,34 @@ function buildCardEl(place, depth, reasons){
   return el;
 }
 
+// issue #33: reuses the existing static .reco-title/.reco-sub elements
+// rather than adding new onboarding-only markup — swaps their text while
+// onboarding is active, restores the normal copy once it completes. Called
+// from renderStack() so it always reflects the queue that was just built.
+function updateRecoHeader(){
+  const titleEl = document.querySelector('.reco-title');
+  const subEl = document.querySelector('.reco-sub');
+  if(!titleEl || !subEl) return;
+  if(onboarding && queue.length){
+    titleEl.textContent = 'Быстрое знакомство';
+    subEl.textContent = `Оцените ещё ${queue.length} ${pluralizeMesto(queue.length)} — так мы быстрее поймём ваш вкус.`;
+  } else {
+    titleEl.textContent = 'Куда сегодня?';
+    subEl.textContent = 'Одна рекомендация — решай и двигайся дальше.';
+  }
+}
+
+function pluralizeMesto(n){
+  const mod10 = n % 10, mod100 = n % 100;
+  if(mod10 === 1 && mod100 !== 11) return 'место';
+  if([2,3,4].includes(mod10) && ![12,13,14].includes(mod100)) return 'места';
+  return 'мест';
+}
+
 function renderStack(){
   if(!stackEl) return;
   stackEl.innerHTML = '';
+  updateRecoHeader();
 
   if(PLACES.length === 0){
     stackEl.innerHTML = `<div class="reco-card reco-empty"><p class="reco-empty-big">Собираем места…</p>
@@ -348,6 +421,7 @@ export async function initRecommend(){
   sheetBody = document.getElementById('reco-sheet-body');
 
   await loadInteractions();
+  await checkOnboarding();
 
   document.getElementById('reco-skip').addEventListener('click', ()=>swipeTop('skip'));
   document.getElementById('reco-later').addEventListener('click', ()=>swipeTop('save'));
