@@ -2,6 +2,7 @@ import { PLACES, statusInfo, catInfo, countryInfo, seasonInfo, sourceKey, store 
 import { pickMode, setPickedCoords } from './modal.js';
 import { setFilter } from './filters.js';
 import { haversineDistance } from './context.js';
+import { fetchPlacePhoto } from './photos.js';
 
 // ---------- КАРТА ----------
 // На мобильном стартуем чуть приближенным видом (примерно по кольцу ~1ч
@@ -74,6 +75,7 @@ export function buildMarker(place){
   const st = statusInfo(place.cat);
   const starMark = place.wantReturn ? ' <span class="star-mark">★</span>' : '';
   const driveId = `dt-${placeIdCounter++}`;
+  const photoId = `ph-${placeIdCounter++}`;
   const catBadges = place.cats.slice(0,3).map(c=>
     `<span class="popup-badge cat cat-tag-btn" data-filter-type="cat" data-filter-value="${c}" role="button" tabindex="0">
       <span class="cat-art">${catInfo(c).ico}</span>${catInfo(c).label.replace(' / ',' · ')}</span>`).join('');
@@ -112,6 +114,14 @@ export function buildMarker(place){
   marker.bindPopup(
     terraBlock +
     `<div class="popup-badges"><span class="popup-badge ${st.badge} cat-tag-btn" data-filter-type="status" data-filter-value="${place.cat}" role="button" tabindex="0">${st.label}</span>${countryBadge}${seasonBadge}${catBadges}</div>` +
+    // issue #81: the recommend/tinder card (js/recommend.js) already shows
+    // a real Wikipedia photo when one exists (js/photos.js) — this popup
+    // had no equivalent, a real inconsistency between the two places a
+    // user sees the same place. Same lazy/progressive-enhancement pattern
+    // as loadDriveTime() below: an empty placeholder here, filled in (or
+    // left empty, on no photo/no image tag at all) only once the popup is
+    // actually opened, not for all ~116 markers on load.
+    `<div class="popup-photo" id="${photoId}"></div>` +
     `<p class="popup-title"><a href="${searchUrl}" target="_blank" rel="noopener" class="title-link">${place.name}<svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>${starMark}</p>` +
     `<p class="popup-note">${place.note}</p>` +
     warnBlock +
@@ -119,7 +129,10 @@ export function buildMarker(place){
     `<p class="popup-drivetime" id="${driveId}"><a href="${gmapsUrl}" target="_blank" rel="noopener" class="drivetime-link">🚗 время в пути: <span class="dt-value">${place.drive || '—'}</span> <svg class="ext-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a></p>` +
     `<div class="nearby-box"><button class="nearby-btn" data-id="${place.id}">Что рядом →</button><div class="nearby-out"></div></div>`
   );
-  marker.on('popupopen', ()=>loadDriveTime(place, driveId));
+  marker.on('popupopen', ()=>{
+    loadDriveTime(place, driveId);
+    loadPlacePhoto(place, photoId);
+  });
   marker.on('add', ()=>{
     const el = marker.getElement();
     const b = el && el.querySelector('.pin-badge');
@@ -180,6 +193,19 @@ export function setReturnBadgeVisible(on){
     const b = el && el.querySelector('.pin-badge');
     if(b) b.classList.toggle('hidden', !on);
   });
+}
+
+// ---------- ФОТО МЕСТА (issue #81) ----------
+// fetchPlacePhoto() (photos.js) is already cached by place id, so opening
+// the same popup twice costs one real network call, not two — same
+// caching js/recommend.js's card already relies on.
+async function loadPlacePhoto(place, photoId){
+  const el = document.getElementById(photoId);
+  if(!el) return;
+  const url = await fetchPlacePhoto(place);
+  const cur = document.getElementById(photoId); // popup may have closed/reopened by the time this resolves
+  if(!cur || !url) return;
+  cur.innerHTML = `<img src="${url}" alt="" loading="lazy">`;
 }
 
 // ---------- ВРЕМЯ В ПУТИ ----------
