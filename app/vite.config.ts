@@ -9,6 +9,15 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   base: "./",
   plugins: [react()],
+  // MapLibre GL ships a web worker (for off-main-thread tile parsing)
+  // whose own relative asset URL breaks once esbuild pre-bundles it into
+  // a different location under node_modules/.vite/deps/ — the worker
+  // 404s and the map silently falls back to no vector data at all. A
+  // known Vite+MapLibre/Mapbox interaction; excluding it from
+  // pre-bundling is the standard fix.
+  optimizeDeps: {
+    exclude: ["maplibre-gl"],
+  },
   test: {
     setupFiles: ["./src/test/setup.ts"],
   },
