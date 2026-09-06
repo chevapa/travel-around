@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #efe7d7; }
+  a { color: #0E7C7B; text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { color: #FF2E86; }
+</style>
+</helmet>
+
+<div style="font-family:'Space Grotesk',system-ui,sans-serif;color:#14140F;background:#efe7d7;padding:0 20px 120px;display:flex;flex-direction:column;align-items:center;gap:64px">
+
+  <header style="width:100%;max-width:1000px;padding-top:56px;display:flex;flex-direction:column;gap:22px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#7d7460">Design review · Travel Atlas · Атлас поездок</div>
+    <h1 style="margin:0;font-size:clamp(36px,6vw,64px);line-height:.98;font-weight:700;letter-spacing:-.03em;text-wrap:balance;max-width:16ch">A great idea wearing three&nbsp;different outfits</h1>
+    <p style="margin:0;max-width:64ch;font-size:19px;line-height:1.55;color:#3b3a33;text-wrap:pretty">The concept is genuinely good: a personal atlas of day trips out of Zagreb, with visited/liked state, a travel-time radius, and a “just tell me where to go” button. The riso-print identity is distinctive. What's holding it back is that the interface is a set of independent floating widgets — each styled by its own rules — dropped on top of a stock consumer basemap that fights the brand for attention.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase">
+      <span style="padding:7px 13px;background:#14140F;color:#F5EFE2;border-radius:2px">Visual system</span>
+      <span style="padding:7px 13px;background:#14140F;color:#F5EFE2;border-radius:2px">Map usability</span>
+      <span style="padding:7px 13px;background:#14140F;color:#F5EFE2;border-radius:2px">Filtering</span>
+      <span style="padding:7px 13px;background:#14140F;color:#F5EFE2;border-radius:2px">Hierarchy</span>
+      <span style="padding:7px 13px;background:#14140F;color:#F5EFE2;border-radius:2px">Contrast</span>
+    </div>
+  </header>
+
+  <section style="width:100%;max-width:1000px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:2px;background:#14140F;border:2px solid #14140F">
+    <div style="background:#F5EFE2;padding:20px 18px;display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:38px;font-weight:700;letter-spacing:-.03em;color:#0E7C7B">A−</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7d7460">Concept &amp; identity</div>
+    </div>
+    <div style="background:#F5EFE2;padding:20px 18px;display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:38px;font-weight:700;letter-spacing:-.03em;color:#c9741a">C+</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7d7460">Map readability</div>
+    </div>
+    <div style="background:#F5EFE2;padding:20px 18px;display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:38px;font-weight:700;letter-spacing:-.03em;color:#c9741a">C</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7d7460">Chrome &amp; layout</div>
+    </div>
+    <div style="background:#F5EFE2;padding:20px 18px;display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:38px;font-weight:700;letter-spacing:-.03em;color:#B3123F">D</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7d7460">Text contrast</div>
+    </div>
+  </section>
+
+  <section style="width:100%;max-width:1000px;display:flex;flex-direction:column;gap:22px">
+    <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#7d7460">01 — What's working</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+      <div style="background:#F5EFE2;border:2px solid #14140F;padding:20px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:5px">
+          <span style="width:24px;height:24px;border-radius:50%;background:#FF2E86;border:1.5px solid #14140F"></span>
+          <span style="width:24px;height:24px;border-radius:50%;background:#FFC61E;border:1.5px solid #14140F"></span>
+          <span style="width:24px;height:24px;border-radius:50%;background:#0E7C7B;border:1.5px solid #14140F"></span>
+          <span style="width:24px;height:24px;border-radius:50%;background:#6B4EE6;border:1.5px solid #14140F"></span>
+        </div>
+        <strong style="font-size:17px">A real point of view</strong>
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#3b3a33">Riso magenta / yellow / teal on cream, hard offset shadows, cut-and-paste collage. Nobody will mistake this for a template. Protect it.</p>
+      </div>
+      <div style="background:#F5EFE2;border:2px solid #14140F;padding:20px;display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600">~1 ч ◠</div>
+        <strong style="font-size:17px">The travel-time radius</strong>
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#3b3a33">Dashed isochrone rings labelled in hours are the single smartest thing here — day trips are chosen by drive time, not distance. It deserves far more prominence than it gets.</p>
+      </div>
+      <div style="background:#F5EFE2;border:2px solid #14140F;padding:20px;display:flex;flex-direction:column;gap:10px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600">42 + 74</div>
+        <strong style="font-size:17px">Diary vs. wishlist as one dataset</strong>
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#3b3a33">Places you've been and places you might go living on one map, distinguished by colour, is the right model. “Что рядом →” on the card is an excellent day-planning move.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="width:100%;max-width:1000px;display:flex;flex-direction:column;gap:26px">
+    <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#7d7460">02 — What's breaking, in priority order</h2>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="position:relative;border:2px solid #14140F;background:#14140F">
+        <img src="assets/map.png" alt="Map view with header, toolbar, and clustered pins" style="display:block;width:100%" />
+        <span style="position:absolute;top:12%;left:1.5%;width:27%;height:14%;border:3px solid #FF2E86;box-shadow:0 0 0 2px #14140F, inset 0 0 0 2px #14140F"></span>
+        <span style="position:absolute;top:14%;left:46%;width:53%;height:9%;border:3px solid #FFC61E;box-shadow:0 0 0 2px #14140F, inset 0 0 0 2px #14140F"></span>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:#7d7460;display:flex;gap:18px;flex-wrap:wrap">
+        <span><span style="color:#FF2E86">■</span> broken header collage</span>
+        <span><span style="color:#c9a119">■</span> four buttons, four visual languages</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:2px;background:#14140F;border:2px solid #14140F">
+
+      <div style="background:#F5EFE2;padding:22px 22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;background:#B3123F;color:#fff;padding:5px 9px;white-space:nowrap">CRIT 01</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <strong style="font-size:19px;letter-spacing:-.01em">The header block is visibly broken</strong>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:#3b3a33;max-width:70ch">The collage image overflows its cream card on three sides, the word “ЗАГРЕБ” is half-buried behind a starburst, and “31 МЕСТ” sits in a floating chip that appears to be escaping the container. It reads as a rendering bug, not as intentional collage — and it's the first thing anyone sees. (Also: “31 <em>мест</em>” should be “31 <em>место</em>”.)</p>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#0E7C7B"><strong>Fix:</strong> give the collage a fixed aspect box with <code style="font-family:'IBM Plex Mono',monospace;font-size:13px">overflow:hidden</code>, or drop the photo entirely and let the wordmark + place count stand alone. Deliberate overlap needs one element breaking the frame, not four.</p>
+        </div>
+      </div>
+
+      <div style="background:#F5EFE2;padding:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;background:#B3123F;color:#fff;padding:5px 9px;white-space:nowrap">CRIT 02</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <strong style="font-size:19px;letter-spacing:-.01em">Filter panel text fails contrast badly</strong>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:#3b3a33;max-width:70ch">“Были, Понравилось”, “Были, Нейтрально” and “Ещё не были” are set in pale grey on cream — roughly <strong>2.4:1</strong>, against a 4.5:1 requirement. The counts and the “только” links beside them are lighter still. These are the primary controls of the whole product and they read as disabled.</p>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#0E7C7B"><strong>Fix:</strong> ink <code style="font-family:'IBM Plex Mono',monospace;font-size:13px">#14140F</code> for every filter label, <code style="font-family:'IBM Plex Mono',monospace;font-size:13px">#6b6455</code> as the absolute lightest for counts. Show unselected state with the checkbox, never by fading the label.</p>
+        </div>
+      </div>
+
+      <div style="background:#F5EFE2;padding:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;background:#c9741a;color:#fff;padding:5px 9px;white-space:nowrap">HIGH 03</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <strong style="font-size:19px;letter-spacing:-.01em">The basemap is competing with your pins</strong>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:#3b3a33;max-width:70ch">A stock basemap at full saturation puts bright green forest, blue lakes and <em>pink motorways</em> under magenta pins. The roads are nearly the same hue as your primary marker colour, so pins stop being figure and become part of the ground. The purple “not visited” dots — your largest category at 74 places — are the worst off: dark violet on mid-green is almost invisible at a glance.</p>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#0E7C7B"><strong>Fix:</strong> a custom cream/greige basemap — desaturate landcover to ~10%, roads to warm grey, keep water a pale tint, drop POI icons. All colour saturation on the map should belong to your data.</p>
+        </div>
+      </div>
+
+      <div style="background:#F5EFE2;padding:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;background:#c9741a;color:#fff;padding:5px 9px;white-space:nowrap">HIGH 04</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <strong style="font-size:19px;letter-spacing:-.01em">Marker hierarchy is inverted, and there's no legend</strong>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:#3b3a33;max-width:70ch">Clusters are big, magenta and yellow-ringed; individual places are small, dark and quiet. So the loudest things on the map are the ones carrying the least information — “2” tells you nothing. Meanwhile pin colour encodes status (teal / orange / purple) and <strong>nothing on the map explains what those colours mean</strong>; the key is buried inside a panel you have to open.</p>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#0E7C7B"><strong>Fix:</strong> mute clusters to outlined cream-on-ink and give single places the colour and weight. Put a permanent 3-line legend in a bottom corner — it doubles as a one-tap filter.</p>
+        </div>
+      </div>
+
+      <div style="background:#F5EFE2;padding:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;background:#c9741a;color:#fff;padding:5px 9px;white-space:nowrap">HIGH 05</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <strong style="font-size:19px;letter-spacing:-.01em">Four buttons, four different visual languages</strong>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:#3b3a33;max-width:70ch">“КУДА?” is yellow-filled, “СБРОСИТЬ” and “+ МЕСТО” are white outlined, “ФИЛЬТРЫ” is black-filled — with no relationship between colour and importance. Black “ФИЛЬТРЫ” currently shouts louder than the primary action. The search field, which is the least-used control on a map you browse visually, is the widest element in the bar. And the toolbar floats detached from the header block, so the app has two unrelated pieces of chrome.</p>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#0E7C7B"><strong>Fix:</strong> one bar, one hierarchy — yellow = the single primary action, ink = secondary, quiet = tertiary. Shrink search to an icon that expands.</p>
+        </div>
+      </div>
+
+      <div style="background:#F5EFE2;padding:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;background:#14140F;color:#FFC61E;padding:5px 9px;white-space:nowrap">MED 06</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <strong style="font-size:19px;letter-spacing:-.01em">The place card buries its own headline</strong>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:#3b3a33;max-width:70ch">Five metadata chips — status, country, and three category tags with emoji — occupy the top third of the card, above the place name. The name is what you came for. Worse, the card floats unanchored in the middle of the map with no tail or connector, so you lose track of which pin you tapped, and it covers the surroundings you'd want to see. The status chip also restates a filter you already set.</p>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#0E7C7B"><strong>Fix:</strong> name → one-line description → drive time → tags at the bottom. Anchor the card to its pin with a pointer, or dock it as a side panel / bottom sheet so the map stays legible.</p>
+        </div>
+      </div>
+
+      <div style="background:#F5EFE2;padding:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;background:#14140F;color:#FFC61E;padding:5px 9px;white-space:nowrap">MED 07</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <strong style="font-size:19px;letter-spacing:-.01em">Panels stack instead of coexisting</strong>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:#3b3a33;max-width:70ch">Open the filters with a card showing and you get two overlapping sheets plus a header — three layers of chrome over the map, with the filter panel running off the bottom edge and its footer (“31 МЕСТ ПОДХОДИТ / ПО РАССТОЯНИЮ”) partly cut. Filters also open with every section collapsed and no indication of what's currently active, so you must expand each one to find out.</p>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#0E7C7B"><strong>Fix:</strong> one panel slot — opening filters replaces the card. Cap the panel at viewport height with an internal scroll and a pinned footer. Show active filters as removable chips on the collapsed section header.</p>
+        </div>
+      </div>
+
+      <div style="background:#F5EFE2;padding:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;background:#14140F;color:#FFC61E;padding:5px 9px;white-space:nowrap">MED 08</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <strong style="font-size:19px;letter-spacing:-.01em">The counts don't add up, and the type is fighting Cyrillic</strong>
+          <p style="margin:0;font-size:16px;line-height:1.55;color:#3b3a33;max-width:70ch">The header says 31 places; the status filter shows 31 / 11 / 74; the footer says 31 match — but only “Ещё не были” (74) is checked. Three different 31s that mean different things. Separately, the display face's question mark renders as a reversed glyph in “КУДА?”, and its Cyrillic caps are noticeably wider and weaker than the Latin — the wordmark and the UI labels are effectively two different typefaces.</p>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#0E7C7B"><strong>Fix:</strong> label every number (“показано 31 из 116”). Keep the display face for the wordmark only; set UI in a face with first-class Cyrillic.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section style="width:100%;max-width:1000px;display:flex;flex-direction:column;gap:22px">
+    <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#7d7460">03 — Redesign proposal</h2>
+    <p style="margin:0;max-width:64ch;font-size:18px;line-height:1.55;color:#3b3a33;text-wrap:pretty">Same identity, same features, restructured: <strong>one</strong> bar of chrome across the top, <strong>one</strong> panel slot on the right, a quiet basemap, and a permanent legend. Nothing below is a new feature — it's the existing product with the hierarchy sorted out.</p>
+
+    <div style="border:2px solid #14140F;background:#e8e2d2;position:relative;overflow:hidden;aspect-ratio:16/10;min-height:420px;background-image:linear-gradient(#dcd6c4 1px,transparent 1px),linear-gradient(90deg,#dcd6c4 1px,transparent 1px);background-size:64px 64px">
+
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 46% 62%, rgba(14,124,123,.07), transparent 46%)"></div>
+      <div style="position:absolute;left:46%;top:62%;width:0;height:0"></div>
+      <div style="position:absolute;left:16%;top:22%;right:16%;bottom:8%;border:2px dashed #a89f88;border-radius:50%"></div>
+      <div style="position:absolute;left:28%;top:38%;right:28%;bottom:24%;border:2px dashed #bfb6a0;border-radius:50%"></div>
+      <div style="position:absolute;left:16.5%;top:47%;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;background:#F5EFE2;border:1.5px solid #14140F;padding:2px 7px">2 Ч</div>
+      <div style="position:absolute;left:28.5%;top:52%;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;background:#F5EFE2;border:1.5px solid #14140F;padding:2px 7px">1 Ч</div>
+
+      <div style="position:absolute;left:46%;top:62%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:#14140F;box-shadow:0 0 0 4px #F5EFE2, 0 0 0 6px #14140F"></div>
+
+      <div style="position:absolute;left:34%;top:34%;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center">
+        <span style="width:22px;height:22px;border-radius:50%;background:#0E7C7B;border:2.5px solid #14140F"></span>
+        <span style="width:2.5px;height:9px;background:#14140F"></span>
+      </div>
+      <div style="position:absolute;left:57%;top:44%;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center">
+        <span style="width:22px;height:22px;border-radius:50%;background:#E8621C;border:2.5px solid #14140F"></span>
+        <span style="width:2.5px;height:9px;background:#14140F"></span>
+      </div>
+      <div style="position:absolute;left:24%;top:70%;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center">
+        <span style="width:22px;height:22px;border-radius:50%;background:#6B4EE6;border:2.5px solid #14140F"></span>
+        <span style="width:2.5px;height:9px;background:#14140F"></span>
+      </div>
+      <div style="position:absolute;left:64%;top:76%;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center">
+        <span style="width:22px;height:22px;border-radius:50%;background:#6B4EE6;border:2.5px solid #14140F"></span>
+        <span style="width:2.5px;height:9px;background:#14140F"></span>
+      </div>
+      <div style="position:absolute;left:41%;top:28%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:#F5EFE2;border:2.5px solid #14140F;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600">4</div>
+      <div style="position:absolute;left:70%;top:36%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:#F5EFE2;border:2.5px solid #14140F;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600">2</div>
+
+      <div style="position:absolute;top:0;left:0;right:0;background:#F5EFE2;border-bottom:2px solid #14140F;padding:10px 14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;letter-spacing:.1em;background:#FF2E86;color:#fff;padding:3px 8px">TRAVEL ATLAS</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6b6455">Загреб · показано 31 из 116</span>
+        </div>
+        <div style="flex:1;min-width:12px"></div>
+        <div style="display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase">
+          <span style="width:30px;height:30px;border:2px solid #14140F;display:flex;align-items:center;justify-content:center;font-size:13px">⌕</span>
+          <span style="padding:7px 12px;border:2px solid #14140F;color:#14140F">+ Место</span>
+          <span style="padding:7px 12px;background:#14140F;color:#F5EFE2;position:relative">Фильтры<span style="position:absolute;top:-6px;right:-6px;width:16px;height:16px;border-radius:50%;background:#FF2E86;color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;border:1.5px solid #14140F">2</span></span>
+          <span style="padding:7px 14px;background:#FFC61E;color:#14140F;border:2px solid #14140F;box-shadow:3px 3px 0 #14140F;font-weight:600">Куда сегодня?</span>
+        </div>
+      </div>
+
+      <div style="position:absolute;left:14px;bottom:14px;background:#F5EFE2;border:2px solid #14140F;padding:10px 12px;display:flex;flex-direction:column;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:#0E7C7B;border:1.5px solid #14140F"></span><span>Были, понравилось</span><span style="margin-left:auto;color:#6b6455">31</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:#E8621C;border:1.5px solid #14140F"></span><span>Были, нейтрально</span><span style="margin-left:auto;color:#6b6455">11</span></div>
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:#6B4EE6;border:1.5px solid #14140F"></span><span>Ещё не были</span><span style="margin-left:auto;color:#6b6455">74</span></div>
+      </div>
+
+      <div style="position:absolute;right:14px;top:74px;bottom:14px;width:min(38%,330px);background:#F5EFE2;border:2px solid #14140F;box-shadow:5px 5px 0 rgba(20,20,15,.25);display:flex;flex-direction:column;overflow:hidden">
+        <div style="padding:16px 16px 0;display:flex;flex-direction:column;gap:10px;flex:1;min-height:0">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+            <h3 style="margin:0;font-size:26px;line-height:1.05;letter-spacing:-.02em;font-weight:700">Свети-Крыж-<br />Зачретье</h3>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;line-height:1;padding:4px">✕</span>
+          </div>
+          <div style="height:3px;background:#0E7C7B;width:64px"></div>
+          <p style="margin:0;font-size:15px;line-height:1.5;color:#3b3a33">Отреставрированная усадьба и приятный центр городка.</p>
+          <div style="display:flex;flex-direction:column;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;padding:10px 0;border-top:1.5px solid #ddd4bf;border-bottom:1.5px solid #ddd4bf">
+            <div style="display:flex;justify-content:space-between"><span style="color:#6b6455">В пути</span><strong style="color:#14140F">52 мин · 49 км</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#6b6455">На месте</span><strong style="color:#14140F">~45 мин</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#6b6455">Источник</span><strong style="color:#14140F">Подборка</strong></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase">
+            <span style="padding:4px 8px;border:1.5px solid #14140F;color:#14140F">Хорватия</span>
+            <span style="padding:4px 8px;border:1.5px solid #14140F;color:#14140F">Замок</span>
+            <span style="padding:4px 8px;border:1.5px solid #14140F;color:#14140F">Городок</span>
+            <span style="padding:4px 8px;border:1.5px solid #14140F;color:#14140F">Музей</span>
+          </div>
+        </div>
+        <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px">
+          <span style="padding:11px;background:#FFC61E;border:2px solid #14140F;box-shadow:3px 3px 0 #14140F;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Что рядом →</span>
+          <div style="display:flex;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase">
+            <span style="flex:1;padding:9px;border:2px solid #14140F;text-align:center">★ Хочу</span>
+            <span style="flex:1;padding:9px;border:2px solid #14140F;text-align:center">↗ Маршрут</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+      <div style="background:#F5EFE2;border:2px solid #14140F;padding:18px;display:flex;flex-direction:column;gap:8px">
+        <strong style="font-size:16px">One bar, one hierarchy</strong>
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#3b3a33">Wordmark, honest counts, and actions in ascending weight: icon → outline → ink → yellow. Only “Куда сегодня?” gets the offset shadow, so the primary action is unambiguous. Filters carry a badge for how many are active.</p>
+      </div>
+      <div style="background:#F5EFE2;border:2px solid #14140F;padding:18px;display:flex;flex-direction:column;gap:8px">
+        <strong style="font-size:16px">Legend as a control</strong>
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#3b3a33">The three statuses live permanently in the corner with their counts. It explains the colour code and doubles as the filter you actually use 90% of the time — tap a row to isolate it.</p>
+      </div>
+      <div style="background:#F5EFE2;border:2px solid #14140F;padding:18px;display:flex;flex-direction:column;gap:8px">
+        <strong style="font-size:16px">Card leads with the name</strong>
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#3b3a33">Name, description, then a scannable facts table — drive time is the number you decide on, so it stops being body text. Tags drop to the bottom. Docked right, it never covers the pin or its surroundings.</p>
+      </div>
+      <div style="background:#F5EFE2;border:2px solid #14140F;padding:18px;display:flex;flex-direction:column;gap:8px">
+        <strong style="font-size:16px">Quiet ground, loud data</strong>
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#3b3a33">Cream basemap, warm-grey roads, no stock POIs. Clusters become outlined counters; single places keep the saturated status colour, and the isochrone rings finally read.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="width:100%;max-width:1000px;display:flex;flex-direction:column;gap:18px">
+    <h2 style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#7d7460">04 — If you only do four things</h2>
+    <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px;background:#14140F;border:2px solid #14140F">
+      <li style="background:#F5EFE2;padding:16px 20px;display:flex;gap:16px;align-items:baseline"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#FF2E86">01</span><span style="font-size:17px">Darken every filter label to full ink — one CSS change, biggest usability gain.</span></li>
+      <li style="background:#F5EFE2;padding:16px 20px;display:flex;gap:16px;align-items:baseline"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#FF2E86">02</span><span style="font-size:17px">Clip the header collage, or delete the photo. It currently looks broken.</span></li>
+      <li style="background:#F5EFE2;padding:16px 20px;display:flex;gap:16px;align-items:baseline"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#FF2E86">03</span><span style="font-size:17px">Desaturate the basemap so the pins are the only saturated thing on screen.</span></li>
+      <li style="background:#F5EFE2;padding:16px 20px;display:flex;gap:16px;align-items:baseline"><span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#FF2E86">04</span><span style="font-size:17px">Add the corner legend. Colour is doing real work with nothing to decode it.</span></li>
+    </ol>
+  </section>
+
+</div>
+
+</x-dc>
+</body>
+</html>

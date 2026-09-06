@@ -1,0 +1,25 @@
+<!-- @dsCard group="Spacing" viewport="700x180" subtitle="Prints shrink; tap targets and filter labels never do" name="Targets & minimums" -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    html, body { margin: 0; }
+    body { background: var(--paper-1); color: var(--text-body); font: var(--body); padding: 16px; box-sizing: border-box; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+    .sw { display: flex; flex-direction: column; gap: 4px; }
+    .sw b { display: block; width: 92px; height: 52px; border: var(--stroke); }
+    .sw span { font: var(--label-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-55); }
+    .sw em { font: var(--label-sm); font-style: normal; color: var(--ink-40); }
+  </style>
+</head>
+<body>
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <div style="width:44px;height:44px;border:var(--stroke-dashed);display:flex;align-items:center;justify-content:center;font:var(--label-sm);color:var(--blue)">44</div>
+    <div style="width:28px;height:28px;border:var(--stroke);display:flex;align-items:center;justify-content:center;font:var(--label-sm)">28</div>
+    <span style="font:var(--body);color:var(--text-strong)">Filter labels stay 16px, full ink</span>
+  </div>
+  <div style="margin-top:10px;font:var(--label-sm);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-40)">--tap-min 44px · --print-min 28px · --min-ui-size 16px</div>
+</body>
+</html>

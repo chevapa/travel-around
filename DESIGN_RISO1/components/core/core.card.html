@@ -1,0 +1,66 @@
+<!-- @dsCard group="Components" viewport="700x300" name="Core — buttons, tags, stamps" subtitle="Fill carries hierarchy; one yellow primary per screen" -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="../../styles.css" />
+  <style>
+    html, body { margin: 0; background: var(--paper-1); }
+    body { font: var(--body); color: var(--text-body); padding: 18px; }
+    .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: 12px; }
+    .eyebrow { font: var(--eyebrow); letter-spacing: var(--eyebrow-tracking); text-transform: uppercase; color: var(--text-quiet); }
+  </style>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="../../_ds_bundle.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { Button, IconButton, Tag, StampCheck, Paper } = window.RISO1;
+    function Demo() {
+      const [a, setA] = React.useState(true);
+      const [b, setB] = React.useState(false);
+      return (
+        <div className="col">
+          <div className="row">
+            <Button variant="primary">To Print →</Button>
+            <Button variant="secondary">New Frame</Button>
+            <Button variant="invert" badge={2}>The Index</Button>
+            <Button variant="accent">Discard</Button>
+            <Button variant="secondary" disabled>Disabled</Button>
+          </div>
+          <div className="row">
+            <Button variant="secondary" size="sm">Small</Button>
+            <Button variant="secondary" size="md">Medium</Button>
+            <Button variant="secondary" size="lg">Large</Button>
+            <IconButton glyph="⌕" label="Search" />
+            <IconButton glyph="✕" label="Close" />
+            <IconButton glyph="↗" label="Route" />
+          </div>
+          <div className="row">
+            <Tag>Croatia</Tag>
+            <Tag>Castle</Tag>
+            <Tag tone="ink">52 min · 49 km</Tag>
+            <Tag tone="yellow">By drive time</Tag>
+            <span className="row" style={{ gap: 8 }}>
+              <StampCheck checked={a} onChange={setA} />
+              <span style={{ font: 'var(--body)', color: 'var(--text-strong)' }}>Printed · loved</span>
+            </span>
+            <span className="row" style={{ gap: 8 }}>
+              <StampCheck checked={b} onChange={setB} />
+              <span style={{ font: 'var(--body)', color: 'var(--text-strong)' }}>Printed · fine</span>
+            </span>
+          </div>
+          <Paper tone="card" lift="sm" pad="14px" tape style={{ maxWidth: 300 }}>
+            <span className="eyebrow">Paper · card · tape</span>
+          </Paper>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<Demo />);
+  </script>
+</body>
+</html>
