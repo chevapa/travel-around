@@ -26,5 +26,7 @@ jobs:
       - run: npm ci
       - name: No raw hex colours in components (RISO1 ground rule)
         run: npm run lint:hex
+      - name: Unit tests
+        run: npm test
       - name: Type-check and build
         run: npm run build

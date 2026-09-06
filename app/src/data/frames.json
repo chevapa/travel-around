@@ -1,0 +1,2287 @@
+[
+  {
+    "id": "o3rsks02",
+    "name": "Скопье",
+    "state": "unprinted",
+    "lat": 42.0069,
+    "lon": 21.438,
+    "driveMinutes": 664,
+    "distanceKm": 608.3,
+    "tags": [
+      "town",
+      "castle",
+      "church",
+      "museum",
+      "food"
+    ],
+    "description": "Столица Северной Македонии. Интересны старая османская Чаршия с чайханами, мечетями и ремесленными лавками, Каменный мост, крепость Kale, Даут-пашин хамам и церковь Святого Спаса.",
+    "source": "Источник: Putni Kofer. Статья о местах Северной Македонии.",
+    "country": "mk",
+    "season": "all",
+    "q": "Skopje",
+    "wantReturn": false
+  },
+  {
+    "id": "i11oidq7",
+    "name": "Каньон Матка",
+    "state": "unprinted",
+    "lat": 41.95,
+    "lon": 21.3,
+    "driveMinutes": 660,
+    "distanceKm": 605,
+    "tags": [
+      "nature",
+      "water",
+      "cave",
+      "view"
+    ],
+    "description": "Живописный каньон недалеко от Скопье с искусственным озером Матка. Здесь можно кататься на лодке или каяке, исследовать пещеры и посетить церковь Святого Андрея.",
+    "source": "Источник: Putni Kofer. Статья о местах Северной Македонии.",
+    "country": "mk",
+    "season": "warm",
+    "q": "Matka Canyon",
+    "wantReturn": false
+  },
+  {
+    "id": "e5m4s41l",
+    "name": "Охрид",
+    "state": "unprinted",
+    "lat": 41.1231,
+    "lon": 20.8016,
+    "driveMinutes": 710,
+    "distanceKm": 650.5,
+    "tags": [
+      "town",
+      "water",
+      "beach",
+      "church",
+      "culture",
+      "view"
+    ],
+    "description": "Исторический город на берегу Охридского озера. Старый город расположен на скале над водой. Особенно интересны церковь Святого Иоанна Канео, античный театр и исторический центр.",
+    "source": "Охрид и Охридское озеро находятся под защитой UNESCO. Источник: Putni Kofer.",
+    "country": "mk",
+    "season": "summer",
+    "q": "Ohrid",
+    "wantReturn": false
+  },
+  {
+    "id": "wux2iksh",
+    "name": "Свети-Наум",
+    "state": "unprinted",
+    "lat": 40.9125,
+    "lon": 20.7397,
+    "driveMinutes": 728,
+    "distanceKm": 666.9,
+    "tags": [
+      "church",
+      "beach",
+      "water",
+      "nature",
+      "view"
+    ],
+    "description": "Монастырь на берегу Охридского озера рядом с албанской границей. Рядом находятся пляжи и источник Святого Наума с очень прозрачной водой.",
+    "source": "Источник: Putni Kofer.",
+    "country": "mk",
+    "season": "summer",
+    "q": "Sveti Naum",
+    "wantReturn": false
+  },
+  {
+    "id": "gco59rtj",
+    "name": "Голем-Град",
+    "state": "unprinted",
+    "lat": 40.925,
+    "lon": 21.05,
+    "driveMinutes": 742,
+    "distanceKm": 680.5,
+    "tags": [
+      "nature",
+      "church",
+      "view"
+    ],
+    "description": "Ненаселённый остров на Преспанском озере, известный как Змеиный остров. Здесь сохранились древние руины и церкви, а остров является важным местом обитания птиц и змей.",
+    "source": "Остров открыт для туристов. Источник: Putni Kofer.",
+    "country": "mk",
+    "season": "warm",
+    "q": "Golem Grad",
+    "wantReturn": false
+  },
+  {
+    "id": "c9gugq9w",
+    "name": "Национальный парк Пелистер",
+    "state": "unprinted",
+    "lat": 41.032,
+    "lon": 21.17,
+    "driveMinutes": 738,
+    "distanceKm": 676.7,
+    "tags": [
+      "nature",
+      "water",
+      "view"
+    ],
+    "description": "Горный национальный парк с вершинами выше 2000 метров, глубокими долинами и двумя ледниковыми озёрами, известными как Пелистерские глаза.",
+    "source": "Источник: Putni Kofer.",
+    "country": "mk",
+    "season": "warm",
+    "q": "Pelister National Park",
+    "wantReturn": false
+  },
+  {
+    "id": "ozphn5z4",
+    "name": "Галичник",
+    "state": "unprinted",
+    "lat": 41.588,
+    "lon": 20.658,
+    "driveMinutes": 656,
+    "distanceKm": 601.6,
+    "tags": [
+      "town",
+      "nature",
+      "culture"
+    ],
+    "description": "Горная традиционная деревня, известная ежегодной свадебной церемонией Galičnik Wedding с сохранением старинных местных обрядов.",
+    "source": "Источник: Putni Kofer.",
+    "country": "mk",
+    "season": "summer",
+    "q": "Galičnik",
+    "wantReturn": false
+  },
+  {
+    "id": "xp5lplqr",
+    "name": "Нови-Сад",
+    "state": "unprinted",
+    "lat": 45.2671,
+    "lon": 19.8335,
+    "driveMinutes": 334,
+    "distanceKm": 306.1,
+    "tags": [
+      "town",
+      "food",
+      "culture",
+      "museum",
+      "castle"
+    ],
+    "description": "Мультикультурный город на Дунае с исторической архитектурой, музеями, ресторанами и кафе. Главная достопримечательность рядом с городом — Петроварадинская крепость.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "all",
+    "q": "Novi Sad",
+    "wantReturn": false
+  },
+  {
+    "id": "533ujq8o",
+    "name": "Петроварадинская крепость",
+    "state": "unprinted",
+    "lat": 45.254,
+    "lon": 19.862,
+    "driveMinutes": 337,
+    "distanceKm": 308.6,
+    "tags": [
+      "castle",
+      "view",
+      "museum",
+      "culture",
+      "food"
+    ],
+    "description": "Большая крепость над Дунаем, известная как «Гибралтар на Дунае». Внутри находятся художественные мастерские, рестораны, кафе и музеи. Здесь также проходит фестиваль EXIT.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "all",
+    "q": "Petrovaradin Fortress",
+    "wantReturn": false
+  },
+  {
+    "id": "y0qm2xze",
+    "name": "Дьявольский город",
+    "state": "unprinted",
+    "lat": 42.996,
+    "lon": 21.409,
+    "driveMinutes": 581,
+    "distanceKm": 532.8,
+    "tags": [
+      "nature",
+      "view"
+    ],
+    "description": "Природный феномен на юге Сербии с 202 необычными земляными фигурами, сформированными эрозией. Рядом находятся два минеральных источника.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "all",
+    "q": "Đavolja Varoš",
+    "wantReturn": false
+  },
+  {
+    "id": "5doghw0m",
+    "name": "Суботица",
+    "state": "unprinted",
+    "lat": 46.1,
+    "lon": 19.667,
+    "driveMinutes": 313,
+    "distanceKm": 286.6,
+    "tags": [
+      "town",
+      "food",
+      "culture",
+      "museum"
+    ],
+    "description": "Город на севере Сербии возле венгерской границы, известный архитектурой сецессии, мультикультурной атмосферой и разнообразной кухней.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "all",
+    "q": "Subotica",
+    "wantReturn": false
+  },
+  {
+    "id": "a9dvgrfh",
+    "name": "Озеро Палич",
+    "state": "unprinted",
+    "lat": 46.103,
+    "lon": 19.758,
+    "driveMinutes": 320,
+    "distanceKm": 293.6,
+    "tags": [
+      "water",
+      "beach",
+      "nature",
+      "town"
+    ],
+    "description": "Курортное озеро рядом с Суботицей. Подходит для прогулок, отдыха у воды и летнего пляжного отдыха.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "summer",
+    "q": "Palić Lake",
+    "wantReturn": false
+  },
+  {
+    "id": "f7n9ifnl",
+    "name": "Сирогойно",
+    "state": "unprinted",
+    "lat": 43.848,
+    "lon": 19.792,
+    "driveMinutes": 405,
+    "distanceKm": 371.6,
+    "tags": [
+      "town",
+      "museum",
+      "culture",
+      "nature"
+    ],
+    "description": "Традиционная деревня в районе Златибора с музеем под открытым небом Staro Selo. Здесь собраны деревянные дома XIX века и представлены традиционные ремёсла.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "all",
+    "q": "Sirogojno Staro Selo",
+    "wantReturn": false
+  },
+  {
+    "id": "e3i7opqs",
+    "name": "Национальный парк Джердап",
+    "state": "unprinted",
+    "lat": 44.65,
+    "lon": 22.35,
+    "driveMinutes": 562,
+    "distanceKm": 515.1,
+    "tags": [
+      "nature",
+      "water",
+      "view",
+      "castle",
+      "culture"
+    ],
+    "description": "Большой национальный парк на Дунае с Джердапским ущельем, историческими крепостями, археологическими памятниками и природными достопримечательностями.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "all",
+    "q": "Đerdap National Park",
+    "wantReturn": false
+  },
+  {
+    "id": "u20se8c6",
+    "name": "Крепость Голубац",
+    "state": "unprinted",
+    "lat": 44.662,
+    "lon": 21.677,
+    "driveMinutes": 506,
+    "distanceKm": 463.9,
+    "tags": [
+      "castle",
+      "view",
+      "water",
+      "culture"
+    ],
+    "description": "Средневековая крепость на берегу Дуная с мощными стенами и башнями. Расположена у входа в Джердапское ущелье.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "all",
+    "q": "Golubac Fortress",
+    "wantReturn": false
+  },
+  {
+    "id": "njld63ii",
+    "name": "Большой военный остров",
+    "state": "unprinted",
+    "lat": 44.829,
+    "lon": 20.442,
+    "driveMinutes": 399,
+    "distanceKm": 365.5,
+    "tags": [
+      "nature",
+      "water",
+      "beach",
+      "view"
+    ],
+    "description": "Ненаселённый речной остров на месте слияния Савы и Дуная в Белграде. Большая часть территории является природным резерватом. Здесь обитает множество видов птиц.",
+    "source": "Охраняемая природная территория. Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "summer",
+    "q": "Veliko Ratno Ostrvo",
+    "wantReturn": false
+  },
+  {
+    "id": "lzbk2zdt",
+    "name": "Пляж Лидо",
+    "state": "unprinted",
+    "lat": 44.839,
+    "lon": 20.438,
+    "driveMinutes": 398,
+    "distanceKm": 364.8,
+    "tags": [
+      "beach",
+      "water",
+      "nature"
+    ],
+    "description": "Песчаный пляж на северной части Большого военного острова. Летом к нему устанавливают понтонный мост; также можно добраться на лодке, каноэ или каяке.",
+    "source": "Источник: Putni Kofer.",
+    "country": "rs",
+    "season": "summer",
+    "q": "Lido Beach Zemun",
+    "wantReturn": false
+  },
+  {
+    "id": "nwfku0g8",
+    "name": "Берат",
+    "state": "unprinted",
+    "lat": 40.7058,
+    "lon": 19.9522,
+    "driveMinutes": 712,
+    "distanceKm": 652.6,
+    "tags": [
+      "town",
+      "castle",
+      "church",
+      "museum",
+      "view",
+      "food"
+    ],
+    "description": "Исторический город на реке Осум, известный как «город тысячи окон». Старый город включает районы Кала, Мангалем и Горика. Сохранились османская архитектура, церкви, мечети и замок.",
+    "source": "Исторический центр Берата включён в список Всемирного наследия UNESCO. Источник: Putni Kofer.",
+    "country": "al",
+    "season": "all",
+    "q": "Berat",
+    "wantReturn": false
+  },
+  {
+    "id": "qfpgncqm",
+    "name": "Замок Берат",
+    "state": "unprinted",
+    "lat": 40.709,
+    "lon": 19.948,
+    "driveMinutes": 711,
+    "distanceKm": 652.1,
+    "tags": [
+      "castle",
+      "church",
+      "view",
+      "culture"
+    ],
+    "description": "Большой исторический замок на скалистом холме над Бератом. Внутри сохранились церкви и исторические здания; часть территории до сих пор населена.",
+    "source": "История укреплений восходит к античному периоду. Источник: Putni Kofer.",
+    "country": "al",
+    "season": "all",
+    "q": "Berat Castle",
+    "wantReturn": false
+  },
+  {
+    "id": "kahj2pjh",
+    "name": "Мангалем",
+    "state": "unprinted",
+    "lat": 40.706,
+    "lon": 19.949,
+    "driveMinutes": 712,
+    "distanceKm": 652.4,
+    "tags": [
+      "town",
+      "culture",
+      "view",
+      "food"
+    ],
+    "description": "Исторический район Берата под замком. Дома построены каскадами по склону, создавая характерный вид «города тысячи окон».",
+    "source": "Часть исторического центра Берата. Источник: Putni Kofer.",
+    "country": "al",
+    "season": "all",
+    "q": "Mangalem Berat",
+    "wantReturn": false
+  },
+  {
+    "id": "nck9dva7",
+    "name": "Мост Горика",
+    "state": "unprinted",
+    "lat": 40.703,
+    "lon": 19.944,
+    "driveMinutes": 712,
+    "distanceKm": 652.5,
+    "tags": [
+      "water",
+      "view",
+      "culture"
+    ],
+    "description": "Исторический каменный мост через реку Осум, соединяющий район Горика с остальной частью Берата.",
+    "source": "Построен в XVIII веке. Источник: Putni Kofer.",
+    "country": "al",
+    "season": "all",
+    "q": "Gorica Bridge Berat",
+    "wantReturn": false
+  },
+  {
+    "id": "ts6zmw86",
+    "name": "Водопад Богова",
+    "state": "unprinted",
+    "lat": 40.28,
+    "lon": 20.065,
+    "driveMinutes": 763,
+    "distanceKm": 699,
+    "tags": [
+      "water",
+      "nature",
+      "view"
+    ],
+    "description": "Живописный водопад недалеко от Берата. Вода падает в естественный бассейн с прозрачной голубой водой.",
+    "source": "Источник: Putni Kofer.",
+    "country": "al",
+    "season": "summer",
+    "q": "Bogove Waterfall",
+    "wantReturn": false
+  },
+  {
+    "id": "giw6z2d3",
+    "name": "Штаньел",
+    "state": "unprinted",
+    "lat": 45.823,
+    "lon": 13.844,
+    "driveMinutes": 181,
+    "distanceKm": 165.7,
+    "tags": [
+      "town",
+      "castle",
+      "view",
+      "nature",
+      "museum",
+      "church",
+      "food"
+    ],
+    "description": "Средневековый городок на холме в словенском Красу. Сохранились крепостные стены, замок, музей, галерея, винодельни и церковь Святого Даниила. Особенно известен сад Ferrari.",
+    "source": "Историческое поселение в регионе Kras. Источник: Putni Kofer.",
+    "country": "si",
+    "season": "all",
+    "q": "Štanjel",
+    "wantReturn": false
+  },
+  {
+    "id": "1eawgsbw",
+    "name": "Сад Феррари",
+    "state": "unprinted",
+    "lat": 45.822,
+    "lon": 13.843,
+    "driveMinutes": 181,
+    "distanceKm": 165.8,
+    "tags": [
+      "nature",
+      "view",
+      "culture"
+    ],
+    "description": "Исторический сад в Штаньеле, созданный архитектором Максом Фабиани. Известен сочетанием архитектуры, зелени и панорамного вида на окружающий карстовый ландшафт.",
+    "source": "Источник: Putni Kofer.",
+    "country": "si",
+    "season": "warm",
+    "q": "Ferrari Garden Štanjel",
+    "wantReturn": false
+  },
+  {
+    "id": "6khzk9nd",
+    "name": "Замок Оточец",
+    "state": "unprinted",
+    "lat": 45.851,
+    "lon": 15.235,
+    "driveMinutes": 63,
+    "distanceKm": 58,
+    "tags": [
+      "castle",
+      "water",
+      "nature"
+    ],
+    "description": "Средневековый замок на острове посреди реки Крка. Окружён водой, лесами и природой Доленьска; сегодня работает как отель.",
+    "source": "Один из самых необычных замков Словении. Источник: Putni Kofer.",
+    "country": "si",
+    "season": "all",
+    "q": "Otočec Castle",
+    "wantReturn": false
+  },
+  {
+    "id": "7lmiza6f",
+    "name": "Крнское озеро",
+    "state": "unprinted",
+    "lat": 46.281,
+    "lon": 13.725,
+    "driveMinutes": 198,
+    "distanceKm": 181.7,
+    "tags": [
+      "water",
+      "nature",
+      "view"
+    ],
+    "description": "Горное озеро на склонах горы Крн, окружённое альпийской природой. Подходит для пеших маршрутов и прогулок.",
+    "source": "Источник: Putni Kofer.",
+    "country": "si",
+    "season": "warm",
+    "q": "Krnsko Lake Slovenia",
+    "wantReturn": false
+  },
+  {
+    "id": "n6a2fqz8",
+    "name": "Кобарид",
+    "state": "unprinted",
+    "lat": 46.2476,
+    "lon": 13.5791,
+    "driveMinutes": 209,
+    "distanceKm": 191.6,
+    "tags": [
+      "town",
+      "nature",
+      "water",
+      "food",
+      "museum",
+      "culture"
+    ],
+    "description": "Небольшой город в Юлийских Альпах рядом с рекой Соча. Сочетает альпийскую природу, историю Первой мировой войны и известную гастрономическую сцену.",
+    "source": "Источник: Putni Kofer.",
+    "country": "si",
+    "season": "all",
+    "q": "Kobarid",
+    "wantReturn": false
+  },
+  {
+    "id": "7xa14smq",
+    "name": "Тромея — Врх-Печ",
+    "state": "unprinted",
+    "lat": 46.547,
+    "lon": 13.713,
+    "driveMinutes": 210,
+    "distanceKm": 192.7,
+    "tags": [
+      "view",
+      "nature"
+    ],
+    "description": "Точка встречи границ Словении, Италии и Австрии. С высоты открывается панорама сразу на три страны.",
+    "source": "Высота около 1508 м. Источник: Putni Kofer.",
+    "country": "si",
+    "season": "warm",
+    "q": "Tromeja Vrh Peč Slovenia",
+    "wantReturn": false
+  },
+  {
+    "id": "l9r6j9ik",
+    "name": "Зеленгора",
+    "state": "unprinted",
+    "lat": 43.349,
+    "lon": 18.55,
+    "driveMinutes": 372,
+    "distanceKm": 341.4,
+    "tags": [
+      "nature",
+      "water",
+      "view"
+    ],
+    "description": "Горный массив на юго-востоке Боснии и Герцеговины с высокими вершинами, долинами, лесами и ледниковыми озёрами. Место подходит для горных походов и уединённого отдыха.",
+    "source": "На Зеленгоре находится несколько вершин выше 2000 метров. Источник: Putni Kofer.",
+    "country": "ba",
+    "season": "warm",
+    "q": "Zelengora Bosnia",
+    "wantReturn": false
+  },
+  {
+    "id": "4bo3oo6n",
+    "name": "О́рловачко озеро",
+    "state": "unprinted",
+    "lat": 43.327,
+    "lon": 18.553,
+    "driveMinutes": 375,
+    "distanceKm": 343.5,
+    "tags": [
+      "water",
+      "nature",
+      "view"
+    ],
+    "description": "Одно из самых красивых ледниковых озёр Зеленгоры. Летом вода подходит для купания, а окружающие горы создают эффектный пейзаж.",
+    "source": "Источник: Putni Kofer.",
+    "country": "ba",
+    "season": "summer",
+    "q": "Orlovačko Lake Zelengora",
+    "wantReturn": false
+  },
+  {
+    "id": "3xc5pm4l",
+    "name": "Каньон Ракитницы",
+    "state": "unprinted",
+    "lat": 43.666,
+    "lon": 18.13,
+    "driveMinutes": 320,
+    "distanceKm": 293,
+    "tags": [
+      "nature",
+      "water",
+      "view"
+    ],
+    "description": "Дикий каньон реки Ракитница между горами Белашница и Височица. Известен отвесными скалами, холодной чистой водой и практически нетронутой природой.",
+    "source": "Источник: Putni Kofer.",
+    "country": "ba",
+    "season": "warm",
+    "q": "Rakitnica Canyon Bosnia",
+    "warn": "⚠️ Дикий и труднодоступный каньон без обычной туристической инфраструктуры.",
+    "wantReturn": false
+  },
+  {
+    "id": "xe80i5lc",
+    "name": "Река Требишница",
+    "state": "unprinted",
+    "lat": 42.711,
+    "lon": 18.343,
+    "driveMinutes": 429,
+    "distanceKm": 393,
+    "tags": [
+      "water",
+      "nature",
+      "view"
+    ],
+    "description": "Крупная карстовая река Герцеговины с характерными подземными участками. Река и окружающий карстовый ландшафт представляют интерес как природная достопримечательность.",
+    "source": "Источник: Putni Kofer.",
+    "country": "ba",
+    "season": "all",
+    "q": "Trebišnjica River",
+    "wantReturn": false
+  },
+  {
+    "id": "ssgxhelx",
+    "name": "Даорсон",
+    "state": "unprinted",
+    "lat": 43.086,
+    "lon": 17.962,
+    "driveMinutes": 373,
+    "distanceKm": 341.7,
+    "tags": [
+      "culture",
+      "view"
+    ],
+    "description": "Древний археологический комплекс на холме над Столацем с массивными каменными стенами и мегалитической кладкой. Часто называется «герцеговинскими Микенами».",
+    "source": "Национальный памятник Боснии и Герцеговины. Источник: Putni Kofer.",
+    "country": "ba",
+    "season": "all",
+    "q": "Daorson Bosnia Herzegovina",
+    "wantReturn": false
+  },
+  {
+    "id": "9h1w041j",
+    "name": "Исток реки Сана",
+    "state": "unprinted",
+    "lat": 44.165,
+    "lon": 16.75,
+    "driveMinutes": 211,
+    "distanceKm": 193.2,
+    "tags": [
+      "water",
+      "nature",
+      "view"
+    ],
+    "description": "Живописный исток реки Сана среди зелени и лесов. Вода выходит из скалы, вокруг почти нет городской инфраструктуры.",
+    "source": "Источник: Putni Kofer.",
+    "country": "ba",
+    "season": "warm",
+    "q": "Sana River Source Bosnia",
+    "wantReturn": false
+  },
+  {
+    "id": "zyccnyw0",
+    "name": "Биоградская гора",
+    "state": "unprinted",
+    "lat": 42.887,
+    "lon": 19.602,
+    "driveMinutes": 474,
+    "distanceKm": 434.5,
+    "tags": [
+      "nature",
+      "water",
+      "view"
+    ],
+    "description": "Национальный парк на севере Черногории с одной из последних европейских зон девственного леса. Здесь сохранилась практически нетронутая природа.",
+    "source": "Расположен между реками Тара и Лим. Источник: Putni Kofer.",
+    "country": "me",
+    "season": "warm",
+    "q": "Biogradska Gora Montenegro",
+    "wantReturn": false
+  },
+  {
+    "id": "jb8fa9n4",
+    "name": "Озаль",
+    "state": "unprinted",
+    "lat": 45.6108,
+    "lon": 15.4736,
+    "driveMinutes": 50,
+    "distanceKm": 45.5,
+    "tags": [
+      "castle",
+      "museum",
+      "water"
+    ],
+    "description": "Замок на скале с музейным интерьером + «Мунярa», ГЭС-«замок» + прогулка вдоль Купы. Топ-1 из планов.",
+    "country": "hr",
+    "season": "all",
+    "q": "Ozalj stari grad",
+    "warn": "Купание в Купе — только летом",
+    "wantReturn": false
+  },
+  {
+    "id": "mappj51o",
+    "name": "Белец",
+    "state": "unprinted",
+    "lat": 46.1206,
+    "lon": 15.9875,
+    "driveMinutes": 60,
+    "distanceKm": 34,
+    "tags": [
+      "church"
+    ],
+    "description": "Барочная церковь Св. Марии Снежной — фрески Рангера. Звонить заранее, обычно закрыта.",
+    "country": "hr",
+    "season": "all",
+    "q": "Belec crkva svete Marije Snježne",
+    "warn": "Церковь обычно заперта — договариваться через приход заранее",
+    "wantReturn": false
+  },
+  {
+    "id": "0r72yvfy",
+    "name": "Кальник",
+    "state": "unprinted",
+    "lat": 46.1167,
+    "lon": 16.4667,
+    "driveMinutes": 75,
+    "distanceKm": 50.3,
+    "tags": [
+      "castle",
+      "view",
+      "food",
+      "nature"
+    ],
+    "description": "Руины крепости рядом с горным домом — вид + штрукли, как на Япетиче.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Kalnik stari grad planinarski dom",
+    "warn": "Горный дом закрыт по понедельникам",
+    "wantReturn": false
+  },
+  {
+    "id": "mjalje0q",
+    "name": "Дворец Оршич (Горня-Стубица)",
+    "state": "unprinted",
+    "lat": 45.9944,
+    "lon": 15.9575,
+    "driveMinutes": 40,
+    "distanceKm": 20,
+    "tags": [
+      "castle",
+      "museum"
+    ],
+    "description": "Барочный дворец с интерьером и парком, музей крестьянских восстаний.",
+    "country": "hr",
+    "season": "all",
+    "q": "dvorac Oršić Gornja Stubica",
+    "wantReturn": false
+  },
+  {
+    "id": "5gfaf7n0",
+    "name": "Окич + Плешивица",
+    "state": "unprinted",
+    "lat": 45.7311,
+    "lon": 15.7086,
+    "driveMinutes": 45,
+    "distanceKm": 23.2,
+    "tags": [
+      "castle",
+      "food",
+      "view"
+    ],
+    "description": "Руины на скале + винная дорога с дегустациями и ресторанами.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Okić grad Plešivica",
+    "warn": "Винодельни лучше согласовать заранее",
+    "wantReturn": false
+  },
+  {
+    "id": "8ks4weyt",
+    "name": "Шкофья-Лока (Словения)",
+    "state": "unprinted",
+    "lat": 46.1653,
+    "lon": 14.3057,
+    "driveMinutes": 105,
+    "distanceKm": 135.2,
+    "tags": [
+      "town",
+      "castle",
+      "museum"
+    ],
+    "description": "Средневековый городок + замок-музей — мини-Любляна без толп.",
+    "country": "si",
+    "season": "all",
+    "q": "Škofja Loka",
+    "wantReturn": false
+  },
+  {
+    "id": "nd1qbwq5",
+    "name": "Турополье (Велика-Млака + Лукавец)",
+    "state": "unprinted",
+    "lat": 45.7139,
+    "lon": 16.0472,
+    "driveMinutes": 30,
+    "distanceKm": 12.3,
+    "tags": [
+      "church",
+      "castle",
+      "bike",
+      "museum"
+    ],
+    "description": "Деревянные капеллы + небольшой замок-крепость, плоская вело-местность.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Velika Mlaka crkva svete Barbare Lukavec",
+    "warn": "Деревянные капеллы открывают по договорённости",
+    "wantReturn": false
+  },
+  {
+    "id": "ep83klyp",
+    "name": "Чаковец",
+    "state": "unprinted",
+    "lat": 46.3833,
+    "lon": 16.4333,
+    "driveMinutes": 75,
+    "distanceKm": 72.1,
+    "tags": [
+      "castle",
+      "museum",
+      "town"
+    ],
+    "description": "Крепость Зринских с музеем, сокровищницей и тоннелями. Часть крыльев на реконструкции.",
+    "country": "hr",
+    "season": "all",
+    "q": "Čakovec Stari grad Zrinski",
+    "warn": "Часть крыльев музея закрыта на ремонт — проверить, что открыто",
+    "wantReturn": false
+  },
+  {
+    "id": "onwcjjnf",
+    "name": "Целе (Словения)",
+    "state": "unprinted",
+    "lat": 46.2311,
+    "lon": 15.2683,
+    "driveMinutes": 110,
+    "distanceKm": 71.9,
+    "tags": [
+      "castle",
+      "town",
+      "museum"
+    ],
+    "description": "Крупнейший средневековый замок Словении с интерьерами + старый город.",
+    "country": "si",
+    "season": "all",
+    "q": "Celje grad",
+    "wantReturn": false
+  },
+  {
+    "id": "zk8kt1k9",
+    "name": "Птуй (Словения)",
+    "state": "unprinted",
+    "lat": 46.42,
+    "lon": 15.87,
+    "driveMinutes": 110,
+    "distanceKm": 67.8,
+    "tags": [
+      "castle",
+      "town",
+      "museum"
+    ],
+    "description": "Старейший город Словении, замок XII в. с обставленными комнатами.",
+    "country": "si",
+    "season": "all",
+    "q": "Ptuj grad",
+    "wantReturn": false
+  },
+  {
+    "id": "33p94qjh",
+    "name": "Гргосова пещера (Жумберак)",
+    "state": "unprinted",
+    "lat": 45.7553,
+    "lon": 15.6353,
+    "driveMinutes": 60,
+    "distanceKm": 27.7,
+    "tags": [
+      "cave",
+      "nature"
+    ],
+    "description": "«Самая красивая пещера СЗ Хорватии» — противовес мелкой пещере у Самобора.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Grgosova špilja Otruševec",
+    "warn": "С гидом, вне сезона по договорённости",
+    "wantReturn": false
+  },
+  {
+    "id": "kp46930i",
+    "name": "Свети-Крыж-Зачретье",
+    "state": "unprinted",
+    "lat": 46.0728,
+    "lon": 15.8494,
+    "driveMinutes": 45,
+    "distanceKm": 30.4,
+    "tags": [
+      "castle",
+      "town",
+      "museum"
+    ],
+    "description": "Отреставрированная усадьба + приятный центр городка.",
+    "country": "hr",
+    "season": "all",
+    "q": "Sveti Križ Začretje dvorac",
+    "wantReturn": false
+  },
+  {
+    "id": "zbkoe7r3",
+    "name": "Лоньско-поле (Чигоч)",
+    "state": "unprinted",
+    "lat": 45.2833,
+    "lon": 16.6167,
+    "driveMinutes": 70,
+    "distanceKm": 77.1,
+    "tags": [
+      "nature",
+      "museum",
+      "water"
+    ],
+    "description": "Живая деревня аистов, деревянная застройка — Кумровец, но природный.",
+    "country": "hr",
+    "season": "stork",
+    "q": "Lonjsko polje Čigoč",
+    "warn": "Аисты — примерно конец марта – конец августа",
+    "wantReturn": false
+  },
+  {
+    "id": "bkzn66ql",
+    "name": "Лепоглава",
+    "state": "unprinted",
+    "lat": 46.1967,
+    "lon": 16.0092,
+    "driveMinutes": 75,
+    "distanceKm": 42.5,
+    "tags": [
+      "church",
+      "museum",
+      "town"
+    ],
+    "description": "Бывший паулинский монастырь с фресками Рангера + традиция кружевоплетения.",
+    "country": "hr",
+    "season": "all",
+    "q": "Lepoglava pavlinski samostan",
+    "warn": "Фестиваль кружева — отдельный сезонный повод",
+    "wantReturn": false
+  },
+  {
+    "id": "6g0p1wj1",
+    "name": "Камник (Словения)",
+    "state": "unprinted",
+    "lat": 46.2256,
+    "lon": 14.6111,
+    "driveMinutes": 115,
+    "distanceKm": 115.3,
+    "tags": [
+      "town",
+      "castle",
+      "nature",
+      "view"
+    ],
+    "description": "Городок с двумя руинами замков + канатка на плато Велика-Планина.",
+    "country": "si",
+    "season": "warm",
+    "q": "Kamnik",
+    "warn": "Канатка на Велика-Планина — проверять работу",
+    "wantReturn": false
+  },
+  {
+    "id": "dhl8tqr5",
+    "name": "Вараждинске-Топлице (Aquae Iasae)",
+    "state": "unprinted",
+    "lat": 46.2078,
+    "lon": 16.4197,
+    "driveMinutes": 75,
+    "distanceKm": 55.2,
+    "tags": [
+      "museum",
+      "town",
+      "spa",
+      "church"
+    ],
+    "description": "Римский комплекс терм и форума под навесом (~6000 м²) + старейший курорт Хорватии + готическая церковь Св. Мартина с органом 1765 г.",
+    "country": "hr",
+    "season": "all",
+    "q": "Varaždinske Toplice Aquae Iasae arheološki park",
+    "warn": "Групповые экскурсии бронировать за 3 дня",
+    "wantReturn": false
+  },
+  {
+    "id": "x4r4egec",
+    "name": "Лудбрег",
+    "state": "unprinted",
+    "lat": 46.2542,
+    "lon": 16.6183,
+    "driveMinutes": 80,
+    "distanceKm": 69.3,
+    "tags": [
+      "church",
+      "museum",
+      "town"
+    ],
+    "description": "Единственное евхаристическое святилище Хорватии, фрески Михаэля Пека в часовне Батьяни, римский Iovia, «Центр мира».",
+    "country": "hr",
+    "season": "all",
+    "q": "Ludbreg svetište Predragocjene Krvi Kristove",
+    "warn": "Свята-Неделя 28 авг – 6 сент 2026: до 100 тыс. паломников, толпы",
+    "wantReturn": false
+  },
+  {
+    "id": "gadtw1x0",
+    "name": "Дворец Миляна",
+    "state": "unprinted",
+    "lat": 46.0722,
+    "lon": 15.6486,
+    "driveMinutes": 60,
+    "distanceKm": 38.5,
+    "tags": [
+      "castle",
+      "culture"
+    ],
+    "description": "Полностью отреставрированная ренессансно-барочная усадьба с парком.",
+    "country": "hr",
+    "season": "all",
+    "q": "dvorac Miljana",
+    "warn": "Частное владение — доступ внутрь только по договорённости или на мероприятиях",
+    "wantReturn": false
+  },
+  {
+    "id": "jt081clm",
+    "name": "Конйщина (водный замок)",
+    "state": "unprinted",
+    "lat": 46.0442,
+    "lon": 16.0489,
+    "driveMinutes": 45,
+    "distanceKm": 26,
+    "tags": [
+      "castle"
+    ],
+    "description": "Редкий низинный замок с рвом (не на холме), сохранившиеся стены и башни, площадка для пикника.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Stari grad Konjščina",
+    "warn": "Внутрь обычно не попасть — смотрят снаружи; проверять календарь событий",
+    "wantReturn": false
+  },
+  {
+    "id": "wsucaedf",
+    "name": "Стубичке-Топлице (Дианина купель)",
+    "state": "unprinted",
+    "lat": 46.0403,
+    "lon": 15.9161,
+    "driveMinutes": 40,
+    "distanceKm": 25.6,
+    "tags": [
+      "spa",
+      "museum",
+      "nature"
+    ],
+    "description": "Историческая купальня, ставшая небольшим выставочным пространством, в парке столетних пихт — курорт с архитектурой, а не аквапарк.",
+    "country": "hr",
+    "season": "all",
+    "q": "Stubičke Toplice Dijanina kupelj",
+    "wantReturn": false
+  },
+  {
+    "id": "84m9efc7",
+    "name": "Планинарски дом Главица",
+    "state": "unprinted",
+    "lat": 45.8419,
+    "lon": 15.8817,
+    "driveMinutes": 35,
+    "distanceKm": 8.3,
+    "tags": [
+      "view",
+      "food",
+      "nature"
+    ],
+    "description": "Горный дом на высоте ~420 м с панорамой на Загреб и домашней кухней, рядом пещера Ветерница.",
+    "country": "hr",
+    "season": "all",
+    "q": "Planinarski dom Glavica Medvednica",
+    "warn": "В будни может открываться только с полудня — звонить заранее",
+    "wantReturn": false
+  },
+  {
+    "id": "kt1bqoi0",
+    "name": "Пунтиярка (Сльеме)",
+    "state": "unprinted",
+    "lat": 45.9081,
+    "lon": 15.9631,
+    "driveMinutes": 40,
+    "distanceKm": 10.5,
+    "tags": [
+      "food",
+      "view",
+      "nature"
+    ],
+    "description": "Классический горный дом (~957 м): сыр со сметаной, грах, жаркое. Рядом Grofica с полуметровым шницелем.",
+    "country": "hr",
+    "season": "all",
+    "q": "Planinarski dom Puntijarka Sljeme",
+    "wantReturn": false
+  },
+  {
+    "id": "h62denmh",
+    "name": "Джурджевац (Стари град)",
+    "state": "unprinted",
+    "lat": 46.0364,
+    "lon": 17.0631,
+    "driveMinutes": 105,
+    "distanceKm": 87.2,
+    "tags": [
+      "castle",
+      "museum",
+      "town"
+    ],
+    "description": "Кирпичная ренессансная крепость (ок. 1488) с галереей. Фестиваль Пицокияда 26–28 июня 2026.",
+    "country": "hr",
+    "season": "all",
+    "q": "Đurđevac Stari grad",
+    "warn": "Валы на реконструкции — уточнять доступ внутрь вне фестиваля",
+    "wantReturn": false
+  },
+  {
+    "id": "zfzid203",
+    "name": "Джурджевачки пески («Хорватская Сахара»)",
+    "state": "unprinted",
+    "lat": 46.0287,
+    "lon": 17.0992,
+    "driveMinutes": 105,
+    "distanceKm": 89.6,
+    "tags": [
+      "nature",
+      "view"
+    ],
+    "description": "Песчаные дюны — уникальный для Хорватии заповедник (19,33 га, охраняется с 1963), мини-зоопарк с верблюдами. Неожиданный «экстра».",
+    "country": "hr",
+    "season": "warm",
+    "q": "Đurđevački peski",
+    "wantReturn": false
+  },
+  {
+    "id": "gl0f9chr",
+    "name": "Хлебине (наивное искусство)",
+    "state": "unprinted",
+    "lat": 46.1114,
+    "lon": 16.9536,
+    "driveMinutes": 90,
+    "distanceKm": 82,
+    "tags": [
+      "museum",
+      "town"
+    ],
+    "description": "Родина Хлебинской школы наивной живописи по стеклу: ~1000 работ, парк скульптур, этно-дом Генералича.",
+    "country": "hr",
+    "season": "all",
+    "q": "Hlebine galerija naivne umjetnosti",
+    "warn": "Пн закрыто; вт–пт 10–16, сб–вс 10–14",
+    "wantReturn": false
+  },
+  {
+    "id": "2ejcew2l",
+    "name": "Копривница + озеро Шодерица",
+    "state": "unprinted",
+    "lat": 46.163,
+    "lon": 16.828,
+    "driveMinutes": 75,
+    "distanceKm": 76,
+    "tags": [
+      "town",
+      "museum",
+      "water",
+      "nature"
+    ],
+    "description": "Ренессансные валы, превращённые в парк, барочно-сецессионный центр и музей + «Подравское море» с галечными пляжами.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Koprivnica stari grad Šoderica",
+    "wantReturn": false
+  },
+  {
+    "id": "pq2wn4vp",
+    "name": "Чазма (церковь Св. Марии Магдалины)",
+    "state": "unprinted",
+    "lat": 45.7486,
+    "lon": 16.613,
+    "driveMinutes": 60,
+    "distanceKm": 49.5,
+    "tags": [
+      "church",
+      "culture"
+    ],
+    "description": "Романско-готические кости и богатый барочный интерьер (алтари, кафедра, орган рококо) — снаружи скромно, внутри роскошно.",
+    "country": "hr",
+    "season": "all",
+    "q": "Čazma crkva svete Marije Magdalene",
+    "warn": "Действующий приход — вход через жупный уред",
+    "wantReturn": false
+  },
+  {
+    "id": "j3h5bu70",
+    "name": "Подгарич (монумент Джамони)",
+    "state": "unprinted",
+    "lat": 45.6408,
+    "lon": 16.7778,
+    "driveMinutes": 75,
+    "distanceKm": 64.7,
+    "tags": [
+      "museum",
+      "view",
+      "nature"
+    ],
+    "description": "Абстрактный монумент Душана Джамони (1967), 10 м в высоту и 20 в ширину, «крылья победы». Рядом ресторан Vila Garić у озера.",
+    "country": "hr",
+    "season": "all",
+    "q": "Spomenik revoluciji naroda Moslavine Podgarić",
+    "warn": "Соседний Гарич-град ЗАКРЫТ на реставрацию — не планировать",
+    "wantReturn": false
+  },
+  {
+    "id": "y9w8ddzh",
+    "name": "Крижевцы",
+    "state": "unprinted",
+    "lat": 46.026,
+    "lon": 16.543,
+    "driveMinutes": 55,
+    "distanceKm": 49.3,
+    "tags": [
+      "town",
+      "church",
+      "museum"
+    ],
+    "description": "Церковь Св. Креста (1232) с раннеготическим порталом и мраморным алтарём Роббы (1756), греко-католический собор. Справисче 5–7 июня 2026.",
+    "country": "hr",
+    "season": "all",
+    "q": "Križevci crkva svetog Križa",
+    "warn": "Часть экспозиции городского музея была закрыта на ремонт — проверить",
+    "wantReturn": false
+  },
+  {
+    "id": "n9asb3wi",
+    "name": "Планинарски дом Каменитовац (Билогора)",
+    "state": "unprinted",
+    "lat": 45.9553,
+    "lon": 16.9236,
+    "driveMinutes": 90,
+    "distanceKm": 74.5,
+    "tags": [
+      "view",
+      "food",
+      "nature"
+    ],
+    "description": "Горный дом на Билогоре с видами в сторону Кальника.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Planinarski dom Kamenitovac Maglenča",
+    "warn": "Ресторан для групп по предварительной записи — звонить. Координаты приблизительные — уточняйте на месте.",
+    "wantReturn": false
+  },
+  {
+    "id": "15aurlok",
+    "name": "Мославачка гора — видовая «Вис»",
+    "state": "unprinted",
+    "lat": 45.6001,
+    "lon": 16.7558,
+    "driveMinutes": 75,
+    "distanceKm": 64.7,
+    "tags": [
+      "view",
+      "nature"
+    ],
+    "description": "Новая видовая с рельефным макетом на тропе Бела Црква, 437 м.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Moslavačka gora vidikovac Vis",
+    "warn": "Еды на горе нет — спускаться к Vila Garić",
+    "wantReturn": false
+  },
+  {
+    "id": "93mqhskl",
+    "name": "Ружица град (Папук)",
+    "state": "unprinted",
+    "lat": 45.5433,
+    "lon": 17.8925,
+    "driveMinutes": 140,
+    "distanceKm": 151.5,
+    "tags": [
+      "castle",
+      "nature",
+      "water",
+      "view"
+    ],
+    "description": "Крупнейший сохранившийся средневековый укреплённый город Славонии в геопарке ЮНЕСКО Папук. Рядом Ораховачко озеро, Янковац и водопад Скакавац 36 м — вместе может получиться многодневный вариант поездки.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Ružica grad Orahovica",
+    "wantReturn": false
+  },
+  {
+    "id": "7o28fcfn",
+    "name": "Сопотски слап (Жумберак)",
+    "state": "unprinted",
+    "lat": 45.7561,
+    "lon": 15.3403,
+    "driveMinutes": 60,
+    "distanceKm": 50.2,
+    "tags": [
+      "nature",
+      "view",
+      "water"
+    ],
+    "description": "Крупнейший водопад Жумберака, подъезд почти вплотную по асфальту, луг для пикника. Кольцевой маршрут через вершину Плиеш (977 м).",
+    "country": "hr",
+    "season": "warm",
+    "q": "Sopotski slap Sošice Žumberak",
+    "warn": "PD Vodice открыт по выходным весна–осень; иначе только родник",
+    "wantReturn": false
+  },
+  {
+    "id": "6e19pxmd",
+    "name": "Долина Слапница (Жумберак)",
+    "state": "unprinted",
+    "lat": 45.73,
+    "lon": 15.37,
+    "driveMinutes": 60,
+    "distanceKm": 48.4,
+    "tags": [
+      "nature",
+      "water",
+      "castle"
+    ],
+    "description": "Каньон с чередой туфовых водопадов и купелей, выходит к руинам Стари град Жумберак.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Slapnica Brisalo Vranjački slap",
+    "warn": "Лучше весной/в начале лета — летом каскады мелеют",
+    "wantReturn": false
+  },
+  {
+    "id": "xm9k9r70",
+    "name": "Барачеве пещеры",
+    "state": "unprinted",
+    "lat": 44.9803,
+    "lon": 15.6461,
+    "driveMinutes": 120,
+    "distanceKm": 96.4,
+    "tags": [
+      "cave",
+      "nature"
+    ],
+    "description": "Оборудованная пещера (верхняя, 492 м, экскурсия ~60 мин, 9°C) + карстовая тропа. Рядом крепость Дрежник над каньоном Кораны.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Baraćeve špilje Rakovica",
+    "warn": "Заметно меньше Постойны — брать как дополнение к Плитвицам, не самоцелью",
+    "wantReturn": false
+  },
+  {
+    "id": "e8man2gt",
+    "name": "Костаньевица-на-Крки (Словения)",
+    "state": "unprinted",
+    "lat": 45.8425,
+    "lon": 15.4222,
+    "driveMinutes": 75,
+    "distanceKm": 43.5,
+    "tags": [
+      "town",
+      "museum",
+      "food",
+      "water"
+    ],
+    "description": "Самый маленький город Словении на речном острове, известный как «Доленьская Венеция». Цистерцианский монастырь (1234) с одним из крупнейших аркадных дворов Европы, галерея, парк скульптур Forma Viva (с 1961).",
+    "country": "si",
+    "season": "all",
+    "q": "Kostanjevica na Krki samostan galerija Božidar Jakac",
+    "warn": "Зимние часы уточнять; виньетка не нужна — дорога местная",
+    "wantReturn": false
+  },
+  {
+    "id": "9ylnjcyi",
+    "name": "Шкоцянске-Яме (Словения)",
+    "state": "unprinted",
+    "lat": 45.6636,
+    "lon": 13.9903,
+    "driveMinutes": 140,
+    "distanceKm": 155.5,
+    "tags": [
+      "cave",
+      "nature"
+    ],
+    "description": "Объект ЮНЕСКО (1986): подземный каньон реки Реки и мост Черквеник на высоте 47 м над водой. Многие ставят выше Постойны — вместе может получиться многодневный вариант поездки.",
+    "country": "si",
+    "season": "all",
+    "q": "Škocjanske jame",
+    "warn": "Только с гидом ~1ч30, много мокрых ступеней, съёмка запрещена, билеты заранее",
+    "wantReturn": false
+  },
+  {
+    "id": "2lwhhxm0",
+    "name": "Град Богеншперк (Словения)",
+    "state": "unprinted",
+    "lat": 46.0089,
+    "lon": 14.8656,
+    "driveMinutes": 120,
+    "distanceKm": 89,
+    "tags": [
+      "castle",
+      "museum"
+    ],
+    "description": "Ренессансный замок-музей Вальвазора: обставленный кабинет и библиотека, восстановленная печатня, коллекция о колдовстве. Тише Бледа.",
+    "country": "si",
+    "season": "all",
+    "q": "Grad Bogenšperk",
+    "warn": "Интерьеры только с экскурсией — проверять сезонные часы",
+    "wantReturn": false
+  },
+  {
+    "id": "9vwsgj0k",
+    "name": "Жичка картузия + Гастуж (Словения)",
+    "state": "unprinted",
+    "lat": 46.2914,
+    "lon": 15.4408,
+    "driveMinutes": 105,
+    "distanceKm": 67.5,
+    "tags": [
+      "church",
+      "museum",
+      "food"
+    ],
+    "description": "Атмосферные руины средневекового картузианского монастыря в тихой долине + Гастуж, одна из старейших корчм Словении, с локальной кухней.",
+    "country": "si",
+    "season": "warm",
+    "q": "Žička kartuzija Gastuž",
+    "wantReturn": false
+  },
+  {
+    "id": "b7nmno2d",
+    "name": "Кумровец (Старо Село)",
+    "state": "loved",
+    "lat": 45.9581,
+    "lon": 15.5253,
+    "driveMinutes": 50,
+    "distanceKm": 38.8,
+    "tags": [
+      "museum",
+      "town"
+    ],
+    "description": "Целостная этно-деревня, аутентичные дома разного назначения, интерьеры.",
+    "country": "hr",
+    "season": "all",
+    "q": "Kumrovec Staro Selo",
+    "wantReturn": false
+  },
+  {
+    "id": "bbryj12x",
+    "name": "Мария Бистрица",
+    "state": "loved",
+    "lat": 45.9989,
+    "lon": 16.0167,
+    "driveMinutes": 40,
+    "distanceKm": 20.6,
+    "tags": [
+      "church",
+      "town",
+      "nature"
+    ],
+    "description": "Необычная церковь «замкового» типа, улица вниз к площади, Кальвария.",
+    "country": "hr",
+    "season": "all",
+    "q": "Marija Bistrica",
+    "wantReturn": false
+  },
+  {
+    "id": "7tq5n0pr",
+    "name": "Велики Табор",
+    "state": "loved",
+    "lat": 46.1975,
+    "lon": 15.7644,
+    "driveMinutes": 65,
+    "distanceKm": 45.7,
+    "tags": [
+      "castle",
+      "museum"
+    ],
+    "description": "Сохранившиеся стены, двор, местами интерьеры. Хочется доисследовать.",
+    "country": "hr",
+    "season": "all",
+    "q": "Veliki Tabor dvorac",
+    "wantReturn": true
+  },
+  {
+    "id": "2ip59p3d",
+    "name": "Грешна Горица",
+    "state": "loved",
+    "lat": 46.1958,
+    "lon": 15.7592,
+    "driveMinutes": 65,
+    "distanceKm": 45.7,
+    "tags": [
+      "food",
+      "view"
+    ],
+    "description": "Локальная кухня, загорские штрукли, вид на замок, царско месо. Обожрались.",
+    "country": "hr",
+    "season": "all",
+    "q": "Grešna Gorica restoran",
+    "wantReturn": false
+  },
+  {
+    "id": "pvou01fr",
+    "name": "Трakошчан",
+    "state": "loved",
+    "lat": 46.2775,
+    "lon": 15.9539,
+    "driveMinutes": 75,
+    "distanceKm": 51.5,
+    "tags": [
+      "castle",
+      "water",
+      "nature"
+    ],
+    "description": "Романтический замок, озеро вокруг — хочется повторить прогулку.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Trakošćan dvorac",
+    "warn": "Прогулка вокруг озера лучше в сухую погоду",
+    "wantReturn": true
+  },
+  {
+    "id": "zgu5uuxj",
+    "name": "Вараждин",
+    "state": "loved",
+    "lat": 46.3057,
+    "lon": 16.3366,
+    "driveMinutes": 65,
+    "distanceKm": 61,
+    "tags": [
+      "town",
+      "castle",
+      "museum"
+    ],
+    "description": "Старый город и замок (внутри не был — надо зайти). Отличный Адвент, кладбище.",
+    "country": "hr",
+    "season": "all",
+    "q": "Varaždin",
+    "warn": "Адвент — отдельный повод; расписание летающего Санты уточнять",
+    "wantReturn": true
+  },
+  {
+    "id": "uhfl9s5q",
+    "name": "Самобор",
+    "state": "loved",
+    "lat": 45.8025,
+    "lon": 15.7133,
+    "driveMinutes": 30,
+    "distanceKm": 20.9,
+    "tags": [
+      "town",
+      "nature",
+      "food",
+      "bike"
+    ],
+    "description": "Ар-нуво площадь, кремшнита в Ливадиче, хайк к руинам замка. Зимой — на Фашник.",
+    "country": "hr",
+    "season": "all",
+    "q": "Samobor",
+    "warn": "Фашник (карнавал) — февраль, даты плавающие",
+    "wantReturn": true
+  },
+  {
+    "id": "zuj2rvwo",
+    "name": "Япетич (вершина)",
+    "state": "loved",
+    "lat": 45.6103,
+    "lon": 15.5972,
+    "driveMinutes": 55,
+    "distanceKm": 37.6,
+    "tags": [
+      "view",
+      "nature",
+      "food"
+    ],
+    "description": "Супер вид, парковка рядом, дом для путешественников с кофе.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Japetić vrh",
+    "warn": "Дом для путешественников работает не каждый день",
+    "wantReturn": false
+  },
+  {
+    "id": "61hj47iz",
+    "name": "Sumski Dvor (ресторан)",
+    "state": "loved",
+    "lat": 45.628,
+    "lon": 15.652,
+    "driveMinutes": 50,
+    "distanceKm": 33,
+    "tags": [
+      "food",
+      "view"
+    ],
+    "description": "Локальная кухня, потрясающий вид с холмов.",
+    "country": "hr",
+    "season": "all",
+    "q": "Šumski Dvor restoran",
+    "warn": "Столик лучше бронировать заранее",
+    "wantReturn": false
+  },
+  {
+    "id": "4oagsbr2",
+    "name": "Сльеме / Медведница",
+    "state": "loved",
+    "lat": 45.8971,
+    "lon": 15.9503,
+    "driveMinutes": 35,
+    "distanceKm": 9.5,
+    "tags": [
+      "nature",
+      "view",
+      "castle"
+    ],
+    "description": "Смотровая башня, тропы, крепость Медведград — на удивление хороша.",
+    "country": "hr",
+    "season": "all",
+    "q": "Sljeme Medvednica",
+    "wantReturn": false
+  },
+  {
+    "id": "k01vmign",
+    "name": "Расток",
+    "state": "loved",
+    "lat": 45.1103,
+    "lon": 15.5763,
+    "driveMinutes": 90,
+    "distanceKm": 84.5,
+    "tags": [
+      "water",
+      "museum",
+      "nature"
+    ],
+    "description": "Речка, музей, мельницы, остров с домами и водопадиками.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Rastoke",
+    "wantReturn": false
+  },
+  {
+    "id": "sv4i71e6",
+    "name": "Плитвицкие озёра",
+    "state": "loved",
+    "lat": 44.8654,
+    "lon": 15.582,
+    "driveMinutes": 120,
+    "distanceKm": 110.1,
+    "tags": [
+      "nature",
+      "water"
+    ],
+    "description": "Отлично — хочется вернуться в другой сезон (осень/зима).",
+    "country": "hr",
+    "season": "all",
+    "q": "Plitvička jezera",
+    "warn": "Летом толпы и дорогие билеты; осень/зима дешевле и тише",
+    "wantReturn": true
+  },
+  {
+    "id": "8go91sam",
+    "name": "Фужине",
+    "state": "loved",
+    "lat": 45.4667,
+    "lon": 14.7167,
+    "driveMinutes": 85,
+    "distanceKm": 105.7,
+    "tags": [
+      "water",
+      "nature",
+      "bike",
+      "cave"
+    ],
+    "description": "Городок с горным озером, велосипеды до верха, пещеры.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Fužine",
+    "warn": "Пещеры закрываются в холодный сезон",
+    "wantReturn": true
+  },
+  {
+    "id": "1x51glz5",
+    "name": "Любляна",
+    "state": "loved",
+    "lat": 46.0569,
+    "lon": 14.5058,
+    "driveMinutes": 90,
+    "distanceKm": 117.3,
+    "tags": [
+      "town",
+      "museum",
+      "food"
+    ],
+    "description": "Старый город, шопинг, еда, прогулки, римское городище.",
+    "country": "si",
+    "season": "all",
+    "q": "Ljubljana",
+    "wantReturn": true
+  },
+  {
+    "id": "wpjb7hn4",
+    "name": "Блед",
+    "state": "loved",
+    "lat": 46.3683,
+    "lon": 14.1146,
+    "driveMinutes": 135,
+    "distanceKm": 156.6,
+    "tags": [
+      "water",
+      "nature",
+      "castle"
+    ],
+    "description": "Топ место, были на Адвенте.",
+    "country": "si",
+    "season": "all",
+    "q": "Bled",
+    "wantReturn": false
+  },
+  {
+    "id": "ioaqzsw6",
+    "name": "Бохиньское озеро + Вогель",
+    "state": "loved",
+    "lat": 46.2833,
+    "lon": 13.8833,
+    "driveMinutes": 170,
+    "distanceKm": 170.1,
+    "tags": [
+      "water",
+      "nature",
+      "view"
+    ],
+    "description": "Потрясающе, как и Блед. Канатка на Вогеле, супер прогулка.",
+    "country": "si",
+    "season": "all",
+    "q": "Bohinjsko jezero Vogel",
+    "warn": "Канатка может не работать в межсезонье и при ветре",
+    "wantReturn": false
+  },
+  {
+    "id": "3xt2rsn6",
+    "name": "Постойнска-Яма + Предъямски замок",
+    "state": "loved",
+    "lat": 45.783,
+    "lon": 14.2018,
+    "driveMinutes": 110,
+    "distanceKm": 138,
+    "tags": [
+      "cave",
+      "castle"
+    ],
+    "description": "Огромная пещера, впечатляющий замок — поражает воображение.",
+    "country": "si",
+    "season": "all",
+    "q": "Postojnska jama Predjamski grad",
+    "warn": "Замок Предъяма зимой в сокращённом режиме",
+    "wantReturn": false
+  },
+  {
+    "id": "n3cogik0",
+    "name": "Триест",
+    "state": "loved",
+    "lat": 45.6495,
+    "lon": 13.7768,
+    "driveMinutes": 140,
+    "distanceKm": 172.1,
+    "tags": [
+      "town",
+      "food",
+      "museum",
+      "castle"
+    ],
+    "description": "Шопинг, еда, замок, дворцы, раскопки. Хочется доехать до Мирамаре.",
+    "country": "it",
+    "season": "all",
+    "q": "Trieste",
+    "wantReturn": true
+  },
+  {
+    "id": "mkhlgg4o",
+    "name": "Опатия",
+    "state": "loved",
+    "lat": 45.3378,
+    "lon": 14.3053,
+    "driveMinutes": 110,
+    "distanceKm": 140.9,
+    "tags": [
+      "town",
+      "beach",
+      "nature"
+    ],
+    "description": "Солнечный зимний гетевей, прогулка вдоль моря.",
+    "country": "hr",
+    "season": "all",
+    "q": "Opatija",
+    "wantReturn": false
+  },
+  {
+    "id": "d2a0vzpm",
+    "name": "Мотовун",
+    "state": "loved",
+    "lat": 45.3325,
+    "lon": 13.8347,
+    "driveMinutes": 160,
+    "distanceKm": 175.5,
+    "tags": [
+      "town",
+      "view",
+      "nature"
+    ],
+    "description": "Супер виды, но ресторан оказался туристической ловушкой.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Motovun",
+    "warn": "Рестораны выбирать заранее — много туристических",
+    "wantReturn": false
+  },
+  {
+    "id": "0urjkdh2",
+    "name": "Вижинада (старт Паренцаны)",
+    "state": "loved",
+    "lat": 45.3444,
+    "lon": 13.7469,
+    "driveMinutes": 165,
+    "distanceKm": 181.6,
+    "tags": [
+      "nature",
+      "view"
+    ],
+    "description": "Пеший маршрут по бывшей ж/д Паренцана до Мотовуна. Ходили 25.04 со Smart Travel, 44€/чел, 7 человек.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Vižinada Parenzana",
+    "wantReturn": false
+  },
+  {
+    "id": "yyg71e9a",
+    "name": "Пула",
+    "state": "loved",
+    "lat": 44.8666,
+    "lon": 13.8496,
+    "driveMinutes": 210,
+    "distanceKm": 197.2,
+    "tags": [
+      "town",
+      "museum",
+      "beach"
+    ],
+    "description": "Арена, город, Верудела — многодневное направление.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Pula",
+    "wantReturn": false
+  },
+  {
+    "id": "34aobu5f",
+    "name": "Бриюни",
+    "state": "loved",
+    "lat": 44.9333,
+    "lon": 13.7667,
+    "driveMinutes": 220,
+    "distanceKm": 198.9,
+    "tags": [
+      "nature",
+      "beach",
+      "museum"
+    ],
+    "description": "Топ место — не однодневная поездка от Загреба.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Brijuni",
+    "warn": "Только по расписанию катеров, бронь обязательна",
+    "wantReturn": true
+  },
+  {
+    "id": "ljvtfaz1",
+    "name": "Ровинь",
+    "state": "loved",
+    "lat": 45.0811,
+    "lon": 13.6387,
+    "driveMinutes": 200,
+    "distanceKm": 200.2,
+    "tags": [
+      "town",
+      "beach"
+    ],
+    "description": "Супер понравилось — тоже не однодневная поездка.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Rovinj",
+    "wantReturn": true
+  },
+  {
+    "id": "lbnvj8q3",
+    "name": "Мошченицка-Драга",
+    "state": "loved",
+    "lat": 45.2989,
+    "lon": 14.2439,
+    "driveMinutes": 120,
+    "distanceKm": 147,
+    "tags": [
+      "beach",
+      "town"
+    ],
+    "description": "Интересный городок, пляжный отдых.",
+    "country": "hr",
+    "season": "summer",
+    "q": "Mošćenička Draga",
+    "wantReturn": false
+  },
+  {
+    "id": "lsl867ro",
+    "name": "Крк (город)",
+    "state": "loved",
+    "lat": 45.0247,
+    "lon": 14.575,
+    "driveMinutes": 135,
+    "distanceKm": 140.6,
+    "tags": [
+      "town",
+      "beach",
+      "museum"
+    ],
+    "description": "В музеи не заходили — есть что доисследовать.",
+    "country": "hr",
+    "season": "all",
+    "q": "Krk grad",
+    "warn": "Музеи работают по сокращённому графику вне сезона",
+    "wantReturn": true
+  },
+  {
+    "id": "f5h3ezrg",
+    "name": "Пунат (о. Крк)",
+    "state": "loved",
+    "lat": 45.0136,
+    "lon": 14.6178,
+    "driveMinutes": 135,
+    "distanceKm": 138.8,
+    "tags": [
+      "town",
+      "beach"
+    ],
+    "description": "Ездили вместе с Крком одной поездкой (Autoturist, пример: 15.08, 7 чел.).",
+    "country": "hr",
+    "season": "summer",
+    "q": "Punat Krk",
+    "wantReturn": false
+  },
+  {
+    "id": "91lhvfa8",
+    "name": "Малинска",
+    "state": "loved",
+    "lat": 45.1319,
+    "lon": 14.5236,
+    "driveMinutes": 130,
+    "distanceKm": 136.7,
+    "tags": [
+      "beach",
+      "nature"
+    ],
+    "description": "Супер для прогулок, дышать морем — хороша в межсезонье.",
+    "country": "hr",
+    "season": "all",
+    "q": "Malinska",
+    "warn": "Хороша именно в межсезонье",
+    "wantReturn": false
+  },
+  {
+    "id": "ic10bb5s",
+    "name": "Башка",
+    "state": "loved",
+    "lat": 44.9739,
+    "lon": 14.7539,
+    "driveMinutes": 165,
+    "distanceKm": 133.9,
+    "tags": [
+      "beach"
+    ],
+    "description": "Эталон пляжного отдыха: берег, заход, простор, виды.",
+    "country": "hr",
+    "season": "summer",
+    "q": "Baška",
+    "wantReturn": false
+  },
+  {
+    "id": "d6fq80dz",
+    "name": "Караловац",
+    "state": "loved",
+    "lat": 45.487,
+    "lon": 15.5478,
+    "driveMinutes": 50,
+    "distanceKm": 49.7,
+    "tags": [
+      "town",
+      "castle",
+      "museum"
+    ],
+    "description": "Архитектурный старый центр, небольшой но занимательный замок.",
+    "country": "hr",
+    "season": "all",
+    "q": "Karlovac",
+    "wantReturn": false
+  },
+  {
+    "id": "x7ivklxr",
+    "name": "Брежице (Словения)",
+    "state": "loved",
+    "lat": 45.9058,
+    "lon": 15.5936,
+    "driveMinutes": 45,
+    "distanceKm": 31.7,
+    "tags": [
+      "town",
+      "museum",
+      "bike"
+    ],
+    "description": "Крутой музей от римлян до наших дней, улица, доходный дом, кофейня.",
+    "country": "si",
+    "season": "all",
+    "q": "Brežice",
+    "wantReturn": true
+  },
+  {
+    "id": "hmik1ru9",
+    "name": "Смотровая Графичар",
+    "state": "fine",
+    "lat": 45.952,
+    "lon": 16.045,
+    "driveMinutes": 45,
+    "distanceKm": 16,
+    "tags": [
+      "view"
+    ],
+    "description": "Неплохо, но не супер — стоило приехать ближе к закату.",
+    "country": "hr",
+    "season": "all",
+    "q": "Grafičar vidikovac",
+    "warn": "Приезжать ближе к закату — время проверять",
+    "wantReturn": false
+  },
+  {
+    "id": "7nrz8pfl",
+    "name": "Подсреда (Словения)",
+    "state": "fine",
+    "lat": 46.0206,
+    "lon": 15.568,
+    "driveMinutes": 70,
+    "distanceKm": 39.3,
+    "tags": [
+      "castle",
+      "town",
+      "nature"
+    ],
+    "description": "Городок и замок, вид с холмов — интересно, но «на один раз».",
+    "country": "si",
+    "season": "warm",
+    "q": "Podsreda grad",
+    "wantReturn": false
+  },
+  {
+    "id": "vglbuwum",
+    "name": "Крапина",
+    "state": "fine",
+    "lat": 46.1639,
+    "lon": 15.8708,
+    "driveMinutes": 45,
+    "distanceKm": 39.7,
+    "tags": [
+      "museum",
+      "town"
+    ],
+    "description": "Музей неандертальцев интересен, но местами слишком «детский».",
+    "country": "hr",
+    "season": "all",
+    "q": "Krapina muzej krapinskih neandertalaca",
+    "wantReturn": false
+  },
+  {
+    "id": "ql00c9jh",
+    "name": "Надьканижа (Венгрия)",
+    "state": "fine",
+    "lat": 46.459,
+    "lon": 16.9896,
+    "driveMinutes": 110,
+    "distanceKm": 105.6,
+    "tags": [
+      "town"
+    ],
+    "description": "Пара красивых зданий в центре, на этом всё.",
+    "country": "hu",
+    "season": "all",
+    "q": "Nagykanizsa",
+    "wantReturn": false
+  },
+  {
+    "id": "63rhoxfm",
+    "name": "Сисак",
+    "state": "fine",
+    "lat": 45.4881,
+    "lon": 16.3789,
+    "driveMinutes": 50,
+    "distanceKm": 47.7,
+    "tags": [
+      "town",
+      "castle"
+    ],
+    "description": "Похоже на Надьканижу, чуть побольше по объёму.",
+    "country": "hr",
+    "season": "all",
+    "q": "Sisak",
+    "wantReturn": false
+  },
+  {
+    "id": "vu3xla1f",
+    "name": "Пещера к северу от Самобора",
+    "state": "fine",
+    "lat": 45.8194,
+    "lon": 15.6919,
+    "driveMinutes": 40,
+    "distanceKm": 22.5,
+    "tags": [
+      "cave"
+    ],
+    "description": "Интересно, но немного — уступает крупным пещерам.",
+    "country": "hr",
+    "season": "warm",
+    "q": "špilja Samobor",
+    "wantReturn": false
+  },
+  {
+    "id": "o4ne090k",
+    "name": "Заприешич",
+    "state": "fine",
+    "lat": 45.8564,
+    "lon": 15.8092,
+    "driveMinutes": 25,
+    "distanceKm": 14.1,
+    "tags": [
+      "town",
+      "bike",
+      "food"
+    ],
+    "description": "Novi dvori Elačićevi (частично реконструкция), ресторан Batak.",
+    "country": "hr",
+    "season": "all",
+    "q": "Zaprešić Novi dvori",
+    "warn": "Novi dvori — проверить, закончена ли реконструкция",
+    "wantReturn": false
+  },
+  {
+    "id": "jz9uc6qq",
+    "name": "Велика-Горица",
+    "state": "fine",
+    "lat": 45.7125,
+    "lon": 16.0764,
+    "driveMinutes": 25,
+    "distanceKm": 13.6,
+    "tags": [
+      "town",
+      "bike",
+      "museum"
+    ],
+    "description": "Велодорожка в городе, музей не особо интересен, приятный парк.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Velika Gorica",
+    "wantReturn": false
+  },
+  {
+    "id": "4qtwb76b",
+    "name": "Андаутония (римские раскопки)",
+    "state": "fine",
+    "lat": 45.7439,
+    "lon": 16.0733,
+    "driveMinutes": 25,
+    "distanceKm": 10.6,
+    "tags": [
+      "museum",
+      "bike"
+    ],
+    "description": "Сами раскопки не посещал, проезжал мимо — стоит вернуться.",
+    "country": "hr",
+    "season": "warm",
+    "q": "Andautonija Ščitarjevo",
+    "warn": "Открыто в основном по выходным, май–октябрь",
+    "wantReturn": true
+  },
+  {
+    "id": "48suaj1b",
+    "name": "Ястребарско",
+    "state": "fine",
+    "lat": 45.6667,
+    "lon": 15.65,
+    "driveMinutes": 35,
+    "distanceKm": 30.6,
+    "tags": [
+      "town",
+      "castle"
+    ],
+    "description": "Дворец то ли на реконструкции, то ли уже готов — стоит доехать.",
+    "country": "hr",
+    "season": "all",
+    "q": "Jastrebarsko dvorac",
+    "warn": "Дворец — уточнить статус реконструкции перед выездом",
+    "wantReturn": true
+  },
+  {
+    "id": "x89xlgf6",
+    "name": "Нови-Винодольски",
+    "state": "fine",
+    "lat": 45.1281,
+    "lon": 14.7886,
+    "driveMinutes": 115,
+    "distanceKm": 120.4,
+    "tags": [
+      "beach",
+      "town"
+    ],
+    "description": "Окей, не супер — скученно, узкие тротуары. Худшая поездка сезона: холодная вода из подводных ключей, «проходной» пляж, много народу.",
+    "country": "hr",
+    "season": "summer",
+    "q": "Novi Vinodolski",
+    "wantReturn": false
+  }
+]
