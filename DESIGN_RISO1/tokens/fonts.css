@@ -1,0 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Space+Mono:wght@400;700&family=Caveat:wght@500;600;700&display=swap");
+
+:root {
+  --font-display: "Bricolage Grotesque", "Arial Black", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
+  --font-body: "Bricolage Grotesque", system-ui, sans-serif;
+}

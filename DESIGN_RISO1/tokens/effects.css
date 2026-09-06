@@ -1,0 +1,37 @@
+:root {
+  /* --- Borders: one dark hairline, three weights. No radii anywhere. --- */
+  --stroke: 2px solid var(--ink);
+  --stroke-heavy: 2.5px solid var(--ink);
+  --stroke-hair: 1.5px solid var(--ink);
+  --stroke-dashed: 2px dashed var(--blue);
+  --stroke-dashed-quiet: 1.5px dashed var(--hairline);
+  --radius: 0;
+
+  /* --- Offset shadows: hard, opaque, never blurred --- */
+  --lift-1: 3px 3px 0 var(--ink);
+  --lift-2: 4px 4px 0 var(--ink);
+  --lift-3: 7px 7px 0 var(--ink);
+  --lift-4: 12px 12px 0 var(--ink);
+  --lift-print: 3px 3px 0 rgba(25, 21, 16, .4); /* a print casts a softer, translucent shadow */
+
+  /* --- Grain: ONE overlay at the top of the tree, never per element --- */
+  --grain-size: 4px 4px;
+  --grain-image: radial-gradient(var(--grain) .7px, transparent .8px);
+  --grain-opacity: .5;
+  --grain-blend: multiply;
+
+  /* --- Hatch fill for unprinted frames --- */
+  --hatch: repeating-linear-gradient(45deg, var(--unprinted-hatch) 0 6px, transparent 6px 12px);
+
+  /* --- Tilt budget. Prints and tape only; never text blocks or chrome. --- */
+  --tilt-a: -4deg;
+  --tilt-b: 3deg;
+  --tilt-c: -1.5deg;
+  --tilt-max: 4deg;
+
+  /* --- Motion: mechanical, short, no easing theatrics --- */
+  --dur-press: 90ms;
+  --dur-panel: 160ms;
+  --ease: linear;
+  --press-shift: 2px; /* a pressed button moves INTO its own shadow */
+}

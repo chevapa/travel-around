@@ -1,0 +1,44 @@
+:root {
+  /* --- Paper stock: three weights of the same warm sheet --- */
+  --paper-1: #EFE7D2;   /* page / default background */
+  --paper-2: #F6F0DE;   /* panels, cards, the top bar (lighter than the page) */
+  --paper-3: #E7DCC0;   /* atlas ground, recessed surfaces */
+  --paper-print: #ffffff; /* the white border of a photographic print */
+
+  /* --- Ink: the single dark. Never pure black. --- */
+  --ink: #191510;
+  --ink-70: #2b2620;   /* body copy on paper */
+  --ink-55: #4d4636;   /* counts, numerals beside a label */
+  --ink-40: #6a6046;   /* section eyebrows, the lightest text permitted */
+  --hairline: #cfc4a6; /* dashed rules inside panels, print edges */
+
+  /* --- The three inks. Flat, unmixed, never gradients. --- */
+  --pink: #FF2E86;   /* roads, primary marks, "loved", accent rules */
+  --blue: #1F4FD8;   /* water, everything unprinted, handwriting */
+  --yellow: #FFD200; /* the single primary action, tape, stamps */
+  --green: #8FBF4A;  /* landcover only — never UI */
+
+  /* --- Print states (the core semantic of the system) --- */
+  --state-loved: var(--pink);
+  --state-fine: #b9b2a4;      /* the grey of a black-and-white print */
+  --state-unprinted: var(--blue);
+  --unprinted-edge: #7fa0ef;  /* dashed border of a blank frame on dark ground */
+  --unprinted-hatch: rgba(31, 79, 216, .16);
+
+  /* --- Materials --- */
+  --tape: rgba(255, 210, 0, .72);
+  --grain: #b9ae90;
+
+  /* --- Semantic aliases --- */
+  --surface-page: var(--paper-1);
+  --surface-card: var(--paper-2);
+  --surface-ground: var(--paper-3);
+  --surface-invert: var(--ink);
+  --text-body: var(--ink-70);
+  --text-strong: var(--ink);
+  --text-quiet: var(--ink-40);
+  --text-on-invert: var(--paper-2);
+  --border-ink: var(--ink);
+  --action-primary: var(--yellow);
+  --action-accent: var(--pink);
+}

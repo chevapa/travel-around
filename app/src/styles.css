@@ -1,0 +1,25 @@
+/* Entry point — imports only. Consumers of the token pipeline import this
+   once, at the app root. See DESIGN_RISO1/readme.md for what each token
+   file owns. */
+@import "./tokens/fonts.css";
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+@import "./tokens/effects.css";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-body);
+  font: var(--body);
+}

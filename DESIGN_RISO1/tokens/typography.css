@@ -1,0 +1,32 @@
+:root {
+  /* Display — Bricolage Grotesque 800, uppercase, negative tracking, sub-1 leading */
+  --display-1: 800 clamp(44px, 9.5vw, 118px)/.86 var(--font-display);
+  --display-2: 800 40px/.9 var(--font-display);
+  --display-3: 800 29px/.92 var(--font-display);
+  --display-tracking: -.045em;
+  --display-tracking-tight: -.035em;
+
+  /* Body */
+  --lede: 400 21px/1.45 var(--font-body);
+  --body: 400 16px/1.5 var(--font-body);
+  --body-sm: 400 15px/1.5 var(--font-body);
+
+  /* Label — Space Mono 700, uppercase, wide tracking. All UI chrome. */
+  --label: 700 11px/1.2 var(--font-mono);
+  --label-sm: 700 10px/1.2 var(--font-mono);
+  --label-tracking: .12em;
+  --label-tracking-wide: .2em;
+
+  /* Eyebrow — the section marker, mono, widest tracking, quiet ink */
+  --eyebrow: 700 11px/1.2 var(--font-mono);
+  --eyebrow-tracking: .22em;
+
+  /* Hand — captions on prints only. Never for UI. */
+  --hand: 600 19px/1 var(--font-hand);
+  --hand-sm: 600 15px/1 var(--font-hand);
+
+  /* Numeral — counts, distances, drive times */
+  --numeral: 700 12px/1 var(--font-mono);
+
+  --min-ui-size: 16px; /* filter labels and anything a finger targets */
+}

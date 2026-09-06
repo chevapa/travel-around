@@ -1,0 +1,26 @@
+<!-- @dsCard group="Colors" viewport="700x150" subtitle="One dark, four strengths — #6a6046 is the lightest text allowed" name="Ink scale" -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    html, body { margin: 0; }
+    body { background: var(--paper-1); color: var(--text-body); font: var(--body); padding: 16px; box-sizing: border-box; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+    .sw { display: flex; flex-direction: column; gap: 4px; }
+    .sw b { display: block; width: 92px; height: 52px; border: var(--stroke); }
+    .sw span { font: var(--label-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-55); }
+    .sw em { font: var(--label-sm); font-style: normal; color: var(--ink-40); }
+  </style>
+</head>
+<body>
+  <div class="row">
+  <div class="sw"><b style="background:var(--ink);"></b><span>--ink</span><em>#191510</em></div>
+  <div class="sw"><b style="background:var(--ink-70);"></b><span>--ink-70</span><em>#2B2620</em></div>
+  <div class="sw"><b style="background:var(--ink-55);"></b><span>--ink-55</span><em>#4D4636</em></div>
+  <div class="sw"><b style="background:var(--ink-40);"></b><span>--ink-40</span><em>#6A6046</em></div>
+  <div class="sw"><b style="background:var(--hairline);"></b><span>--hairline</span><em>#CFC4A6</em></div>
+  </div>
+</body>
+</html>

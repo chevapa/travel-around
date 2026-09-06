@@ -1,0 +1,25 @@
+<!-- @dsCard group="Brand" viewport="700x200" subtitle="±4° on prints and tape only — chrome and text never rotate" name="Tilt budget" -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    html, body { margin: 0; }
+    body { background: var(--paper-1); color: var(--text-body); font: var(--body); padding: 16px; box-sizing: border-box; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+    .sw { display: flex; flex-direction: column; gap: 4px; }
+    .sw b { display: block; width: 92px; height: 52px; border: var(--stroke); }
+    .sw span { font: var(--label-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-55); }
+    .sw em { font: var(--label-sm); font-style: normal; color: var(--ink-40); }
+  </style>
+</head>
+<body>
+  <div style="display:flex;gap:20px;align-items:center">
+    <span style="width:86px;height:60px;background:#fff;border:1px solid var(--hairline);box-shadow:var(--lift-print);transform:rotate(-4deg)"></span>
+    <span style="width:86px;height:60px;background:#fff;border:1px solid var(--hairline);box-shadow:var(--lift-print);transform:rotate(3deg)"></span>
+    <span style="width:86px;height:60px;background:#fff;border:1px solid var(--hairline);box-shadow:var(--lift-print);transform:rotate(-1.5deg)"></span>
+    <span style="font:var(--label-sm);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-40)">--tilt-max 4deg</span>
+  </div>
+</body>
+</html>

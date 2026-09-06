@@ -1,0 +1,72 @@
+/* Self-hosted — no network request to fonts.googleapis.com.
+   Latin subset only (product ships in English; see epic #84). Bricolage
+   Grotesque and Caveat are shipped as their single variable-weight woff2
+   (that is how Google itself serves the 400/600/800 and 500/600/700 cuts —
+   one file, several @font-face declarations pointing at it); Space Mono is
+   a genuine two-static-weight font, so it gets two files. */
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/bricolage-grotesque-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/bricolage-grotesque-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("../assets/fonts/bricolage-grotesque-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/space-mono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Space Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/space-mono-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/caveat-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/caveat-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/caveat-variable.woff2") format("woff2");
+}
+
+:root {
+  --font-display: "Bricolage Grotesque", "Arial Black", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
+  --font-body: "Bricolage Grotesque", system-ui, sans-serif;
+}
