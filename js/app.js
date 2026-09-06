@@ -4,6 +4,7 @@ import { initFilters, visiblePlaces, refresh } from './filters.js';
 import { initModal } from './modal.js';
 import { initRecommend, refreshRecommend } from './recommend.js';
 import { applyUrlRoute } from './router.js';
+import { initStats } from './stats.js';
 
 // Порядок важен и повторяет прежний монолитный <script>:
 // 1) карта и маркеры (пока PLACES пуст — рисовать нечего, но слушатели уже готовы),
@@ -15,6 +16,10 @@ initMap(visiblePlaces);
 initFilters();
 initModal();
 initRecommend();
+// issue #58: stats.js recomputes from PLACES on open (see renderStats()),
+// not on load — no onPlacesLoaded hook needed here, unlike the modules
+// above that render eagerly as soon as any data is available.
+initStats();
 
 // issue #49: three independent loaders below (base/custom/folder places)
 // each call onPlacesLoaded when they finish — applyUrlRoute() only makes

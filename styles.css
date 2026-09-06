@@ -1216,3 +1216,66 @@
   display:flex; align-items:center; justify-content:center;
   font-family:'Bungee',sans-serif; font-size:13px;
 }
+
+/* issue #58: "traveler stats" screen — a small always-recomputed panel
+   (see stats.js's computeExplorationStats(), never a stored value), same
+   cut-paper modal system as #modal (styles.css's V-numbered modal block
+   above) so it reads as part of the same app, not a bolted-on dashboard —
+   CLAUDE.md §13 explicitly warns against turning this into "a database of
+   my travels", so this stays to one headline number + a compact grid,
+   not tables/filters/raw fields. */
+.hero-stats-btn{
+  display:block; margin-top:8px; padding:0; border:0; background:none;
+  font-family:'Fraunces',serif; font-size:12px; font-weight:600;
+  color:var(--riso-teal); text-decoration:underline; cursor:pointer;
+}
+.hero-stats-btn:hover{ color:var(--riso-pink); }
+
+#stats-back{
+  position:fixed; inset:0; background:rgba(43,42,37,.45); z-index:3000;
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+#stats-back.open{ display:flex; }
+#stats-modal{
+  position:relative; background:var(--riso-paper); border:3px solid var(--riso-ink);
+  box-shadow:10px 10px 0 var(--riso-teal); width:100%; max-width:420px;
+  max-height:86vh; overflow-y:auto; padding:20px 22px 24px;
+}
+#stats-modal h2{
+  font-family:'Bungee',sans-serif; font-size:18px; letter-spacing:.03em;
+  margin:0 0 14px; padding-right:36px;
+}
+#stats-close{
+  position:absolute; top:10px; right:10px; width:32px; height:32px;
+  border:2px solid var(--riso-ink); background:var(--riso-paper); color:var(--riso-ink);
+  font-size:18px; line-height:1; cursor:pointer; box-shadow:2px 2px 0 var(--riso-ink);
+}
+#stats-close:hover{ background:var(--riso-pink); }
+.stats-headline{ font-family:'Fraunces',serif; font-size:26px; margin:0 0 2px; }
+.stats-headline strong{ color:var(--riso-pink); font-size:34px; }
+.stats-sub{ font-size:13px; color:var(--ink-soft); margin:0 0 16px; }
+.stats-empty{ font-size:13px; color:var(--ink-soft); }
+.stats-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;
+}
+.stats-tile{
+  border:2px solid var(--riso-ink); padding:10px 12px; text-align:center;
+  box-shadow:3px 3px 0 var(--riso-ink);
+}
+.stats-tile strong{ display:block; font-size:22px; font-family:'Bungee',sans-serif; }
+.stats-tile span{ font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em; }
+.stats-subhead{
+  font-family:'Bungee',sans-serif; font-size:11px; text-transform:uppercase;
+  letter-spacing:.04em; color:var(--ink-soft); margin:14px 0 8px;
+}
+.stats-country-row{
+  display:flex; align-items:center; gap:8px; font-size:12px; margin-bottom:6px;
+}
+.stats-country-flag{ flex-shrink:0; }
+.stats-country-name{ flex-shrink:0; width:92px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.stats-country-bar{
+  flex:1; height:8px; background:var(--cream); border:1px solid var(--riso-ink);
+  overflow:hidden;
+}
+.stats-country-bar span{ display:block; height:100%; background:var(--riso-teal); }
+.stats-country-pct{ flex-shrink:0; width:34px; text-align:right; color:var(--ink-soft); }
