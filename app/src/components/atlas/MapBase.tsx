@@ -1,9 +1,34 @@
-import { Map as MapLibreMap } from "maplibre-gl";
+import { Map as MapLibreMap, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+// maplibre-gl resolves its worker script at runtime as a URL relative to
+// its OWN module's import.meta.url (see its web_worker.ts). That's fine
+// unmodified, but Vite's production build inlines maplibre-gl into the
+// app's single bundle rather than emitting it as its own file, so at
+// runtime import.meta.url points at .../assets/index-<hash>.js, and
+// maplibre-gl goes looking for maplibre-gl-worker.mjs next to THAT —
+// a file that was never emitted, so the request 404s and the map never
+// renders (the RISO1 chrome mounts fine; only the map canvas stays
+// empty).
+//
+// A plain `?url` import of node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs
+// isn't enough to fix this on its own: that file itself does
+// `import ... from "./maplibre-gl-shared.mjs"`, a relative import to a
+// sibling file a bare `?url` copy doesn't bring along — the worker then
+// fails inside its OWN thread trying to resolve that import, silently
+// (nothing reaches the main thread's console at all; the map's "load"
+// event just never fires). scripts/bundle-maplibre-worker.mjs flattens
+// the worker and that one dependency into a single, import-free file
+// (see its own comment) — `?url` on THAT file is what actually works,
+// giving back a URL correctly resolved however deep the app is nested
+// (e.g. under /riso1/). setWorkerUrl() then points maplibre-gl at it
+// instead of letting it guess.
+import maplibreWorkerUrl from "../../vendor/maplibre-gl-worker.bundled.mjs?url";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { attachLongPress } from "../../lib/longPress";
 import { restyleToRiso } from "../../lib/mapStyle";
 import type { GeoBounds } from "./projection";
+
+setWorkerUrl(maplibreWorkerUrl);
 
 /**
  * The real, restyled basemap — resolves the tile-provider question that
@@ -70,6 +95,14 @@ export function MapBase({ initialBounds, styleUrl = DEFAULT_STYLE_URL, onLongPre
     map.on("move", rerender);
     map.on("zoom", rerender);
     map.on("resize", rerender);
+    // Surface style/tile failures instead of silently leaving `ready`
+    // false forever — every bit of chrome (TopBar, Legend, cards) is
+    // gated on "load" firing (see the render below), so an unlogged
+    // style error here reads to the user as a blank map with no UI at
+    // all, with no clue why.
+    map.on("error", (e) => {
+      console.error("[MapBase] MapLibre error:", e.error);
+    });
     map.on("load", () => {
       map.fitBounds(
         [

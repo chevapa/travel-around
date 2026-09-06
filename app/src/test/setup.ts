@@ -14,7 +14,11 @@ expect.extend(toHaveNoViolations);
 // on construction without it — every test goes through the fake instead.
 // See mockMapLibre.ts for why. Real map behaviour (the restyle, actual
 // tile rendering) is verified against real headless Chromium separately.
-vi.mock("maplibre-gl", () => ({ Map: FakeMapLibreMap }));
+// setWorkerUrl is a real named export MapBase.tsx calls at module scope
+// (see its own comment for why) — without a stub here it's `undefined`
+// under this mock, and `setWorkerUrl(...)` throws before any test using
+// MapBase can even render.
+vi.mock("maplibre-gl", () => ({ Map: FakeMapLibreMap, setWorkerUrl: vi.fn() }));
 
 // @testing-library/react auto-cleans after each test under Jest, but not
 // under Vitest — without this, DOM from one test leaks into the next and
