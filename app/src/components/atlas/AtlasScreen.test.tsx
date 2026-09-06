@@ -195,6 +195,38 @@ describe("AtlasScreen — clustering and zoom (Task 9)", () => {
   });
 });
 
+// Task 12 regression check for HIGH 04 (AUDIT.md): "nothing on the map
+// explains what [pin] colours mean... buried inside a panel." The fix
+// (Legend, Task 5) is a permanent, always-mounted element — proven across
+// every view/panel-slot combination, not just the default one.
+describe("AtlasScreen — the Legend is always mounted (HIGH 04 regression)", () => {
+  it("is present on initial render", () => {
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    expect(screen.getByText("Reading the page")).toBeInTheDocument();
+  });
+
+  it("stays present while The Index is open", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByText("The Index"));
+    expect(screen.getByText("Reading the page")).toBeInTheDocument();
+  });
+
+  it("stays present while a card is open", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByText("Krapina"));
+    expect(screen.getByText("Reading the page")).toBeInTheDocument();
+  });
+
+  it("stays present in the contact sheet view", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByText("Contact sheet"));
+    expect(screen.getByText("Reading the page")).toBeInTheDocument();
+  });
+});
+
 describe("AtlasScreen — structure", () => {
   it("mounts exactly one grain layer", () => {
     const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);

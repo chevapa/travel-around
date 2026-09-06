@@ -44,6 +44,17 @@ describe("TopBar — action hierarchy", () => {
 // .not.toContain("transform") false-positives on it.
 const TRANSFORM_DECLARATION = /(^|;)\s*transform\s*:/;
 
+// Task 12 regression check for CRIT 01 (AUDIT.md): "the header collage
+// image overflows its cream card on three sides." The fix removed the
+// image entirely (type on a pink chip only) — proven structurally, since
+// an element that doesn't exist can't overflow anything.
+describe("TopBar — no collage image (CRIT 01 regression)", () => {
+  it("never renders an img — the wordmark is type on a chip, not a photo", () => {
+    const { container } = render(<TopBar meta="Zagreb · 42 printed / 74 not" />);
+    expect(container.querySelector("img")).toBeNull();
+  });
+});
+
 describe("TopBar — never rotates", () => {
   it("sets no transform on the bar or any of its direct children", () => {
     const { container } = render(<TopBar meta="Zagreb · 42 printed / 74 not" filterCount={1} />);
