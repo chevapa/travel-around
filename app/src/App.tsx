@@ -1,6 +1,7 @@
 import { AtlasGallery } from "./components/atlas/AtlasGallery";
 import { CoreGallery } from "./components/core/CoreGallery";
 import { GrainOverlay } from "./components/core/GrainOverlay";
+import { ShellGallery } from "./components/shell/ShellGallery";
 import { TopBar } from "./components/shell/TopBar";
 
 /**
@@ -14,6 +15,7 @@ export default function App() {
       <TopBar meta="Zagreb · 42 printed / 74 not" filterCount={2} />
       <CoreGallery />
       <AtlasGallery />
+      <ShellGallery />
       <GrainOverlay />
     </div>
   );
