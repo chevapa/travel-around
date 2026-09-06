@@ -47,4 +47,25 @@ describe("panelSlotReducer", () => {
     const withIndex = panelSlotReducer(EMPTY_PANEL_SLOT, { type: "openIndex" });
     expect(panelSlotReducer(withIndex, { type: "close" })).toEqual(EMPTY_PANEL_SLOT);
   });
+
+  // Task 10: New Frame is the same slot, same one-occupant invariant.
+  it("openNewFrame opens the New Frame form at the given coordinates", () => {
+    expect(panelSlotReducer(EMPTY_PANEL_SLOT, { type: "openNewFrame", lat: 45.8, lon: 15.9 })).toEqual({
+      kind: "newFrame",
+      lat: 45.8,
+      lon: 15.9,
+    });
+  });
+
+  it("opening New Frame while a card is open replaces it, never adds to it", () => {
+    const withCard = panelSlotReducer(EMPTY_PANEL_SLOT, { type: "openCard", frameId: "x" });
+    const next = panelSlotReducer(withCard, { type: "openNewFrame", lat: 1, lon: 2 });
+    expect(next).toEqual({ kind: "newFrame", lat: 1, lon: 2 });
+  });
+
+  it("opening a card while New Frame is open replaces it", () => {
+    const withNewFrame = panelSlotReducer(EMPTY_PANEL_SLOT, { type: "openNewFrame", lat: 1, lon: 2 });
+    const next = panelSlotReducer(withNewFrame, { type: "openCard", frameId: "x" });
+    expect(next).toEqual({ kind: "card", frameId: "x" });
+  });
 });

@@ -1,6 +1,7 @@
 import { Map as MapLibreMap } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { attachLongPress } from "../../lib/longPress";
 import { restyleToRiso } from "../../lib/mapStyle";
 import type { GeoBounds } from "./projection";
 
@@ -25,26 +26,39 @@ export interface MapView {
   zoomOut: () => void;
   /** Pans and zooms to centre on a point — used when a specific frame needs to be guaranteed visible (e.g. "To Print"). */
   flyTo: (point: { lat: number; lon: number }, zoom?: number) => void;
+  /** The real lat/lon currently at the centre of the viewport — used as a fallback location for New Frame when it's started from TopBar's button rather than a map long-press. */
+  center: { lat: number; lon: number };
 }
 
 export interface MapBaseProps {
   /** Fit to this extent once, on load — the dataset's own bounding box (see projection.ts's computeBounds), not a guessed centre/zoom. */
   initialBounds: GeoBounds;
   styleUrl?: string;
+  /** Task 10: "adding a place starts from a map long-press." Fired with the real lat/lon under the press. */
+  onLongPress?: (point: { lat: number; lon: number }) => void;
   children?: (view: MapView) => ReactNode;
 }
 
-export function MapBase({ initialBounds, styleUrl = DEFAULT_STYLE_URL, children }: MapBaseProps) {
+export function MapBase({ initialBounds, styleUrl = DEFAULT_STYLE_URL, onLongPress, children }: MapBaseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const [ready, setReady] = useState(false);
   const [, bump] = useState(0);
 
+  // A ref, not a dependency of the effect below — onLongPress is a fresh
+  // closure every render (it captures AtlasScreen's current frames/slot),
+  // but the map itself must only be created once.
+  const onLongPressRef = useRef(onLongPress);
+  useEffect(() => {
+    onLongPressRef.current = onLongPress;
+  }, [onLongPress]);
+
   useEffect(() => {
     if (!containerRef.current) return;
+    const container = containerRef.current;
 
     const map = new MapLibreMap({
-      container: containerRef.current,
+      container,
       style: styleUrl,
       center: [0, 0],
       zoom: 0,
@@ -68,7 +82,16 @@ export function MapBase({ initialBounds, styleUrl = DEFAULT_STYLE_URL, children 
       setReady(true);
     });
 
+    // Task 10: "adding a place starts from a map long-press." MapLibre has
+    // no long-press event of its own (click/dblclick/contextmenu only).
+    const detachLongPress = attachLongPress(container, (clientX, clientY) => {
+      const rect = container.getBoundingClientRect();
+      const { lng, lat } = map.unproject([clientX - rect.left, clientY - rect.top]);
+      onLongPressRef.current?.({ lat, lon: lng });
+    });
+
     return () => {
+      detachLongPress();
       map.remove();
       mapRef.current = null;
     };
@@ -86,11 +109,15 @@ export function MapBase({ initialBounds, styleUrl = DEFAULT_STYLE_URL, children 
     zoomIn: () => mapRef.current?.zoomIn(),
     zoomOut: () => mapRef.current?.zoomOut(),
     flyTo: (point, zoom) => mapRef.current?.flyTo({ center: [point.lon, point.lat], zoom }),
+    center: (() => {
+      const c = mapRef.current?.getCenter();
+      return c ? { lat: c.lat, lon: c.lng } : { lat: 0, lon: 0 };
+    })(),
   };
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      <div ref={containerRef} style={{ position: "absolute", inset: 0 }} />
+      <div ref={containerRef} data-testid="riso-map-container" style={{ position: "absolute", inset: 0 }} />
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>{ready ? children?.(view) : null}</div>
     </div>
   );

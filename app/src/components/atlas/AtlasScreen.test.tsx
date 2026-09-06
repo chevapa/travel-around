@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { Frame } from "../../model/frame";
@@ -239,5 +239,74 @@ describe("AtlasScreen — print class hooks (Task 11)", () => {
     const sheetWrapper = container.querySelector(".riso-contact-sheet-print");
     expect(sheetWrapper).not.toBeNull();
     expect(container.querySelector(".riso-print-hide")?.contains(sheetWrapper!)).toBe(false);
+  });
+});
+
+// Task 10: New Frame — full end-to-end flow through AtlasScreen.
+//
+// Deliberately real timers, not vi.useFakeTimers(): mixing global fake
+// timers with @testing-library/user-event caused every click to hang
+// until the test timeout in this setup, even with `{ delay: null }` —
+// userEvent depends on more than just the artificial typing delay
+// internally. A genuine ~550ms wait past the 500ms long-press threshold
+// is a small, reliable price for not fighting that interaction.
+describe("AtlasScreen — New Frame flow (Task 10)", () => {
+  async function longPressMap(container: HTMLElement, clientX: number, clientY: number) {
+    const mapContainer = container.querySelector('[data-testid="riso-map-container"]') as HTMLElement;
+    mapContainer.getBoundingClientRect = () => ({ left: 0, top: 0 }) as DOMRect;
+    await act(async () => {
+      mapContainer.dispatchEvent(new PointerEvent("pointerdown", { clientX, clientY, pointerType: "touch" }));
+      await new Promise((resolve) => setTimeout(resolve, 550));
+    });
+  }
+
+  it("a map long-press opens the New Frame form at the pressed coordinates", async () => {
+    const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
+    await longPressMap(container, 200, 200); // the fake map's unproject(200,200) -> {lat:0, lon:0}
+    // "New Frame" also names TopBar's own (always-present) button — the
+    // form's heading is the one that actually confirms it opened.
+    expect(screen.getByText("New Frame", { selector: "h3" })).toBeInTheDocument();
+    expect(screen.getByText("0.0000°N, 0.0000°E")).toBeInTheDocument();
+  });
+
+  it("replaces any other open panel occupant, per the one-slot invariant", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByText("Krapina")); // open a card first
+    expect(screen.getByRole("heading", { name: "Krapina" })).toBeInTheDocument();
+    await longPressMap(container, 200, 200);
+    expect(screen.getByText("New Frame", { selector: "h3" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Krapina" })).toBeNull();
+  });
+
+  it("saving adds a new unprinted frame to the map and closes the form", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
+    await longPressMap(container, 200, 200);
+    await user.type(screen.getByPlaceholderText("Name this place"), "Test Place");
+    await user.click(screen.getByText("Add Frame"));
+    expect(screen.queryByText("New Frame", { selector: "h3" })).toBeNull();
+    // the new frame is unprinted, so it renders as a print with no visible
+    // caption text — confirm indirectly via the updated match counts
+    // instead: one more unprinted frame now exists.
+    await user.click(screen.getByText("The Index"));
+    expect(screen.getByText("5 frames match")).toBeInTheDocument();
+  });
+
+  it("TopBar's New Frame button opens the form at the map's current centre as a fallback", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByText("New Frame"));
+    expect(screen.getByText("New Frame", { selector: "h3" })).toBeInTheDocument();
+  });
+
+  it("cancelling the form closes it without adding a frame", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
+    await longPressMap(container, 200, 200);
+    await user.click(screen.getByLabelText("Cancel"));
+    expect(screen.queryByText("New Frame", { selector: "h3" })).toBeNull();
+    await user.click(screen.getByText("The Index"));
+    expect(screen.getByText(/4 frames match/)).toBeInTheDocument();
   });
 });
