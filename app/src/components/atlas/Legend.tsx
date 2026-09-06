@@ -1,5 +1,5 @@
 import type { CSSProperties, HTMLAttributes, KeyboardEvent } from "react";
-import type { FrameState, StateCounts } from "../../model/frame";
+import { STATE_LABEL, type FrameState, type StateCounts } from "../../model/frame";
 
 /**
  * The permanent key in the Atlas's bottom-left corner — and a one-tap
@@ -22,9 +22,9 @@ export interface LegendProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const ROWS: { key: FrameState; label: string; swatch: CSSProperties }[] = [
-  { key: "loved", label: "Printed · loved", swatch: { background: "var(--pink)", border: "1.5px solid var(--paper-2)" } },
-  { key: "fine", label: "Printed · fine", swatch: { background: "var(--state-fine)", border: "1.5px solid var(--paper-2)" } },
-  { key: "unprinted", label: "Not printed", swatch: { background: "transparent", border: "1.5px dashed var(--unprinted-edge)" } },
+  { key: "loved", label: STATE_LABEL.loved, swatch: { background: "var(--pink)", border: "1.5px solid var(--paper-2)" } },
+  { key: "fine", label: STATE_LABEL.fine, swatch: { background: "var(--state-fine)", border: "1.5px solid var(--paper-2)" } },
+  { key: "unprinted", label: STATE_LABEL.unprinted, swatch: { background: "transparent", border: "1.5px dashed var(--unprinted-edge)" } },
 ];
 
 const DEFAULT_COUNTS: StateCounts = { loved: 31, fine: 11, unprinted: 74 };

@@ -23,15 +23,26 @@ import { IconButton } from "../core/IconButton";
  * Task 11 addition: on mobile, TopBar keeps only the primary action
  * visible in the main row; New Frame and The Index collapse behind the
  * search glyph, revealed by tapping it. Desktop is unchanged.
+ *
+ * Issue 131: the search glyph called `onSearch` (a bare "it happened"
+ * signal) but AtlasScreen never had anywhere to put an actual search
+ * box, so clicking it did nothing visible on desktop. TopBar now owns the
+ * open/closed state of an inline search field itself — `onSearch` still
+ * fires (so a caller can react to the glyph being tapped at all), but the
+ * field's value is controlled by the caller via `searchValue`/
+ * `onSearchChange`, same pattern as a normal controlled input.
  */
 export interface TopBarProps extends HTMLAttributes<HTMLDivElement> {
   /** Wordmark text, set in the pink display chip. */
   brand?: string;
-  /** Honest, labelled counts — e.g. "Zagreb · 42 printed / 74 not". Never a bare number. */
+  /** Honest, labelled counts — e.g. "Zagreb · 42 visited / 74 not". Never a bare number. */
   meta?: ReactNode;
   /** Active filter count; renders as the pink badge on The Index. */
   filterCount?: number;
   onSearch?: () => void;
+  /** Current text in the search field — omit to leave the field uncontrolled/absent from callers that don't wire search yet. */
+  searchValue?: string;
+  onSearchChange?: (value: string) => void;
   onNewFrame?: () => void;
   onIndex?: () => void;
   onPrint?: () => void;
@@ -43,25 +54,34 @@ export function TopBar({
   meta,
   filterCount,
   onSearch,
+  searchValue,
+  onSearchChange,
   onNewFrame,
   onIndex,
   onPrint,
-  primaryLabel = "To Print →",
+  primaryLabel = "Where to? →",
   style,
   ...rest
 }: TopBarProps) {
   if (import.meta.env.DEV && typeof meta === "number") {
     console.warn(
-      `[TopBar] meta was passed a bare number (${meta}) — every count must be labelled (see src/model/frame.ts's formatMeta). Wrap it in a string like "Zagreb · 42 printed / 74 not".`,
+      `[TopBar] meta was passed a bare number (${meta}) — every count must be labelled (see src/model/frame.ts's formatMeta). Wrap it in a string like "Zagreb · 42 visited / 74 not".`,
     );
   }
 
   const isMobile = useMediaQuery(MOBILE_BREAKPOINT_QUERY);
   const [expanded, setExpanded] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const showSecondaryActions = !isMobile || expanded;
+  const showSearchField = Boolean(onSearchChange) && (searchOpen || (isMobile && expanded));
 
   const handleSearchClick = () => {
     if (isMobile) setExpanded((e) => !e);
+    setSearchOpen((open) => {
+      const next = !open;
+      if (!next) onSearchChange?.(""); // closing clears the query rather than leaving a stale filter active off-screen
+      return next;
+    });
     onSearch?.();
   };
 
@@ -114,11 +134,40 @@ export function TopBar({
         ) : null}
       </div>
       <div style={{ flex: 1, minWidth: 8 }} />
+      {showSearchField ? (
+        <input
+          type="search"
+          value={searchValue ?? ""}
+          onChange={(e) => onSearchChange?.(e.target.value)}
+          placeholder="Search frames…"
+          aria-label="Search frames"
+          autoFocus
+          style={{
+            font: "var(--body)",
+            fontSize: 13,
+            padding: "7px 10px",
+            border: "var(--stroke)",
+            borderRadius: "var(--radius)",
+            background: "var(--paper-1)",
+            color: "var(--ink)",
+            minWidth: 0,
+            width: isMobile ? "100%" : 180,
+          }}
+        />
+      ) : null}
       <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
         <IconButton
           glyph="⌕"
-          label={isMobile ? (expanded ? "Hide more actions" : "Show more actions") : "Search frames"}
-          aria-expanded={isMobile ? expanded : undefined}
+          label={
+            isMobile
+              ? expanded
+                ? "Hide more actions"
+                : "Show more actions"
+              : searchOpen
+                ? "Close search"
+                : "Search frames"
+          }
+          aria-expanded={isMobile ? expanded : onSearchChange ? searchOpen : undefined}
           onClick={handleSearchClick}
         />
         {showSecondaryActions ? (

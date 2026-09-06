@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { render, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { FakeMapLibreMap } from "../../test/mockMapLibre";
 import { MapBase, type MapView } from "./MapBase";
 
 const BOUNDS = { minLat: 42.0, maxLat: 46.0, minLon: 14.5, maxLon: 21.4 };
@@ -12,23 +13,63 @@ describe("MapBase", () => {
     expect(renderChild).toHaveBeenCalled();
   });
 
+  it("calls children even before 'load' fires — a slow/failed tile load must not hide the whole chrome (TopBar/Legend/panel slot all compose from this render-prop)", () => {
+    const originalOn = FakeMapLibreMap.prototype.on;
+    const onSpy = vi.spyOn(FakeMapLibreMap.prototype, "on").mockImplementation(function (this: FakeMapLibreMap, event: string, cb: (...a: unknown[]) => void) {
+      if (event === "load") return this; // simulate "load" never firing
+      return originalOn.call(this, event, cb);
+    });
+    const renderChild = vi.fn(() => <div>content</div>);
+    render(<MapBase initialBounds={BOUNDS}>{renderChild}</MapBase>);
+    expect(renderChild).toHaveBeenCalled();
+    onSpy.mockRestore();
+  });
+
   it("renders without children without crashing", () => {
     const { container } = render(<MapBase initialBounds={BOUNDS} />);
     expect(container).toBeTruthy();
   });
 
-  it("view.project returns a finite pixel position", () => {
+  it("view.project returns a finite pixel position once ready", () => {
+    // Children are now called on every render, including the first one
+    // (before 'load' fires — see MapBase.tsx's own comment on why), so
+    // asserting inside the render-prop itself would run against that
+    // first, not-yet-ready view too. Capture the latest one instead and
+    // assert after render() returns, once the fake's synchronous 'load'
+    // has flipped `ready` — same pattern as "zoomIn/zoomOut/flyTo don't
+    // throw" below.
+    let latestView: MapView | undefined;
     render(
       <MapBase initialBounds={BOUNDS}>
         {(view) => {
-          const p = view.project({ lat: 45.8, lon: 15.9 });
-          expect(p).not.toBeNull();
-          expect(Number.isFinite(p!.x)).toBe(true);
-          expect(Number.isFinite(p!.y)).toBe(true);
+          latestView = view;
           return <div>ok</div>;
         }}
       </MapBase>,
     );
+    const p = latestView!.project({ lat: 45.8, lon: 15.9 });
+    expect(p).not.toBeNull();
+    expect(Number.isFinite(p!.x)).toBe(true);
+    expect(Number.isFinite(p!.y)).toBe(true);
+  });
+
+  it("returns null before 'load' fires — callers must handle an unready view rather than assuming one always comes back", () => {
+    const originalOn = FakeMapLibreMap.prototype.on;
+    const onSpy = vi.spyOn(FakeMapLibreMap.prototype, "on").mockImplementation(function (this: FakeMapLibreMap, event: string, cb: (...a: unknown[]) => void) {
+      if (event === "load") return this;
+      return originalOn.call(this, event, cb);
+    });
+    let latestView: MapView | undefined;
+    render(
+      <MapBase initialBounds={BOUNDS}>
+        {(view) => {
+          latestView = view;
+          return <div>ok</div>;
+        }}
+      </MapBase>,
+    );
+    expect(latestView!.project({ lat: 45.8, lon: 15.9 })).toBeNull();
+    onSpy.mockRestore();
   });
 
   it("exposes a real zoom number", () => {

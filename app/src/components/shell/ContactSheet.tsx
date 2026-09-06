@@ -20,6 +20,16 @@ import type { FrameState } from "../../model/frame";
  * Each cell carries a `riso-contact-cell` class — styles/print.css uses it
  * (Task 11: "prints cleanly to PDF... no clipped rows") to keep a cell
  * from being cut across a page break.
+ *
+ * Issue 134: with the real 116-frame dataset (mostly unprinted, so mostly
+ * "?" cells) the grid is taller than the viewport, and AtlasScreen mounts
+ * this inside a `height: 100vh; overflow: hidden` root — so rows below the
+ * fold used to be genuinely unreachable, not just visually cut off, and
+ * the only way back to the Atlas (a button below the Legend, positioned
+ * separately) could be pushed out of view with it. Fixed two ways: the
+ * grid itself scrolls internally (`maxHeight`/`overflowY` below, sized to
+ * leave room for the header), and there's now always a close control in
+ * the sheet's own header, not dependent on anything else's position.
  */
 export interface ContactFrame {
   name?: string;
@@ -63,6 +73,8 @@ export interface ContactSheetProps extends HTMLAttributes<HTMLDivElement> {
   onPick?: (frame: ContactFrame, index: number) => void;
   sortBy?: ContactSortBy;
   onSortChange?: (sortBy: ContactSortBy) => void;
+  /** Issue 134: always-visible close control, independent of whatever else happens to be on screen. */
+  onClose?: () => void;
 }
 
 const SORT_LABEL: Record<ContactSortBy, string> = { date: "By date", driveTime: "By drive time" };
@@ -75,6 +87,7 @@ export function ContactSheet({
   onPick,
   sortBy = "date",
   onSortChange,
+  onClose,
   style,
   ...rest
 }: ContactSheetProps) {
@@ -90,6 +103,11 @@ export function ContactSheet({
         display: "flex",
         flexDirection: "column",
         gap: 10,
+        // Issue 134: the grid can be taller than the viewport (mostly-"?"
+        // real dataset) — scroll it internally rather than letting it run
+        // off the bottom of a `overflow: hidden` ancestor, unreachable.
+        maxHeight: "calc(100vh - 112px)",
+        minHeight: 0,
         ...style,
       }}
     >
@@ -104,6 +122,7 @@ export function ContactSheet({
           color: "var(--yellow)",
           flexWrap: "wrap",
           gap: 8,
+          flex: "0 0 auto",
         }}
       >
         <span>
@@ -111,6 +130,29 @@ export function ContactSheet({
         </span>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {range ? <span style={{ color: "var(--text-on-invert)" }}>{range}</span> : null}
+          {onClose ? (
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label="Close contact sheet"
+              onClick={onClose}
+              onKeyDown={(e) => {
+                if (e.key === " " || e.key === "Enter") {
+                  e.preventDefault();
+                  onClose();
+                }
+              }}
+              style={{
+                cursor: "pointer",
+                color: "var(--text-on-invert)",
+                border: "1.5px solid var(--text-on-invert)",
+                padding: "2px 7px",
+                lineHeight: 1,
+              }}
+            >
+              ✕
+            </span>
+          ) : null}
           {onSortChange ? (
             <div role="group" aria-label="Sort contact sheet" style={{ display: "flex", gap: 6 }}>
               {(Object.keys(SORT_LABEL) as ContactSortBy[]).map((key) => (
@@ -141,7 +183,7 @@ export function ContactSheet({
           ) : null}
         </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: 6 }}>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: 6, overflowY: "auto", minHeight: 0 }}>
         {sorted.map((f, i) =>
           f.state === "unprinted" ? (
             <span

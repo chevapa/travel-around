@@ -49,7 +49,7 @@ describe("AtlasScreen — the four required interactions (Task 8 'Done when')", 
     render(<AtlasScreen frames={TEST_FRAMES} />);
     expect(screen.getByText("Krapina")).toBeInTheDocument();
     expect(screen.getByText("Ludbreg")).toBeInTheDocument();
-    await user.click(screen.getByText(/Printed · loved/));
+    await user.click(screen.getByText(/Visited · loved/));
     expect(screen.getByText("Krapina")).toBeInTheDocument(); // loved — stays
     expect(screen.queryByText("Ludbreg")).toBeNull(); // fine — isolated away
   });
@@ -57,16 +57,16 @@ describe("AtlasScreen — the four required interactions (Task 8 'Done when')", 
   it("clicking the same legend row again releases the isolation", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText(/Printed · loved/));
+    await user.click(screen.getByText(/Visited · loved/));
     expect(screen.queryByText("Ludbreg")).toBeNull();
-    await user.click(screen.getByText(/Printed · loved/));
+    await user.click(screen.getByText(/Visited · loved/));
     expect(screen.getByText("Ludbreg")).toBeInTheDocument();
   });
 
-  it("To Print picks a random unprinted frame, highlights it yellow, and opens its card", async () => {
+  it("Where to? picks a random unprinted frame, highlights it yellow, and opens its card", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText("To Print →"));
+    await user.click(screen.getByText("Where to? →"));
     const heading = screen.getByRole("heading", { level: 3 });
     expect(["Ozalj", "Samobor"]).toContain(heading.textContent); // the two unprinted frames
     // the rolled print on the map carries the yellow outline
@@ -74,11 +74,11 @@ describe("AtlasScreen — the four required interactions (Task 8 'Done when')", 
     expect(highlighted).not.toBeNull();
   });
 
-  it("To Print does nothing if there are no unprinted frames left", async () => {
+  it("Where to? does nothing if there are no unprinted frames left", async () => {
     const user = userEvent.setup();
     const allPrinted = TEST_FRAMES.map((f) => (f.state === "unprinted" ? { ...f, state: "fine" as const } : f));
     render(<AtlasScreen frames={allPrinted} />);
-    await user.click(screen.getByText("To Print →"));
+    await user.click(screen.getByText("Where to? →"));
     expect(screen.queryByRole("heading", { level: 3 })).toBeNull();
   });
 });
@@ -240,7 +240,7 @@ describe("AtlasScreen — structure", () => {
 
   it("labels the header meta — never a bare number", () => {
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    expect(screen.getByText(/Zagreb · \d+ printed \/ \d+ not/)).toBeInTheDocument();
+    expect(screen.getByText(/Zagreb · \d+ visited \/ \d+ not/)).toBeInTheDocument();
   });
 
   it("toggles to the contact sheet view and back", async () => {
@@ -340,5 +340,147 @@ describe("AtlasScreen — New Frame flow (Task 10)", () => {
     expect(screen.queryByText("New Frame", { selector: "h3" })).toBeNull();
     await user.click(screen.getByText("The Index"));
     expect(screen.getByText(/4 frames match/)).toBeInTheDocument();
+  });
+});
+
+// Issue 131: "when click on search button nothing happens."
+describe("AtlasScreen — search (issue 131)", () => {
+  it("typing in the search field filters the map by name", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByLabelText("Search frames"));
+    await user.type(screen.getByPlaceholderText("Search frames…"), "Krap");
+    expect(screen.getByText("Krapina")).toBeInTheDocument();
+    expect(screen.queryByText("Ludbreg")).toBeNull();
+  });
+
+  it("also matches the local-language name (q)", async () => {
+    const user = userEvent.setup();
+    const withQ = [...TEST_FRAMES, { id: "e5", name: "Любляна", state: "loved" as const, lat: 46.05, lon: 14.5, driveMinutes: 90, distanceKm: 117, tags: [], q: "Ljubljana" }];
+    render(<AtlasScreen frames={withQ} />);
+    await user.click(screen.getByLabelText("Search frames"));
+    await user.type(screen.getByPlaceholderText("Search frames…"), "ljublj");
+    expect(screen.getByText("Любляна")).toBeInTheDocument();
+    expect(screen.queryByText("Krapina")).toBeNull();
+  });
+});
+
+// Issue 128: "the tags on cards are not clickable and not showing the filtering."
+describe("AtlasScreen — tag filtering from a card (issue 128)", () => {
+  it("clicking a tag on an open card filters the map to frames sharing it", async () => {
+    const user = userEvent.setup();
+    const tagged = [
+      { id: "t1", name: "Alpha", state: "loved" as const, lat: 45.8, lon: 15.9, driveMinutes: 30, distanceKm: 20, tags: ["castle"] },
+      { id: "t2", name: "Beta", state: "unprinted" as const, lat: 45.9, lon: 16.0, driveMinutes: 40, distanceKm: 30, tags: ["castle"] },
+      { id: "t3", name: "Gamma", state: "loved" as const, lat: 48.5, lon: 20.5, driveMinutes: 50, distanceKm: 40, tags: ["beach"] },
+    ];
+    render(<AtlasScreen frames={tagged} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("castle"));
+    await user.click(screen.getByLabelText("Close frame"));
+    expect(screen.getByText("Alpha")).toBeInTheDocument();
+    expect(screen.queryByText("Gamma")).toBeNull(); // different tag — filtered out
+  });
+
+  it("shows a removable chip for the active tag filter", async () => {
+    const user = userEvent.setup();
+    const tagged = [{ id: "t1", name: "Alpha", state: "loved" as const, lat: 45.8, lon: 15.9, driveMinutes: 30, distanceKm: 20, tags: ["castle"] }];
+    render(<AtlasScreen frames={tagged} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("castle"));
+    expect(screen.getByLabelText("Remove castle filter")).toBeInTheDocument();
+    await user.click(screen.getByLabelText("Remove castle filter"));
+    expect(screen.queryByLabelText("Remove castle filter")).toBeNull();
+  });
+});
+
+// Issue 124: "after clicking the index there are no places nor filter present."
+describe("AtlasScreen — recovering from an empty filter (issue 124)", () => {
+  it("shows a reset affordance instead of a silent empty map when every state row is off", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByText("The Index"));
+    // IndexPanel's own checkboxes (StampCheck, aria-labelled by the row's
+    // label) — not Legend's row, which shares the same visible text
+    // ("Visited · loved · 31") but isn't a labelled control.
+    await user.click(screen.getByLabelText("Visited · loved"));
+    await user.click(screen.getByLabelText("Visited · fine"));
+    await user.click(screen.getByLabelText("Not visited"));
+    expect(screen.getByText("No frames match your filters.")).toBeInTheDocument();
+    await user.click(screen.getByText("Reset filters"));
+    expect(screen.queryByText("No frames match your filters.")).toBeNull();
+    expect(screen.getByText("Krapina")).toBeInTheDocument();
+  });
+});
+
+// Issue 123: the live site's default filter is Croatia only.
+describe("AtlasScreen — default country filter (issue 123)", () => {
+  // Both frames are "loved" (rather than "unprinted") deliberately — an
+  // unprinted frame never renders its name as a map caption regardless of
+  // any filter (see AtlasScreen's caption logic), which would make
+  // "Skopje Place" absent for the wrong reason and defeat this test.
+  const MULTI_COUNTRY: Frame[] = [
+    { id: "hr1", name: "Zagreb Place", state: "loved", lat: 45.8, lon: 15.9, driveMinutes: 10, distanceKm: 5, tags: [], country: "hr" },
+    { id: "mk1", name: "Skopje Place", state: "loved", lat: 42.0, lon: 21.4, driveMinutes: 600, distanceKm: 600, tags: [], country: "mk" },
+  ];
+
+  it("hides frames from other countries by default when the dataset spans more than one", () => {
+    render(<AtlasScreen frames={MULTI_COUNTRY} />);
+    expect(screen.getByText("Zagreb Place")).toBeInTheDocument();
+    expect(screen.queryByText("Skopje Place")).toBeNull();
+  });
+
+  it("a frame with no country set is never hidden by this filter", () => {
+    const mixed = [...MULTI_COUNTRY, { id: "u1", name: "Unset Country", state: "loved" as const, lat: 45.7, lon: 15.8, driveMinutes: 20, distanceKm: 15, tags: [] }];
+    render(<AtlasScreen frames={mixed} />);
+    expect(screen.getByText("Unset Country")).toBeInTheDocument();
+  });
+
+  it("can be lifted from the Index's Country tab", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={MULTI_COUNTRY} />);
+    await user.click(screen.getByText("The Index"));
+    expect(screen.getByText("1 frames match")).toBeInTheDocument(); // hr only, by default
+    await user.click(screen.getByText("Country"));
+    await user.click(screen.getByLabelText("MK"));
+    expect(screen.getByText("2 frames match")).toBeInTheDocument();
+    await user.click(screen.getByText("The Index")); // close the panel
+    expect(screen.getByText("Skopje Place")).toBeInTheDocument();
+  });
+});
+
+// Issue 126: "the circles are wrong completely, there are only 2 and should be 3."
+describe("AtlasScreen — drive-time rings (issue 126)", () => {
+  it("draws all three calibrated rings (1h/2h/3h), not two", () => {
+    const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
+    const polygons = container.querySelectorAll("svg polygon");
+    expect(polygons.length).toBe(3);
+  });
+});
+
+// Issue 133: FrameCard's actions were previously unwired no-ops.
+describe("AtlasScreen — FrameCard actions actually do something (issue 133)", () => {
+  it("Similar places filters the map to frames sharing the open frame's first tag", async () => {
+    const user = userEvent.setup();
+    const tagged = [
+      { id: "t1", name: "Alpha", state: "loved" as const, lat: 45.8, lon: 15.9, driveMinutes: 30, distanceKm: 20, tags: ["castle"] },
+      { id: "t2", name: "Gamma", state: "loved" as const, lat: 48.5, lon: 20.5, driveMinutes: 50, distanceKm: 40, tags: ["beach"] },
+    ];
+    render(<AtlasScreen frames={tagged} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("Similar places →"));
+    expect(screen.getByText("Alpha")).toBeInTheDocument();
+    expect(screen.queryByText("Gamma")).toBeNull();
+  });
+
+  it("Want to go marks the frame with a star on the map", async () => {
+    const user = userEvent.setup();
+    // state "fine" (not "loved") so it starts unstarred but still renders
+    // its name as a map caption — an unprinted frame never shows one
+    // (regardless of this test), which would make it unclickable by text.
+    render(<AtlasScreen frames={[{ id: "u1", name: "Unstarred", state: "fine", lat: 45.8, lon: 15.9, driveMinutes: 10, distanceKm: 5, tags: [] }]} />);
+    await user.click(screen.getByText("Unstarred"));
+    await user.click(screen.getByText(/Want to go/));
+    expect(screen.getByText("★")).toBeInTheDocument();
   });
 });

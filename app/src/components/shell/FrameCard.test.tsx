@@ -39,20 +39,61 @@ describe("FrameCard — fixed order: name -> print -> description -> drive time 
   });
 });
 
-describe("FrameCard — Same roll is not variant=primary (Task 8 fix: TopBar already owns the one screen-wide primary)", () => {
-  it("renders Same roll with the accent (pink) fill, not the primary (yellow) one", () => {
+describe("FrameCard — Similar places is not variant=primary (Task 8 fix: TopBar already owns the one screen-wide primary)", () => {
+  it("renders Similar places with the accent (pink) fill, not the primary (yellow) one", () => {
     render(<FrameCard name="Krapina" state="loved" src="p.jpg" onNearby={() => {}} />);
-    const button = screen.getByText("Same roll →");
+    const button = screen.getByText("Similar places →");
     expect(button.getAttribute("style")).toContain("var(--action-accent)");
     expect(button.getAttribute("style")).not.toContain("var(--action-primary)");
   });
 });
 
 describe("FrameCard — unprinted state", () => {
-  it("shows the blank-frame placeholder, not a photo", () => {
+  it("shows the blank-frame placeholder, not a photo, when no category image is available", () => {
     const { container } = render(<FrameCard name="Ozalj" state="unprinted" />);
     expect(container.querySelector("img")).toBeNull();
-    expect(screen.getByText(/frame not/)).toBeInTheDocument();
+    expect(screen.getByText(/not visited/)).toBeInTheDocument();
+  });
+
+  it("shows the given image instead of the placeholder when one is available (issue 122)", () => {
+    const { container } = render(<FrameCard name="Ozalj" state="unprinted" src="category-nature.png" />);
+    expect(screen.queryByText(/not visited/)).toBeNull();
+    expect(container.querySelector("img")?.getAttribute("src")).toBe("category-nature.png");
+  });
+});
+
+describe("FrameCard — tags are a click-to-filter control (issue 128)", () => {
+  it("calls onTagClick with the clicked tag", async () => {
+    const user = userEvent.setup();
+    const onTagClick = vi.fn();
+    render(<FrameCard name="Krapina" tags={["nature", "castle"]} onTagClick={onTagClick} />);
+    await user.click(screen.getByText("castle"));
+    expect(onTagClick).toHaveBeenCalledWith("castle");
+  });
+
+  it("marks the active tag so the applied filter is visible", () => {
+    render(<FrameCard name="Krapina" tags={["nature", "castle"]} activeTag="castle" onTagClick={() => {}} />);
+    expect(screen.getByText("castle").getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByText("nature").getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("renders plain, non-interactive tags when onTagClick is absent", () => {
+    render(<FrameCard name="Krapina" tags={["nature"]} />);
+    expect(screen.queryByRole("button", { name: "nature" })).toBeNull();
+  });
+});
+
+describe("FrameCard — name links to a web search when searchUrl is given (issue 109 checklist)", () => {
+  it("wraps the name in a link to searchUrl", () => {
+    render(<FrameCard name="Krapina" searchUrl="https://www.google.com/search?q=Krapina" />);
+    const link = screen.getByRole("link", { name: "Krapina" });
+    expect(link).toHaveAttribute("href", "https://www.google.com/search?q=Krapina");
+    expect(link).toHaveAttribute("target", "_blank");
+  });
+
+  it("renders a plain heading, no link, when searchUrl is absent", () => {
+    render(<FrameCard name="Krapina" />);
+    expect(screen.queryByRole("link")).toBeNull();
   });
 });
 
@@ -66,9 +107,9 @@ describe("FrameCard — actions", () => {
     render(<FrameCard name="Krapina" state="loved" src="p.jpg" onClose={onClose} onNearby={onNearby} onToPrint={onToPrint} onRoute={onRoute} />);
     await user.click(screen.getByLabelText("Close frame"));
     expect(onClose).toHaveBeenCalled();
-    await user.click(screen.getByText("Same roll →"));
+    await user.click(screen.getByText("Similar places →"));
     expect(onNearby).toHaveBeenCalled();
-    await user.click(screen.getByText(/To Print/));
+    await user.click(screen.getByText(/Want to go/));
     expect(onToPrint).toHaveBeenCalled();
     await user.click(screen.getByText(/Route/));
     expect(onRoute).toHaveBeenCalled();

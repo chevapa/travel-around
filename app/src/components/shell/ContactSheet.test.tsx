@@ -50,6 +50,29 @@ describe("ContactSheet — unprinted frames stay as dashed blanks", () => {
   });
 });
 
+// Issue 134: "after click just open weird non scrollable screen with
+// question marks" — the sheet needs an always-visible way back out,
+// independent of whatever else happens to be positioned nearby.
+describe("ContactSheet — close control (issue 134)", () => {
+  it("shows no close control when onClose is absent", () => {
+    render(<ContactSheet frames={[]} />);
+    expect(screen.queryByLabelText("Close contact sheet")).toBeNull();
+  });
+
+  it("calls onClose when clicked", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<ContactSheet frames={[]} onClose={onClose} />);
+    await user.click(screen.getByLabelText("Close contact sheet"));
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it("bounds its own height rather than growing past the viewport unreachably", () => {
+    const { container } = render(<ContactSheet frames={[]} onClose={() => {}} />);
+    expect((container.firstElementChild as HTMLElement).getAttribute("style")).toContain("max-height");
+  });
+});
+
 describe("ContactSheet — sort control", () => {
   it("shows no sort control when onSortChange is absent", () => {
     render(<ContactSheet frames={[]} />);

@@ -8,9 +8,9 @@ import { Legend } from "./Legend";
 describe("Legend", () => {
   it("labels every count — never a bare number", () => {
     render(<Legend counts={{ loved: 31, fine: 11, unprinted: 74 }} />);
-    expect(screen.getByText(/Printed · loved · 31/)).toBeInTheDocument();
-    expect(screen.getByText(/Printed · fine · 11/)).toBeInTheDocument();
-    expect(screen.getByText(/Not printed · 74/)).toBeInTheDocument();
+    expect(screen.getByText(/Visited · loved · 31/)).toBeInTheDocument();
+    expect(screen.getByText(/Visited · fine · 11/)).toBeInTheDocument();
+    expect(screen.getByText(/Not visited · 74/)).toBeInTheDocument();
   });
 
   it("dims the other rows when one is active", () => {
@@ -26,7 +26,7 @@ describe("Legend", () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();
     render(<Legend onToggle={onToggle} />);
-    await user.click(screen.getByText(/Not printed/));
+    await user.click(screen.getByText(/Not visited/));
     expect(onToggle).toHaveBeenCalledWith("unprinted");
   });
 
