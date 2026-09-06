@@ -263,9 +263,6 @@ function ovalPoints(c,d,steps=144){
 // (самого дальнего) шага внешним кольцом служит WORLD_BOUNDS; у остальных
 // внешнее кольцо — это граница СЛЕДУЮЩЕГО шага (см. TERRA_GRADIENT ниже).
 const WORLD_BOUNDS = [[85,-180],[85,180],[-85,180],[-85,-180]];
-// Четыре диагональных азимута — не совпадают с N/E/S/W (0/90/180/270), где
-// уже сидят подписи самих колец ("~1 ч" и т.п.), поэтому не перекрываются.
-const TERRA_INCOGNITA_BEARINGS = [45, 135, 225, 315];
 
 // issue #24 (переоткрыт: "make area out of town really not visible" — один
 // плоский тон поверх чётких тайлов читался просто как лёгкий цветной
@@ -276,19 +273,19 @@ const TERRA_INCOGNITA_BEARINGS = [45, 135, 225, 315];
 // архитектуру карты). mult — во сколько раз дальше исходного кольца
 // проходит внешняя граница шага; opacity — целевая fillOpacity ПРИ ПОЛНОЙ
 // интенсивности (см. zoom-фейд ниже — реальная непрозрачность = opacity*t).
-// ВАЖНО: диапазон mult подобран под то, что реально попадает в вьюпорт на
-// DEFAULT_ZOOM — граница дальнего кольца уже занимает большую часть экрана
-// (см. скриншот в issue), так что "снаружи" остаётся только узкая кайма.
-// Первая версия растягивала градиент до 3.2x — на практике вся сильная
-// часть уходила за пределы экрана, а видимый край держался на 0.14
-// (слабее старой плоской заливки в 0.4) — issue reopened именно из-за
-// этого. Сжато до 1.0-1.8x, с высокой стартовой непрозрачностью.
+// issue #54: тестирование этого же экрана при полном зууме-аут (screenshot
+// в PR) показало сплошной коричневый экран без единого намёка на карту —
+// прямое нарушение "Do not completely hide the OSM map" / "Do not make
+// the entire screen uniformly brown" из #54. Максимум срезан с .96 до .55:
+// вместе с растянутым WORLD_BOUNDS-кольцом (покрывающим весь оставшийся
+// мир на самом дальнем шаге) даже "полная" непрозрачность теперь оставляет
+// тайлы читаемыми под тоном, а не полностью их скрывает.
 const TERRA_GRADIENT = [
-  { mult:1.00, opacity:.35 },
-  { mult:1.15, opacity:.55 },
-  { mult:1.30, opacity:.72 },
-  { mult:1.50, opacity:.88 },
-  { mult:1.80, opacity:.96 },
+  { mult:1.00, opacity:.20 },
+  { mult:1.15, opacity:.32 },
+  { mult:1.30, opacity:.42 },
+  { mult:1.50, opacity:.50 },
+  { mult:1.80, opacity:.55 },
 ];
 // Полная интенсивность на дефолтном зуме и дальше наружу (меньше число —
 // дальше от камеры) — это и есть тот зум, на котором пользователь впервые
@@ -299,7 +296,6 @@ const TERRA_ZOOM_FULL = DEFAULT_ZOOM;
 const TERRA_ZOOM_NONE = DEFAULT_ZOOM + 3;
 
 let terraRings = [];      // [{layer, baseOpacity}] — для пересчёта на зум
-let terraLabelEls = [];   // DOM-узлы подписей — тоже проявляются по мере зума
 
 function terraZoomFactor(){
   const z = map.getZoom();
@@ -311,12 +307,16 @@ function terraZoomFactor(){
 // сразу после drawBase() — пересчитывает уже СОЗДАННЫЕ слои (setStyle /
 // прямая запись в style), а не создаёт их заново: полигоны с их геометрией
 // трогать на каждый кадр зума было бы намного дороже.
+// issue #54 step 5: "TERRA INCOGNITA" text is no longer a Leaflet marker
+// at all (see index.html's .terra-incognita-label elements + note there) —
+// just a CSS custom property on documentElement, read by those fixed-
+// position elements' own opacity, so there's no per-label JS loop here
+// anymore, same one-line update as the polygon rings below.
 export function updateTerraIncognitaZoom(){
   const t = terraZoomFactor();
   terraRings.forEach(({layer, baseOpacity})=>{
     layer.setStyle({fillOpacity: baseOpacity * t});
   });
-  terraLabelEls.forEach(el=>{ if(el) el.style.opacity = t; });
   document.documentElement.style.setProperty('--terra-t', t);
 }
 
@@ -325,7 +325,6 @@ function drawBase(key){
   radiusShapes.forEach(s=>map.removeLayer(s));
   radiusShapes = [];
   terraRings = [];
-  terraLabelEls = [];
   if(baseMarker) map.removeLayer(baseMarker);
   rings.forEach(ring=>{
     const shape = L.polygon(ovalPoints(base,ring), {
@@ -356,20 +355,6 @@ function drawBase(key){
       }).addTo(map);
       radiusShapes.push(layer);
       terraRings.push({layer, baseOpacity: step.opacity});
-    });
-
-    TERRA_INCOGNITA_BEARINGS.forEach(brg=>{
-      const km = ringKmAt(outermost, brg) * 1.15; // within the visible strong-tint band, not off-screen
-      const [lat,lng] = destPoint(base.lat, base.lng, km, brg);
-      const label = L.marker([lat,lng], {
-        icon: L.divIcon({
-          html:'<div class="terra-incognita-label">Terra Incognita</div>',
-          className:'', iconSize:[0,0],
-        }),
-        interactive:false,
-      }).addTo(map);
-      label.on('add', ()=>{ terraLabelEls.push(label.getElement()); });
-      radiusShapes.push(label);
     });
   }
 

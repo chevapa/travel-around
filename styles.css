@@ -1195,13 +1195,37 @@
 .terra-incognita-mask{
   fill:#8a6d4a;
 }
+/* issue #54 step 5: fixed-viewport position, NOT a Leaflet lat/lng marker
+   (the old approach — see git history — visually collapsed into
+   overlapping garbage text at full zoom-out, since two geo-points that
+   are far apart at normal zoom become visually adjacent once the map is
+   zoomed out enough; confirmed by screenshot while testing this issue).
+   Opacity reads --terra-t directly (set by map.js's
+   updateTerraIncognitaZoom() on documentElement) — no per-label JS needed.
+   Placed on the right-hand side at two different heights rather than at
+   the four cardinal/diagonal corners the old version used — the sidebar
+   occupies the left column at desktop widths, so anything positioned
+   there would sit over filters/controls instead of the map area. */
 .terra-incognita-label{
+  position:fixed; z-index:500;
   font-family:'Fraunces',serif; font-style:italic; font-size:22px;
   letter-spacing:.16em; color:#4a3a28; white-space:nowrap;
   text-shadow:0 1px 0 rgba(255,255,255,.4);
-  transform:translate(-50%,-50%) rotate(-6deg);
   pointer-events:none; user-select:none;
+  opacity:var(--terra-t,0);
   transition:opacity .15s linear;
+}
+.terra-incognita-label.corner-a{ top:100px; right:5%; transform:rotate(-6deg); }
+.terra-incognita-label.corner-b{ bottom:90px; right:14%; transform:rotate(4deg); }
+@media(max-width:860px){
+  .terra-incognita-label{ font-size:16px; }
+  /* #map-actions moves to the bottom toolbar on mobile (see its own
+     max-width:700px rule) and the map itself sits below the hero
+     card/sidebar stack (#app{flex-direction:column}) rather than beside
+     it — both labels move to the map's own vertical band so they land on
+     the map, not over the stacked panels above/below it. */
+  .terra-incognita-label.corner-a{ top:auto; bottom:36vh; right:6%; }
+  .terra-incognita-label.corner-b{ bottom:16vh; right:8%; }
 }
 
 /* issue #36: replaces Leaflet.markercluster's default blue-circle look
