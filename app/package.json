@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "lint:hex": "node scripts/check-hex-colors.mjs",
+    "lint:emoji": "node scripts/check-no-emoji.mjs",
     "migrate:frames": "tsx scripts/migrate-places.ts"
   },
   "dependencies": {

@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - name: No raw hex colours in components (RISO1 ground rule)
         run: npm run lint:hex
+      - name: No emoji in src/ — only the seven approved chrome glyphs (Task 12)
+        run: npm run lint:emoji
       - name: Unit tests
         run: npm test
       - name: Type-check and build
