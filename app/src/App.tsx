@@ -1,32 +1,11 @@
+import { CoreGallery } from "./components/core/CoreGallery";
+
 /**
- * Task 1 scaffold. Deliberately minimal — this proves the token pipeline
- * (paper background, self-hosted fonts, no raw hex) before any real
- * component work starts in Task 2+.
- *
- * See DESIGN_RISO1/IMPLEMENTATION_PLAN.md and
- * https://github.com/chevapa/travel-around/issues/86 (Task 1).
+ * Task 3 scaffold: mounts the core-primitives gallery so every variant is
+ * actually viewable, not just asserted in tests. Task 4+ replaces this with
+ * the real Atlas screen (see
+ * https://github.com/chevapa/travel-around/issues/93, Task 8).
  */
 export default function App() {
-  return (
-    <main
-      style={{
-        minHeight: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "var(--s-9)",
-      }}
-    >
-      <p
-        style={{
-          font: "var(--label)",
-          letterSpacing: "var(--label-tracking)",
-          textTransform: "uppercase",
-          color: "var(--text-quiet)",
-        }}
-      >
-        RISO1 scaffold — Task 2 onward builds here
-      </p>
-    </main>
-  );
+  return <CoreGallery />;
 }
