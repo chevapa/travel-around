@@ -28,6 +28,12 @@ export function PanelSlot({ state, renderIndex, renderCard }: PanelSlotProps) {
         bottom: 14,
         width: "min(38%, 360px)",
         display: "flex",
+        // Chrome, always above map content — any element with a *set*
+        // z-index (a Print pin, a cluster) otherwise creates its own
+        // stacking level regardless of DOM order and can paint over an
+        // unindexed panel. See AtlasScreen.tsx's Z_CHROME for the fuller
+        // explanation of why this isn't just theoretical.
+        zIndex: 10,
       }}
     >
       {state.kind === "index" ? renderIndex() : renderCard(state.frameId)}
