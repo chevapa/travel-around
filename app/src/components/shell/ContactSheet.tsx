@@ -16,6 +16,10 @@ import type { FrameState } from "../../model/frame";
  * Honest scope note: the current dataset has no visit-date field yet (see
  * src/model/frame.ts) — sorting by date works mechanically the moment
  * that data exists, but until then every frame sorts as "undated" (last).
+ *
+ * Each cell carries a `riso-contact-cell` class — styles/print.css uses it
+ * (Task 11: "prints cleanly to PDF... no clipped rows") to keep a cell
+ * from being cut across a page break.
  */
 export interface ContactFrame {
   name?: string;
@@ -142,6 +146,7 @@ export function ContactSheet({
           f.state === "unprinted" ? (
             <span
               key={i}
+              className="riso-contact-cell"
               onClick={() => onPick?.(f, i)}
               style={{
                 aspectRatio: "4 / 3",
@@ -160,6 +165,7 @@ export function ContactSheet({
           ) : (
             <img
               key={i}
+              className="riso-contact-cell"
               src={f.src}
               alt={f.name || ""}
               onClick={() => onPick?.(f, i)}

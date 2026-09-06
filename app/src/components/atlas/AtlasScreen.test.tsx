@@ -220,3 +220,24 @@ describe("AtlasScreen — structure", () => {
     expect(screen.queryByText(/Contact sheet · 4/)).toBeNull();
   });
 });
+
+// Task 11: "The Contact Sheet should print cleanly to PDF." Real
+// pagination/clipping is verified against real headless Chromium
+// (emulateMedia('print') + a generated PDF, in the session) — this just
+// confirms the two class hooks styles/print.css relies on are actually
+// present on the right elements.
+describe("AtlasScreen — print class hooks (Task 11)", () => {
+  it("marks the map/chrome wrapper as print-hidden", () => {
+    const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
+    expect(container.querySelector(".riso-print-hide")).not.toBeNull();
+  });
+
+  it("marks the open Contact Sheet's wrapper for print, outside the print-hidden map", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByText("Contact sheet"));
+    const sheetWrapper = container.querySelector(".riso-contact-sheet-print");
+    expect(sheetWrapper).not.toBeNull();
+    expect(container.querySelector(".riso-print-hide")?.contains(sheetWrapper!)).toBe(false);
+  });
+});

@@ -1,0 +1,30 @@
+/**
+ * Task 11: "The Contact Sheet should print cleanly to PDF — one grain
+ * layer, no clipped rows."
+ *
+ * Scoped with plain class hooks rather than inline styles, since
+ * `@media print` can't be expressed as a React inline style object.
+ * AtlasScreen.tsx applies `.riso-print-hide` to everything that isn't the
+ * Contact Sheet itself (the map, chrome, panel slot) and
+ * `.riso-contact-sheet-print` to the sheet's own positioned wrapper;
+ * ContactSheet.tsx applies `.riso-contact-cell` to each individual cell.
+ */
+@media print {
+  .riso-print-hide {
+    display: none !important;
+  }
+
+  .riso-contact-sheet-print {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    left: auto !important;
+    top: auto !important;
+  }
+
+  /* No cell may be cut across a page break — the browser breaks between
+     cells instead, never through one. */
+  .riso-contact-cell {
+    break-inside: avoid;
+  }
+}

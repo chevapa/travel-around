@@ -7,13 +7,14 @@ import rawFrames from "../../data/frames.json";
 import { countsByState, formatDrive, formatMeta, type Frame, type FrameState } from "../../model/frame";
 import { averageSpeedKmh } from "./isochrone";
 import { HOME } from "../../model/migrate";
+import { MOBILE_BREAKPOINT_QUERY, useMediaQuery } from "../../lib/motion";
 import { Button } from "../core/Button";
 import { GrainOverlay } from "../core/GrainOverlay";
 import { IconButton } from "../core/IconButton";
 import { ContactSheet } from "../shell/ContactSheet";
 import { FrameCard } from "../shell/FrameCard";
 import { IndexPanel, type IndexSection } from "../shell/IndexPanel";
-import { PanelSlot } from "../shell/PanelSlot";
+import { MOBILE_SHEET_MAX_HEIGHT_VH, PanelSlot } from "../shell/PanelSlot";
 import { usePanelSlot } from "../shell/panelSlotReducer";
 import { TopBar } from "../shell/TopBar";
 import { buildClusterIndex, getClustersAtZoom, isCluster } from "./clustering";
@@ -103,6 +104,7 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   const [iso, setIso] = useState<FrameState | null>(null);
   const [checks, setChecks] = useState<Record<FrameState, boolean>>({ loved: true, fine: true, unprinted: true });
   const [rolled, setRolled] = useState<string | null>(null);
+  const isMobile = useMediaQuery(MOBILE_BREAKPOINT_QUERY);
 
   const bounds = useMemo(() => computeBounds(data.map((f) => ({ lat: f.lat, lon: f.lon }))), [data]);
   const avgSpeed = useMemo(() => averageSpeedKmh(data), [data]);
@@ -143,8 +145,12 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
 
   return (
     <div style={{ position: "relative", height: "100vh", overflow: "hidden", background: "var(--paper-3)" }}>
-      <MapBase initialBounds={bounds}>
-        {(map) => {
+      {/* Print CSS (styles/print.css) hides everything with this class —
+          the real map, every marker, all chrome — so only the Contact
+          Sheet (a genuine sibling, not nested in here) prints. */}
+      <div className="riso-print-hide" style={{ position: "absolute", inset: 0 }}>
+        <MapBase initialBounds={bounds}>
+          {(map) => {
           const clusterIndex = buildClusterIndex(shown);
           const clusters = getClustersAtZoom(clusterIndex, map.zoom);
           const printScale = scaleForZoom(map.zoom);
@@ -188,6 +194,15 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                         left: home.x - radiusPx,
                         top: home.y,
                         transform: "translate(-50%, -50%) rotate(-4deg)",
+                        // Unlike the dashed ring itself (deliberately under
+                        // prints — RingLabel.prompt.md: "sit under the
+                        // prints"), the pennant needs to stay legible. The
+                        // real map can genuinely put the ring's edge right
+                        // where the densest cluster is (Zagreb is both the
+                        // isochrone centre and, by far, the densest area of
+                        // the dataset) — a print/cluster with an explicit
+                        // z-index otherwise paints straight over it.
+                        zIndex: Z_CHROME,
                       }}
                     >
                       {label}
@@ -256,21 +271,27 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                 <TopBar brand="The Atlas" meta={formatMeta("Zagreb", counts)} filterCount={filterCount} onIndex={toggleIndex} onPrint={rollOne} />
               </div>
 
-              <div style={{ position: "absolute", left: 16, bottom: 16, zIndex: Z_CHROME, pointerEvents: "auto", display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
+              {/* Task 11: "Legend moves above the sheet, stays visible" —
+                  on mobile, once the bottom sheet is occupied, it would
+                  otherwise sit underneath/behind it. */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: 16,
+                  bottom: isMobile && slot.state.kind !== "empty" ? `calc(${MOBILE_SHEET_MAX_HEIGHT_VH}vh + 16px)` : 16,
+                  zIndex: Z_CHROME,
+                  pointerEvents: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                  alignItems: "flex-start",
+                }}
+              >
                 <Legend counts={counts} active={iso} onToggle={(k) => setIso(iso === k ? null : k)} />
                 <Button variant="secondary" size="sm" onClick={() => setViewMode(viewMode === "atlas" ? "sheet" : "atlas")}>
                   {viewMode === "atlas" ? "Contact sheet" : "Back to the atlas"}
                 </Button>
               </div>
-
-              {viewMode === "sheet" ? (
-                <div style={{ position: "absolute", left: "50%", top: 96, transform: "translateX(-50%)", width: "min(760px, 88%)", zIndex: Z_CHROME, pointerEvents: "auto" }}>
-                  <ContactSheet
-                    frames={data.map((f, i) => ({ name: f.name, src: photoFor(f, i), state: f.state, driveMinutes: f.driveMinutes }))}
-                    range="2023—2026"
-                  />
-                </div>
-              ) : null}
 
               <PanelSlot
                 state={slot.state}
@@ -293,8 +314,21 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
               />
             </>
           );
-        }}
-      </MapBase>
+          }}
+        </MapBase>
+      </div>
+
+      {viewMode === "sheet" ? (
+        <div
+          className="riso-contact-sheet-print"
+          style={{ position: "absolute", left: "50%", top: 96, transform: "translateX(-50%)", width: "min(760px, 88%)", zIndex: Z_CHROME, pointerEvents: "auto" }}
+        >
+          <ContactSheet
+            frames={data.map((f, i) => ({ name: f.name, src: photoFor(f, i), state: f.state, driveMinutes: f.driveMinutes }))}
+            range="2023—2026"
+          />
+        </div>
+      ) : null}
 
       <GrainOverlay />
     </div>

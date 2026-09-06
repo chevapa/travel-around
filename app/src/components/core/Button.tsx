@@ -1,4 +1,5 @@
 import { useEffect, useState, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from "react";
+import { usePrefersReducedMotion } from "../../lib/motion";
 
 /**
  * The system's button. Mono uppercase label, square corners, ink border.
@@ -41,6 +42,7 @@ let mountedPrimaryCount = 0;
 
 export function Button({ variant = "secondary", size = "md", badge, disabled = false, style, children, ...rest }: ButtonProps) {
   const [down, setDown] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
   const v = VARIANT[variant] ?? VARIANT.secondary;
   const lifted = v.boxShadow !== "none";
 
@@ -86,7 +88,7 @@ export function Button({ variant = "secondary", size = "md", badge, disabled = f
         alignItems: "center",
         justifyContent: "center",
         gap: 6,
-        transition: "transform var(--dur-press) var(--ease), box-shadow var(--dur-press) var(--ease)",
+        transition: reducedMotion ? "none" : "transform var(--dur-press) var(--ease), box-shadow var(--dur-press) var(--ease)",
         ...v,
         ...pressedStyle,
         ...style,

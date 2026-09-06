@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TopBar } from "./TopBar";
@@ -94,5 +95,65 @@ describe("TopBar — accessibility", () => {
   it("has no axe violations", async () => {
     const { container } = render(<TopBar meta="Zagreb · 42 printed / 74 not" filterCount={2} />);
     expect(await axe(container)).toHaveNoViolations();
+  });
+});
+
+// Task 11: "Mobile: TopBar keeps the primary action and collapses the
+// rest behind the search glyph."
+describe("TopBar — mobile collapse", () => {
+  afterEach(() => {
+    // @ts-expect-error -- test-only cleanup
+    delete window.matchMedia;
+  });
+
+  function mockMobile(isMobile: boolean) {
+    window.matchMedia = ((query: string) => ({
+      matches: isMobile,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })) as unknown as typeof window.matchMedia;
+  }
+
+  it("hides New Frame and The Index on mobile, keeps the primary visible", () => {
+    mockMobile(true);
+    render(<TopBar />);
+    expect(screen.queryByText("New Frame")).toBeNull();
+    expect(screen.queryByText("The Index")).toBeNull();
+    expect(screen.getByText("To Print →")).toBeInTheDocument();
+  });
+
+  it("shows all actions on desktop (unchanged from Task 6)", () => {
+    mockMobile(false);
+    render(<TopBar />);
+    expect(screen.getByText("New Frame")).toBeInTheDocument();
+    expect(screen.getByText("The Index")).toBeInTheDocument();
+  });
+
+  it("reveals the collapsed actions when the search glyph is tapped on mobile", async () => {
+    mockMobile(true);
+    const user = userEvent.setup();
+    render(<TopBar />);
+    await user.click(screen.getByLabelText("Show more actions"));
+    expect(screen.getByText("New Frame")).toBeInTheDocument();
+    expect(screen.getByText("The Index")).toBeInTheDocument();
+  });
+
+  it("hides them again on a second tap", async () => {
+    mockMobile(true);
+    const user = userEvent.setup();
+    render(<TopBar />);
+    await user.click(screen.getByLabelText("Show more actions"));
+    await user.click(screen.getByLabelText("Hide more actions"));
+    expect(screen.queryByText("New Frame")).toBeNull();
+  });
+
+  it("still calls onSearch on mobile, in addition to expanding", async () => {
+    mockMobile(true);
+    const user = userEvent.setup();
+    const onSearch = vi.fn();
+    render(<TopBar onSearch={onSearch} />);
+    await user.click(screen.getByLabelText("Show more actions"));
+    expect(onSearch).toHaveBeenCalled();
   });
 });

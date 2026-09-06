@@ -34,3 +34,32 @@ describe("Button primary-count dev warning", () => {
     expect(warn).not.toHaveBeenCalled();
   });
 });
+
+// Task 11: "Honour prefers-reduced-motion."
+describe("Button — reduced motion", () => {
+  afterEach(() => {
+    // @ts-expect-error -- test-only cleanup
+    delete window.matchMedia;
+  });
+
+  function mockMatchMedia(matches: boolean) {
+    window.matchMedia = ((query: string) => ({
+      matches,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })) as unknown as typeof window.matchMedia;
+  }
+
+  it("disables the press transition when the OS prefers reduced motion", () => {
+    mockMatchMedia(true);
+    const { container } = render(<Button variant="secondary">Go</Button>);
+    expect(container.querySelector("button")?.getAttribute("style")).toContain("transition: none");
+  });
+
+  it("keeps the normal transition when reduced motion isn't requested", () => {
+    mockMatchMedia(false);
+    const { container } = render(<Button variant="secondary">Go</Button>);
+    expect(container.querySelector("button")?.getAttribute("style")).toContain("var(--dur-press)");
+  });
+});
