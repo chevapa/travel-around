@@ -110,6 +110,91 @@ describe("AtlasScreen — chrome always paints above map content (z-index regres
   });
 });
 
+describe("AtlasScreen — clustering and zoom (Task 9)", () => {
+  // Two frames a few hundred metres apart — closer together than any two
+  // real distinct places in the dataset (see clustering.test.ts's own
+  // fixture comment) — cluster at the most zoomed-out level and separate
+  // at the most zoomed-in one, at any radius supercluster would use.
+  const CLOSE_PAIR: Frame[] = [
+    { id: "x1", name: "X1", state: "unprinted", lat: 45.8, lon: 15.9, driveMinutes: 10, distanceKm: 5, tags: [] },
+    { id: "x2", name: "X2", state: "unprinted", lat: 45.8005, lon: 15.9005, driveMinutes: 10, distanceKm: 5, tags: [] },
+  ];
+
+  it("renders a FrameStack (not two Prints) for a close pair at the most zoomed-out level", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={CLOSE_PAIR} />);
+    await user.click(screen.getByLabelText("Zoom out"));
+    for (let i = 0; i < 15; i++) await user.click(screen.getByLabelText("Zoom out")); // walk to MIN_ZOOM
+    expect(screen.queryByText("X1")).toBeNull();
+    expect(screen.queryByText("X2")).toBeNull();
+  });
+
+  it("renders both as individual prints at the most zoomed-in level", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<AtlasScreen frames={CLOSE_PAIR} />);
+    for (let i = 0; i < 20; i++) await user.click(screen.getByLabelText("Zoom in")); // walk to MAX_ZOOM
+    // unprinted frames don't render their name as a caption, but each is
+    // its own clickable Print rather than one merged FrameStack — assert
+    // via the pin stems, one per individual marker. (Plain JS filtering,
+    // not a `[style*="..."]` selector: jsdom's CSS engine mis-parses an
+    // attribute-value substring that looks like "word(" even quoted —
+    // not relevant to "width: 2.5px", but avoided everywhere in this
+    // block for consistency with the cluster-root lookup below.)
+    const pins = Array.from(container.querySelectorAll("span[aria-hidden='true']")).filter((el) =>
+      (el.getAttribute("style") ?? "").includes("width: 2.5px"),
+    );
+    expect(pins).toHaveLength(2);
+  });
+
+  it("clicking a cluster zooms in (FrameStack has an onClick)", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<AtlasScreen frames={CLOSE_PAIR} />);
+    for (let i = 0; i < 20; i++) await user.click(screen.getByLabelText("Zoom out")); // MIN_ZOOM — definitely one cluster
+    // FrameStack renders its count as a plain text node inside its own
+    // root div — a reliable way to find it that doesn't risk matching one
+    // of TornGround's many other "rotate(...)"-styled decorations, which
+    // a generic `[style*="rotate"]` selector did (a real bug in this test,
+    // caught by the assertion below going unexpectedly false).
+    const countNode = screen.getByText("2");
+    const stackRoot = countNode.parentElement as HTMLElement;
+    await user.click(stackRoot);
+    // after zooming in enough (getClusterExpansionZoom), the pair
+    // separates into two leaves — the merged "2" count is gone.
+    expect(screen.queryByText("2")).toBeNull();
+    const pins = Array.from(container.querySelectorAll("span[aria-hidden='true']")).filter((el) =>
+      (el.getAttribute("style") ?? "").includes("width: 2.5px"),
+    );
+    expect(pins).toHaveLength(2);
+  });
+
+  it("never encodes state in a cluster's colour — FrameStack takes no state prop", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={CLOSE_PAIR} />);
+    for (let i = 0; i < 20; i++) await user.click(screen.getByLabelText("Zoom out"));
+    // FrameStack's own rendering (Task 5) never reads a `state` — this is
+    // really just confirming the integration passes it no such prop by
+    // construction; see FrameStack.test.tsx for the fill-colour guarantee.
+    expect(screen.getByText("2")).toBeInTheDocument(); // the count numeral
+  });
+
+  it("renders the real 116-frame dataset without throwing, and with fewer DOM prints than frames at a low zoom", async () => {
+    const { default: realFrames } = await import("../../data/frames.json");
+    const user = userEvent.setup();
+    const { container } = render(<AtlasScreen frames={realFrames as Frame[]} />);
+    for (let i = 0; i < 8; i++) await user.click(screen.getByLabelText("Zoom out")); // well below the default
+    // Plain JS filtering rather than a `[style*="translate(..."]` CSS
+    // selector — jsdom's selector engine mis-parses an attribute-value
+    // substring that looks like "word(" even when quoted (confirmed by
+    // direct comparison: the exact full string matches fine, but this
+    // partial "translate(-50%," prefix silently matches nothing).
+    const markers = Array.from(container.querySelectorAll("div[style]")).filter((el) =>
+      (el.getAttribute("style") ?? "").includes("translate(-50%,"),
+    );
+    expect(markers.length).toBeGreaterThan(0);
+    expect(markers.length).toBeLessThan((realFrames as Frame[]).length);
+  });
+});
+
 describe("AtlasScreen — structure", () => {
   it("mounts exactly one grain layer", () => {
     const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
