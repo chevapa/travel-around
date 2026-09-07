@@ -4,7 +4,7 @@ import collage2 from "../../assets/images/collage2.webp";
 import photoStack from "../../assets/images/photo-stack.jpeg";
 import rawFrames from "../../data/frames.json";
 import { categoryImageFor } from "../../lib/categoryImages";
-import { countsByState, formatDrive, formatMeta, STATE_LABEL, type Frame, type FrameState } from "../../model/frame";
+import { countsByState, formatDrive, formatMeta, SEASON_LABEL, SOURCE_TYPE_LABEL, STATE_LABEL, type Frame, type FrameState } from "../../model/frame";
 import { averageSpeedKmh, destPoint, ovalOutline, ZAGREB_DRIVE_RINGS } from "./isochrone";
 import { haversineKm, HOME } from "../../model/migrate";
 import { MOBILE_BREAKPOINT_QUERY, useMediaQuery } from "../../lib/motion";
@@ -163,6 +163,21 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   }, [availableCountries]);
   const [countryChecks, setCountryChecks] = useState<Record<string, boolean>>(defaultCountryChecks);
 
+  // Issue 143: Season and Source tabs, same "which values actually occur
+  // in this dataset" + "start with everything shown" pattern as Country
+  // above — no default restriction analogous to country's home-country
+  // narrowing, since neither has an obvious "default" value.
+  const availableSeasons = useMemo(
+    () => Array.from(new Set(baseFrames.map((f) => f.season).filter((s): s is string => Boolean(s)))).sort(),
+    [baseFrames],
+  );
+  const [seasonChecks, setSeasonChecks] = useState<Record<string, boolean>>({});
+  const availableSourceTypes = useMemo(
+    () => Array.from(new Set(baseFrames.map((f) => f.sourceType).filter((s): s is "journal" | "research" => Boolean(s)))).sort(),
+    [baseFrames],
+  );
+  const [sourceChecks, setSourceChecks] = useState<Record<string, boolean>>({});
+
   // The map's *initial* framing only (issue 125: "can we not show the
   // whole map? only area 3-4 hours from Zagreb is fine for now" —
   // MapBase's own fitBounds call is deliberately one-shot, see its
@@ -199,10 +214,12 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
           (!iso || f.state === iso) &&
           checks[f.state] &&
           (!f.country || countryChecks[f.country] !== false) &&
+          (!f.season || seasonChecks[f.season] !== false) &&
+          (!f.sourceType || sourceChecks[f.sourceType] !== false) &&
           (!tagFilter || f.tags.includes(tagFilter)) &&
           (!trimmedQuery || f.name.toLowerCase().includes(trimmedQuery) || f.q?.toLowerCase().includes(trimmedQuery)),
       ),
-    [data, iso, checks, countryChecks, tagFilter, trimmedQuery],
+    [data, iso, checks, countryChecks, seasonChecks, sourceChecks, tagFilter, trimmedQuery],
   );
   const shownById = useMemo(() => new Map(shown.map((f) => [f.id, f])), [shown]);
   const clusterIndex = useMemo(() => buildClusterIndex(shown), [shown]);
@@ -239,11 +256,39 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
           })),
         }
       : null;
-  const sections: IndexSection[] = countrySection ? [stateSection, countrySection] : [stateSection];
+  const seasonSection: IndexSection | null =
+    availableSeasons.length > 0
+      ? {
+          tab: "Season",
+          rows: availableSeasons.map((s) => ({
+            key: s,
+            label: SEASON_LABEL[s] ?? s,
+            count: data.filter((f) => f.season === s).length,
+            checked: seasonChecks[s] !== false,
+          })),
+        }
+      : null;
+  const sourceSection: IndexSection | null =
+    availableSourceTypes.length > 0
+      ? {
+          tab: "Source",
+          rows: availableSourceTypes.map((s) => ({
+            key: s,
+            label: SOURCE_TYPE_LABEL[s],
+            count: data.filter((f) => f.sourceType === s).length,
+            checked: sourceChecks[s] !== false,
+          })),
+        }
+      : null;
+  const sections: IndexSection[] = [stateSection, countrySection, seasonSection, sourceSection].filter((s): s is IndexSection => s !== null);
 
   const toggleRow = (tab: string, key: string) => {
     if (tab === "Country") {
       setCountryChecks((prev) => ({ ...prev, [key]: !(prev[key] ?? true) }));
+    } else if (tab === "Season") {
+      setSeasonChecks((prev) => ({ ...prev, [key]: !(prev[key] ?? true) }));
+    } else if (tab === "Source") {
+      setSourceChecks((prev) => ({ ...prev, [key]: !(prev[key] ?? true) }));
     } else {
       setChecks((prev) => ({ ...prev, [key]: !prev[key as FrameState] }));
     }
@@ -258,6 +303,8 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   const resetFilters = () => {
     setChecks({ loved: true, fine: true, unprinted: true });
     setCountryChecks(defaultCountryChecks);
+    setSeasonChecks({});
+    setSourceChecks({});
     setIso(null);
     setTagFilter(null);
     setSearch("");

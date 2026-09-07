@@ -34,6 +34,15 @@ export interface Frame {
   q?: string; // local-language name, for the "search in Google" affordance
   warn?: string; // "check before you go" — reconstruction, hours, seasonality
   wantReturn?: boolean;
+  /**
+   * Issue 143: distinct from `source` (free-text citation text, e.g. "Источник:
+   * Putni Kofer") — this is the live site's `sourceKey(place)` classification
+   * (js/places.js): a place either comes from the author's own travel journal
+   * or from a research-based pick. Migrated from `places/*.json`'s `src`
+   * field (`migrate.ts`), defaulting to "research" when absent, same as the
+   * live site's own default for places with no explicit `src`.
+   */
+  sourceType?: "journal" | "research";
 }
 
 export function isPrinted(f: Frame): boolean {
@@ -73,6 +82,25 @@ export const STATE_LABEL: Record<FrameState, string> = {
   loved: "Visited · loved",
   fine: "Visited · fine",
   unprinted: "Not visited",
+};
+
+/**
+ * Display labels for `Frame.season` — issue 143's Season tab. Keys match
+ * `data/vocab.json`'s `seasons` object (the live vocabulary) exactly;
+ * values are the English lexicon (epic #84), not a translation of the
+ * vocab file's Russian labels.
+ */
+export const SEASON_LABEL: Record<string, string> = {
+  all: "Year-round",
+  warm: "Warm (Apr–Oct)",
+  summer: "Summer / swimming",
+  stork: "Storks (Mar–Aug)",
+};
+
+/** Display labels for `Frame.sourceType` — issue 143's Source tab. */
+export const SOURCE_TYPE_LABEL: Record<"journal" | "research", string> = {
+  journal: "My travel journal",
+  research: "Travel Around picks",
 };
 
 export interface StateCounts {

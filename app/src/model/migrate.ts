@@ -107,6 +107,14 @@ export function migratePlace(raw: RawPlace): MigrationResult {
     tags: raw.cats ?? [],
     description: raw.note,
     source: raw.source,
+    // Issue 143: mirrors js/places.js's `sourceKey()` — explicit "journal"
+    // wins, everything else (including no `src` at all) defaults to
+    // "research", same as the live site. `custom` (the live site's other
+    // journal signal, set when a place is added via the running map
+    // rather than shipped in places/*.json) has no equivalent in this
+    // static migration; RISO1's own New Frame flow is a separate,
+    // session-only path (AtlasScreen's `saveNewFrame`), not migrated data.
+    sourceType: raw.src === "journal" ? "journal" : "research",
     country: raw.country,
     season: raw.season,
     q: raw.q,
