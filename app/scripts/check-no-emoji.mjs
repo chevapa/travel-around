@@ -2,7 +2,7 @@
 // Task 12 acceptance check: "a grep for emoji across src/ returns nothing"
 // (DESIGN_RISO1/IMPLEMENTATION_PLAN.md). RISO1 has no icon set — it uses a
 // small set of approved Unicode glyphs set in Space Mono instead
-// (readme.md, "ICONOGRAPHY"): ⌕ ✕ ★ ↗ → ◠ ⌂ and the unprinted "?". Those
+// (readme.md, "ICONOGRAPHY"): ⌕ ✕ ★ ↗ → ◠ ⌂ ↓ and the unprinted "?". Those
 // live in the same Unicode blocks common emoji do, so this excludes
 // exactly those characters rather than the whole block — anything else in
 // an emoji-ish range is a real find.
@@ -12,11 +12,12 @@ import { join, relative } from "node:path";
 const root = new URL("..", import.meta.url).pathname;
 const target = join(root, "src");
 
-// Issue 157 added "⌂" (map "back to home area") — readme.md's own rule for
-// this is "take another Unicode glyph before reaching for a library, and
-// add it to the glyph card" (guidelines/brand-glyphs.html), not "the count
-// is frozen at seven".
-const APPROVED_GLYPHS = new Set(["⌕", "✕", "★", "↗", "→", "◠", "?", "⌂"]);
+// Issue 157 added "⌂" (map "back to home area") and issue 141 added "↓"
+// ("Save for later" on the recommendation screen) — readme.md's own rule
+// for this is "take another Unicode glyph before reaching for a library,
+// and add it to the glyph card" (guidelines/brand-glyphs.html), not "the
+// count is frozen at seven".
+const APPROVED_GLYPHS = new Set(["⌕", "✕", "★", "↗", "→", "◠", "?", "⌂", "↓"]);
 
 // Emoji live in these general ranges (plus the dingbats/misc-symbols
 // blocks the approved glyphs also happen to live in).
@@ -54,7 +55,7 @@ for (const file of walk(target)) {
 }
 
 if (offenders.length > 0) {
-  console.error("Found emoji (or an unapproved glyph) in src/ — RISO1 uses only ⌕ ✕ ★ ↗ → ◠ ? ⌂ :\n");
+  console.error("Found emoji (or an unapproved glyph) in src/ — RISO1 uses only ⌕ ✕ ★ ↗ → ◠ ? ⌂ ↓ :\n");
   for (const o of offenders) {
     console.error(`  ${o.file}:${o.line}  ${o.chars.join(", ")}\n    ${o.text}`);
   }

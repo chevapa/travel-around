@@ -131,9 +131,11 @@ const HOME_COUNTRY = "hr";
 export interface AtlasScreenProps {
   /** Defaults to the full migrated dataset; overridable for tests/stories. */
   frames?: Frame[];
+  /** Issue 141: CLAUDE.md §7 — "on the map, the user can open a specific place and go back to the recommendations." Omit to hide the nav control (e.g. when Atlas is the only screen, as in older tests/stories). */
+  onBackToRecommend?: () => void;
 }
 
-export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
+export function AtlasScreen({ frames: framesProp, onBackToRecommend }: AtlasScreenProps) {
   const baseFrames = framesProp ?? frames;
   // Task 10: frames added via the New Frame flow live only in this
   // session's state — there's no write API in this static site (the
@@ -648,6 +650,11 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                     <Button variant="secondary" size="sm" onClick={() => setViewMode("profile")}>
                       Profile
                     </Button>
+                    {onBackToRecommend ? (
+                      <Button variant="secondary" size="sm" onClick={onBackToRecommend}>
+                        Recommend
+                      </Button>
+                    ) : null}
                   </>
                 ) : (
                   <Button variant="secondary" size="sm" onClick={() => setViewMode("atlas")}>

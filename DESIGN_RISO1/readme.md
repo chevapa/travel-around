@@ -137,8 +137,8 @@ square, but their tap target stays 44px.
 
 **There is no icon set, and that is deliberate.** RISO1 uses single Unicode characters set in
 Space Mono: `⌕` search, `✕` close and the stamped checkbox, `★` favourite, `↗` route,
-`→` forward, `?` an unprinted frame, `⌂` back to the home map area (issue 157). Those cover
-the product.
+`→` forward, `?` an unprinted frame, `⌂` back to the home map area (issue 157), `↓` save
+for later (issue 141). Those cover the product.
 
 - **No icon font, no SVG icon library, no CDN icon set.** If a new action genuinely needs a
   mark, take another Unicode glyph before reaching for a library — and add it to the glyph
