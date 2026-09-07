@@ -37,8 +37,8 @@ Anything marked "manual" has no automated test yet.
 |---|---|---|---|
 | Name, photo, description, drive time/distance | `js/map.js` (`buildMarker` popup HTML) | `FrameCard.tsx` | ✅ done |
 | Category badges, clickable to filter | `js/map.js` (`cat-tag-btn`) | `FrameCard`'s tags | ✅ done (issue 128) |
-| Country badge, clickable to filter | `js/map.js` (`countryBadge`) | Index panel's Country tab (not from the card itself) | ⚠️ partial — issue #145 |
-| Season badge, clickable to filter | `js/map.js` (`seasonBadge`) | — | ❌ not ported — issue #145 |
+| Country badge, clickable to filter | `js/map.js` (`countryBadge`) | `FrameCard`'s country badge (`onCountryClick`) | ✅ done (issue 145) |
+| Season badge, clickable to filter | `js/map.js` (`seasonBadge`) | `FrameCard`'s season badge (`onSeasonClick`) | ✅ done (issue 145) |
 | "check before you go" warning line | `js/map.js` (`place.warn`) | `FrameCard`'s warn block | ✅ done (issue 144) |
 | Name links out to a Google search | `js/map.js` (`searchUrl`, title link) | `FrameCard`'s name link (`searchUrl` prop) | ✅ done (issue 109 checklist) |
 | "Draw route" link to Google Maps | `js/map.js` (`routeUrl`) | `FrameCard`'s Route button | ✅ done (issue 109 checklist, issue 133) |

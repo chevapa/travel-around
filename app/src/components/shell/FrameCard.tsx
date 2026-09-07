@@ -3,7 +3,7 @@ import { Button } from "../core/Button";
 import { IconButton } from "../core/IconButton";
 import { TapeStrip } from "../core/Paper";
 import { Tag } from "../core/Tag";
-import type { FrameState } from "../../model/frame";
+import { SEASON_LABEL, type FrameState } from "../../model/frame";
 import { fetchWikipediaPhoto } from "../../lib/wikipediaPhoto";
 
 /**
@@ -53,6 +53,19 @@ export interface FrameCardProps extends HTMLAttributes<HTMLDivElement> {
   tags?: string[];
   /** The tag currently driving the map filter, if any — shows which chip is active. */
   activeTag?: string | null;
+  /**
+   * Issue 145: country and season as their own clickable filter badges,
+   * same click-to-filter pattern issue 128 gave category tags — live site
+   * equivalent is `js/map.js`'s `countryBadge`/`seasonBadge`. `season`
+   * itself follows the live site in never showing an "all" (year-round)
+   * badge — not worth calling out as a filterable value.
+   */
+  country?: string;
+  activeCountry?: string | null;
+  onCountryClick?: (country: string) => void;
+  season?: string;
+  activeSeason?: string | null;
+  onSeasonClick?: (season: string) => void;
   /** Issue 109 checklist: "link to Google for a place" — when set, the name itself opens a web search for it. */
   searchUrl?: string;
   onClose?: () => void;
@@ -74,6 +87,12 @@ export function FrameCard({
   stay,
   tags = [],
   activeTag,
+  country,
+  activeCountry,
+  onCountryClick,
+  season,
+  activeSeason,
+  onSeasonClick,
   searchUrl,
   onClose,
   onNearby,
@@ -208,8 +227,23 @@ export function FrameCard({
           ) : null}
           {stay ? <Tag>Stay {stay}</Tag> : null}
         </div>
-        {tags.length ? (
+        {tags.length || country || (season && season !== "all") ? (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 5, flex: "0 0 auto" }}>
+            {/* Issue 145: country and season as their own clickable filter
+                badges, same pattern as the category tags below (issue
+                128) — live site order is country, then season, then
+                category (js/map.js's popup-badges). Season never shows an
+                "all" (year-round) badge, matching the live site. */}
+            {country ? (
+              <Tag active={activeCountry === country} onClick={onCountryClick ? () => onCountryClick(country) : undefined}>
+                {country.toUpperCase()}
+              </Tag>
+            ) : null}
+            {season && season !== "all" ? (
+              <Tag active={activeSeason === season} onClick={onSeasonClick ? () => onSeasonClick(season) : undefined}>
+                {SEASON_LABEL[season] ?? season}
+              </Tag>
+            ) : null}
             {tags.map((t) => (
               <Tag key={t} active={activeTag === t} onClick={onTagClick ? () => onTagClick(t) : undefined}>
                 {t}

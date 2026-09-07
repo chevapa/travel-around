@@ -141,6 +141,13 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   const slot = usePanelSlot();
   const [viewMode, setViewMode] = useState<"atlas" | "sheet">("atlas");
   const [iso, setIso] = useState<FrameState | null>(null);
+  // Issue 145: country/season as clickable filter badges on the card,
+  // same isolate-toggle pattern the Legend already uses for `iso` above —
+  // a single-value pivot, independent of the Index panel's own
+  // multi-select `countryChecks`/`seasonChecks` (issue 143), same as
+  // `iso` coexists with `checks`.
+  const [countryIso, setCountryIso] = useState<string | null>(null);
+  const [seasonIso, setSeasonIso] = useState<string | null>(null);
   const [checks, setChecks] = useState<Record<FrameState, boolean>>({ loved: true, fine: true, unprinted: true });
   const [rolled, setRolled] = useState<string | null>(null);
   const [tagFilter, setTagFilter] = useState<string | null>(null);
@@ -216,10 +223,12 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
           (!f.country || countryChecks[f.country] !== false) &&
           (!f.season || seasonChecks[f.season] !== false) &&
           (!f.sourceType || sourceChecks[f.sourceType] !== false) &&
+          (!countryIso || f.country === countryIso) &&
+          (!seasonIso || f.season === seasonIso) &&
           (!tagFilter || f.tags.includes(tagFilter)) &&
           (!trimmedQuery || f.name.toLowerCase().includes(trimmedQuery) || f.q?.toLowerCase().includes(trimmedQuery)),
       ),
-    [data, iso, checks, countryChecks, seasonChecks, sourceChecks, tagFilter, trimmedQuery],
+    [data, iso, checks, countryChecks, seasonChecks, sourceChecks, countryIso, seasonIso, tagFilter, trimmedQuery],
   );
   const shownById = useMemo(() => new Map(shown.map((f) => [f.id, f])), [shown]);
   const clusterIndex = useMemo(() => buildClusterIndex(shown), [shown]);
@@ -306,6 +315,8 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
     setSeasonChecks({});
     setSourceChecks({});
     setIso(null);
+    setCountryIso(null);
+    setSeasonIso(null);
     setTagFilter(null);
     setSearch("");
   };
@@ -658,6 +669,12 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                       distance={`${openFrame.distanceKm} km`}
                       tags={openFrame.tags}
                       activeTag={tagFilter}
+                      country={openFrame.country}
+                      activeCountry={countryIso}
+                      onCountryClick={(c) => setCountryIso((prev) => (prev === c ? null : c))}
+                      season={openFrame.season}
+                      activeSeason={seasonIso}
+                      onSeasonClick={(s) => setSeasonIso((prev) => (prev === s ? null : s))}
                       searchUrl={`https://www.google.com/search?q=${encodeURIComponent(openFrame.q || openFrame.name)}`}
                       onTagClick={(tag) => setTagFilter((prev) => (prev === tag ? null : tag))}
                       onClose={closeCard}

@@ -416,6 +416,47 @@ describe("AtlasScreen — tag filtering from a card (issue 128)", () => {
   });
 });
 
+// Issue 145: country and season as clickable filter badges on the card.
+describe("AtlasScreen — country/season filtering from a card (issue 145)", () => {
+  // Neither country is HOME_COUNTRY ("hr") — issue 123's default
+  // Croatia-only restriction would otherwise hide "mk"/"si" regardless of
+  // this feature, making these tests pass for the wrong reason.
+  const FRAMES: Frame[] = [
+    { id: "c1", name: "Alpha", state: "loved", lat: 45.8, lon: 15.9, driveMinutes: 30, distanceKm: 20, tags: [], country: "mk", season: "summer" },
+    { id: "c2", name: "Beta", state: "loved", lat: 42.0, lon: 21.4, driveMinutes: 600, distanceKm: 600, tags: [], country: "si", season: "warm" },
+  ];
+
+  it("clicking the country badge isolates the map to that country", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={FRAMES} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("MK"));
+    await user.click(screen.getByLabelText("Close frame"));
+    expect(screen.getByText("Alpha")).toBeInTheDocument();
+    expect(screen.queryByText("Beta")).toBeNull();
+  });
+
+  it("clicking the same country badge again releases the isolation", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={FRAMES} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("MK"));
+    await user.click(screen.getByText("MK")); // toggle off
+    await user.click(screen.getByLabelText("Close frame"));
+    expect(screen.getByText("Beta")).toBeInTheDocument();
+  });
+
+  it("clicking the season badge isolates the map to that season", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={FRAMES} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("Summer / swimming"));
+    await user.click(screen.getByLabelText("Close frame"));
+    expect(screen.getByText("Alpha")).toBeInTheDocument();
+    expect(screen.queryByText("Beta")).toBeNull();
+  });
+});
+
 // Issue 124: "after clicking the index there are no places nor filter present."
 describe("AtlasScreen — recovering from an empty filter (issue 124)", () => {
   it("shows a reset affordance instead of a silent empty map when every state row is off", async () => {

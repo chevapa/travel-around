@@ -84,6 +84,41 @@ describe("FrameCard — tags are a click-to-filter control (issue 128)", () => {
   });
 });
 
+// Issue 145: country and season as their own clickable filter badges, same
+// pattern as issue 128's category tags.
+describe("FrameCard — country and season badges (issue 145)", () => {
+  it("shows a country badge that calls onCountryClick when clicked", async () => {
+    const user = userEvent.setup();
+    const onCountryClick = vi.fn();
+    render(<FrameCard name="Krapina" country="hr" onCountryClick={onCountryClick} />);
+    await user.click(screen.getByText("HR"));
+    expect(onCountryClick).toHaveBeenCalledWith("hr");
+  });
+
+  it("marks the country badge active when it matches activeCountry", () => {
+    render(<FrameCard name="Krapina" country="hr" activeCountry="hr" onCountryClick={() => {}} />);
+    expect(screen.getByText("HR").getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("shows a season badge that calls onSeasonClick when clicked", async () => {
+    const user = userEvent.setup();
+    const onSeasonClick = vi.fn();
+    render(<FrameCard name="Krapina" season="summer" onSeasonClick={onSeasonClick} />);
+    await user.click(screen.getByText("Summer / swimming"));
+    expect(onSeasonClick).toHaveBeenCalledWith("summer");
+  });
+
+  it("never shows a season badge for 'all' (year-round), matching the live site", () => {
+    render(<FrameCard name="Krapina" season="all" onSeasonClick={() => {}} />);
+    expect(screen.queryByText("Year-round")).toBeNull();
+  });
+
+  it("renders no badges row at all when neither country, season, nor tags are set", () => {
+    const { container } = render(<FrameCard name="Krapina" />);
+    expect(container.querySelector('[role="button"]')).toBeNull();
+  });
+});
+
 describe("FrameCard — name links to a web search when searchUrl is given (issue 109 checklist)", () => {
   it("wraps the name in a link to searchUrl", () => {
     render(<FrameCard name="Krapina" searchUrl="https://www.google.com/search?q=Krapina" />);
