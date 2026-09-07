@@ -13,7 +13,7 @@ describe("TopBar — action hierarchy", () => {
     expect(buttons.map((b) => b.textContent)).toEqual([
       "⌕", // IconButton — aria-hidden only affects the a11y tree, not textContent
       "New Frame",
-      "The Index2", // badge renders as a sibling span inside the button
+      "Filters2", // badge renders as a sibling span inside the button
       "Where to? →",
     ]);
   });
@@ -29,7 +29,7 @@ describe("TopBar — action hierarchy", () => {
     expect(primaryLikeButtons[0].textContent).toBe("Where to? →");
   });
 
-  it("shows the filter badge on The Index when filterCount is set", () => {
+  it("shows the filter badge on Filters when filterCount is set", () => {
     render(<TopBar filterCount={3} />);
     expect(screen.getByText("3")).toBeInTheDocument();
   });
@@ -124,7 +124,8 @@ describe("TopBar — accessibility", () => {
 });
 
 // Task 11: "Mobile: TopBar keeps the primary action and collapses the
-// rest behind the search glyph."
+// rest behind the search glyph." Issue 160 later carved Filters back out
+// of that collapse — only New Frame still hides.
 describe("TopBar — mobile collapse", () => {
   afterEach(() => {
     // @ts-expect-error -- test-only cleanup
@@ -140,11 +141,13 @@ describe("TopBar — mobile collapse", () => {
     })) as unknown as typeof window.matchMedia;
   }
 
-  it("hides New Frame and The Index on mobile, keeps the primary visible", () => {
+  // Issue 160: Filters used to be hidden behind the same expand toggle as
+  // New Frame, so it wasn't visible on mobile by default.
+  it("hides New Frame but keeps Filters and the primary visible on mobile", () => {
     mockMobile(true);
     render(<TopBar />);
     expect(screen.queryByText("New Frame")).toBeNull();
-    expect(screen.queryByText("The Index")).toBeNull();
+    expect(screen.getByText("Filters")).toBeInTheDocument();
     expect(screen.getByText("Where to? →")).toBeInTheDocument();
   });
 
@@ -152,16 +155,16 @@ describe("TopBar — mobile collapse", () => {
     mockMobile(false);
     render(<TopBar />);
     expect(screen.getByText("New Frame")).toBeInTheDocument();
-    expect(screen.getByText("The Index")).toBeInTheDocument();
+    expect(screen.getByText("Filters")).toBeInTheDocument();
   });
 
-  it("reveals the collapsed actions when the search glyph is tapped on mobile", async () => {
+  it("reveals New Frame when the search glyph is tapped on mobile", async () => {
     mockMobile(true);
     const user = userEvent.setup();
     render(<TopBar />);
     await user.click(screen.getByLabelText("Show more actions"));
     expect(screen.getByText("New Frame")).toBeInTheDocument();
-    expect(screen.getByText("The Index")).toBeInTheDocument();
+    expect(screen.getByText("Filters")).toBeInTheDocument();
   });
 
   it("hides them again on a second tap", async () => {
@@ -219,5 +222,57 @@ describe("TopBar — search field (issue 131)", () => {
     await user.click(screen.getByLabelText("Close search"));
     expect(onSearchChange).toHaveBeenCalledWith("");
     expect(screen.queryByPlaceholderText("Search frames…")).toBeNull();
+  });
+});
+
+// Issue 159: "search doesn't work on mobile" — typing filtered the map
+// behind the bar with nothing shown here, which read as broken. A real
+// results dropdown, same as any ordinary search box.
+describe("TopBar — search results dropdown (issue 159)", () => {
+  it("shows no dropdown while the query is empty", async () => {
+    const user = userEvent.setup();
+    render(<TopBar searchValue="" onSearchChange={() => {}} searchResults={[]} />);
+    await user.click(screen.getByLabelText("Search frames"));
+    expect(screen.queryByRole("listbox")).toBeNull();
+  });
+
+  it("lists matching frames under the field", async () => {
+    const user = userEvent.setup();
+    render(
+      <TopBar
+        searchValue="Krap"
+        onSearchChange={() => {}}
+        searchResults={[
+          { id: "a", label: "Krapina" },
+          { id: "b", label: "Krapinske Toplice" },
+        ]}
+      />,
+    );
+    await user.click(screen.getByLabelText("Search frames"));
+    expect(screen.getByText("Krapina")).toBeInTheDocument();
+    expect(screen.getByText("Krapinske Toplice")).toBeInTheDocument();
+  });
+
+  it("shows a no-matches row rather than nothing when the query matches no frame", async () => {
+    const user = userEvent.setup();
+    render(<TopBar searchValue="zzz" onSearchChange={() => {}} searchResults={[]} />);
+    await user.click(screen.getByLabelText("Search frames"));
+    expect(screen.getByText("No frames match \u201Czzz\u201D")).toBeInTheDocument();
+  });
+
+  it("calls onSelectSearchResult when a result is clicked", async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    render(
+      <TopBar
+        searchValue="Krap"
+        onSearchChange={() => {}}
+        searchResults={[{ id: "a", label: "Krapina" }]}
+        onSelectSearchResult={onSelect}
+      />,
+    );
+    await user.click(screen.getByLabelText("Search frames"));
+    await user.click(screen.getByText("Krapina"));
+    expect(onSelect).toHaveBeenCalledWith("a");
   });
 });

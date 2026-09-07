@@ -25,22 +25,22 @@ describe("AtlasScreen — the four required interactions (Task 8 'Done when')", 
     expect(screen.getByRole("heading", { name: "Krapina" })).toBeInTheDocument();
   });
 
-  it("The Index -> opens the filter panel, replacing any open card", async () => {
+  it("Filters -> opens the filter panel, replacing any open card", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={TEST_FRAMES} />);
     await user.click(screen.getByText("Krapina")); // open a card first
     expect(screen.getByRole("heading", { name: "Krapina" })).toBeInTheDocument();
-    await user.click(screen.getByText("The Index"));
+    await user.click(screen.getByText("Filters"));
     expect(screen.queryByRole("heading", { name: "Krapina" })).toBeNull();
     expect(screen.getByText(/frames match/)).toBeInTheDocument();
   });
 
-  it("clicking The Index again closes it (toggle)", async () => {
+  it("clicking Filters again closes it (toggle)", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText("The Index"));
+    await user.click(screen.getByText("Filters"));
     expect(screen.getByText(/frames match/)).toBeInTheDocument();
-    await user.click(screen.getByText("The Index"));
+    await user.click(screen.getByText("Filters"));
     expect(screen.queryByText(/frames match/)).toBeNull();
   });
 
@@ -205,10 +205,10 @@ describe("AtlasScreen — the Legend is always mounted (HIGH 04 regression)", ()
     expect(screen.getByText("Reading the page")).toBeInTheDocument();
   });
 
-  it("stays present while The Index is open", async () => {
+  it("stays present while Filters is open", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText("The Index"));
+    await user.click(screen.getByText("Filters"));
     expect(screen.getByText("Reading the page")).toBeInTheDocument();
   });
 
@@ -321,7 +321,7 @@ describe("AtlasScreen — New Frame flow (Task 10)", () => {
     // the new frame is unprinted, so it renders as a print with no visible
     // caption text — confirm indirectly via the updated match counts
     // instead: one more unprinted frame now exists.
-    await user.click(screen.getByText("The Index"));
+    await user.click(screen.getByText("Filters"));
     expect(screen.getByText("5 frames match")).toBeInTheDocument();
   });
 
@@ -338,7 +338,7 @@ describe("AtlasScreen — New Frame flow (Task 10)", () => {
     await longPressMap(container, 200, 200);
     await user.click(screen.getByLabelText("Cancel"));
     expect(screen.queryByText("New Frame", { selector: "h3" })).toBeNull();
-    await user.click(screen.getByText("The Index"));
+    await user.click(screen.getByText("Filters"));
     expect(screen.getByText(/4 frames match/)).toBeInTheDocument();
   });
 });
@@ -350,7 +350,10 @@ describe("AtlasScreen — search (issue 131)", () => {
     render(<AtlasScreen frames={TEST_FRAMES} />);
     await user.click(screen.getByLabelText("Search frames"));
     await user.type(screen.getByPlaceholderText("Search frames…"), "Krap");
-    expect(screen.getByText("Krapina")).toBeInTheDocument();
+    // Issue 159: a match now appears twice — the map pin's own caption,
+    // and the new results dropdown row — so this just confirms it's still
+    // present at all, not that the map re-rendered it once.
+    expect(screen.getAllByText("Krapina").length).toBeGreaterThan(0);
     expect(screen.queryByText("Ludbreg")).toBeNull();
   });
 
@@ -360,8 +363,27 @@ describe("AtlasScreen — search (issue 131)", () => {
     render(<AtlasScreen frames={withQ} />);
     await user.click(screen.getByLabelText("Search frames"));
     await user.type(screen.getByPlaceholderText("Search frames…"), "ljublj");
-    expect(screen.getByText("Любляна")).toBeInTheDocument();
+    expect(screen.getAllByText("Любляна").length).toBeGreaterThan(0);
     expect(screen.queryByText("Krapina")).toBeNull();
+  });
+
+  // Issue 159: "nothing popped up" — a real results list under the field,
+  // and picking a result guarantees the frame's card actually opens.
+  it("shows matches in a results dropdown and opens the picked frame's card", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByLabelText("Search frames"));
+    await user.type(screen.getByPlaceholderText("Search frames…"), "Krap");
+    await user.click(screen.getByRole("option", { name: "Krapina" }));
+    expect(screen.getByRole("heading", { name: "Krapina" })).toBeInTheDocument();
+  });
+
+  it("shows a no-matches row for a query that matches nothing", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByLabelText("Search frames"));
+    await user.type(screen.getByPlaceholderText("Search frames…"), "zzz-no-such-place");
+    expect(screen.getByRole("listbox", { name: "Matching frames" })).toHaveTextContent("No frames match");
   });
 });
 
@@ -399,7 +421,7 @@ describe("AtlasScreen — recovering from an empty filter (issue 124)", () => {
   it("shows a reset affordance instead of a silent empty map when every state row is off", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText("The Index"));
+    await user.click(screen.getByText("Filters"));
     // IndexPanel's own checkboxes (StampCheck, aria-labelled by the row's
     // label) — not Legend's row, which shares the same visible text
     // ("Visited · loved · 31") but isn't a labelled control.
@@ -439,12 +461,12 @@ describe("AtlasScreen — default country filter (issue 123)", () => {
   it("can be lifted from the Index's Country tab", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={MULTI_COUNTRY} />);
-    await user.click(screen.getByText("The Index"));
+    await user.click(screen.getByText("Filters"));
     expect(screen.getByText("1 frames match")).toBeInTheDocument(); // hr only, by default
     await user.click(screen.getByText("Country"));
     await user.click(screen.getByLabelText("MK"));
     expect(screen.getByText("2 frames match")).toBeInTheDocument();
-    await user.click(screen.getByText("The Index")); // close the panel
+    await user.click(screen.getByText("Filters")); // close the panel
     expect(screen.getByText("Skopje Place")).toBeInTheDocument();
   });
 });

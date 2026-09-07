@@ -20,9 +20,9 @@ import { IconButton } from "../core/IconButton";
  * white hex literal on the wordmark text became var(--paper-print) to
  * satisfy the hex-colour gate.
  *
- * Task 11 addition: on mobile, TopBar keeps only the primary action
- * visible in the main row; New Frame and The Index collapse behind the
- * search glyph, revealed by tapping it. Desktop is unchanged.
+ * Task 11 addition: on mobile, TopBar keeps only the primary action and
+ * Filters visible in the main row; New Frame collapses behind the search
+ * glyph, revealed by tapping it. Desktop is unchanged.
  *
  * Issue 131: the search glyph called `onSearch` (a bare "it happened"
  * signal) but AtlasScreen never had anywhere to put an actual search
@@ -31,18 +31,37 @@ import { IconButton } from "../core/IconButton";
  * fires (so a caller can react to the glyph being tapped at all), but the
  * field's value is controlled by the caller via `searchValue`/
  * `onSearchChange`, same pattern as a normal controlled input.
+ *
+ * Issue 161: "The Index" read as meaningless to a first-time user — it's a
+ * filter panel, so it's now labelled "Filters" on the button itself. The
+ * component/prop names underneath (IndexPanel, IndexSection, `onIndex`)
+ * are internal and unchanged.
+ *
+ * Issue 160: on mobile, Filters used to be one of the actions hidden
+ * behind the search-glyph expand toggle — reachable, but not visible by
+ * default the way it is on desktop. It's now always shown; only New Frame
+ * still collapses.
+ *
+ * Issue 159: typing into mobile search visibly filtered the map, but nil
+ * else happened, which read as "search doesn't work" when the matching
+ * pins weren't obviously visible (especially with issue 153's oversized
+ * pins). `searchResults`/`onSelectSearchResult` add a real dropdown of
+ * matching frame names under the field, same as a normal search box.
  */
 export interface TopBarProps extends HTMLAttributes<HTMLDivElement> {
   /** Wordmark text, set in the pink display chip. */
   brand?: string;
   /** Honest, labelled counts — e.g. "Zagreb · 42 visited / 74 not". Never a bare number. */
   meta?: ReactNode;
-  /** Active filter count; renders as the pink badge on The Index. */
+  /** Active filter count; renders as the pink badge on the Filters button. */
   filterCount?: number;
   onSearch?: () => void;
   /** Current text in the search field — omit to leave the field uncontrolled/absent from callers that don't wire search yet. */
   searchValue?: string;
   onSearchChange?: (value: string) => void;
+  /** Matching frames for the current searchValue — rendered as a dropdown under the field. Omit/empty shows a "no matches" row instead of nothing (issue 159). */
+  searchResults?: { id: string; label: string }[];
+  onSelectSearchResult?: (id: string) => void;
   onNewFrame?: () => void;
   onIndex?: () => void;
   onPrint?: () => void;
@@ -56,6 +75,8 @@ export function TopBar({
   onSearch,
   searchValue,
   onSearchChange,
+  searchResults,
+  onSelectSearchResult,
   onNewFrame,
   onIndex,
   onPrint,
@@ -72,8 +93,12 @@ export function TopBar({
   const isMobile = useMediaQuery(MOBILE_BREAKPOINT_QUERY);
   const [expanded, setExpanded] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const showSecondaryActions = !isMobile || expanded;
+  // Issue 160: Filters used to be gated on the same `expanded` flag as New
+  // Frame, so it vanished on mobile until the search glyph was tapped.
+  // Only New Frame still collapses.
+  const showNewFrame = !isMobile || expanded;
   const showSearchField = Boolean(onSearchChange) && (searchOpen || (isMobile && expanded));
+  const showSearchResults = showSearchField && Boolean(searchValue?.trim());
 
   const handleSearchClick = () => {
     if (isMobile) setExpanded((e) => !e);
@@ -151,25 +176,82 @@ export function TopBar({
       </div>
       <div style={{ flex: 1, minWidth: 8 }} />
       {showSearchField ? (
-        <input
-          type="search"
-          value={searchValue ?? ""}
-          onChange={(e) => onSearchChange?.(e.target.value)}
-          placeholder="Search frames…"
-          aria-label="Search frames"
-          autoFocus
-          style={{
-            font: "var(--body)",
-            fontSize: 13,
-            padding: "7px 10px",
-            border: "var(--stroke)",
-            borderRadius: "var(--radius)",
-            background: "var(--paper-1)",
-            color: "var(--ink)",
-            minWidth: 0,
-            width: isMobile ? "100%" : 180,
-          }}
-        />
+        <div style={{ position: "relative", minWidth: 0, width: isMobile ? "100%" : 180 }}>
+          <input
+            type="search"
+            value={searchValue ?? ""}
+            onChange={(e) => onSearchChange?.(e.target.value)}
+            placeholder="Search frames…"
+            aria-label="Search frames"
+            autoFocus
+            style={{
+              font: "var(--body)",
+              fontSize: 13,
+              padding: "7px 10px",
+              border: "var(--stroke)",
+              borderRadius: "var(--radius)",
+              background: "var(--paper-1)",
+              color: "var(--ink)",
+              minWidth: 0,
+              width: "100%",
+              boxSizing: "border-box",
+            }}
+          />
+          {/* Issue 159: typing used to only filter pins on the map behind
+              this bar, with no feedback here at all — a real results list,
+              same as any normal search box. */}
+          {showSearchResults ? (
+            <div
+              role="listbox"
+              aria-label="Matching frames"
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                right: 0,
+                marginTop: 4,
+                background: "var(--paper-1)",
+                border: "var(--stroke-heavy)",
+                boxShadow: "var(--lift-3)",
+                maxHeight: 240,
+                overflowY: "auto",
+                zIndex: 30,
+              }}
+            >
+              {searchResults && searchResults.length > 0 ? (
+                searchResults.map((r) => (
+                  <div
+                    key={r.id}
+                    role="option"
+                    aria-selected={false}
+                    tabIndex={0}
+                    onClick={() => onSelectSearchResult?.(r.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === " " || e.key === "Enter") {
+                        e.preventDefault();
+                        onSelectSearchResult?.(r.id);
+                      }
+                    }}
+                    style={{
+                      padding: "8px 10px",
+                      font: "var(--body)",
+                      fontSize: 13,
+                      color: "var(--ink)",
+                      cursor: "pointer",
+                      borderBottom: "var(--stroke-dashed-quiet)",
+                    }}
+                  >
+                    {r.label}
+                  </div>
+                ))
+              ) : (
+                <div style={{ padding: "8px 10px", font: "var(--body)", fontSize: 13, color: "var(--ink-55)" }}>
+                  No frames match “{searchValue}”
+                </div>
+              )}
+            </div>
+          ) : null}
+        </div>
       ) : null}
       <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
         <IconButton
@@ -186,16 +268,14 @@ export function TopBar({
           aria-expanded={isMobile ? expanded : onSearchChange ? searchOpen : undefined}
           onClick={handleSearchClick}
         />
-        {showSecondaryActions ? (
-          <>
-            <Button variant="secondary" size="sm" onClick={onNewFrame}>
-              New Frame
-            </Button>
-            <Button variant="invert" size="sm" badge={filterCount || undefined} onClick={onIndex}>
-              The Index
-            </Button>
-          </>
+        {showNewFrame ? (
+          <Button variant="secondary" size="sm" onClick={onNewFrame}>
+            New Frame
+          </Button>
         ) : null}
+        <Button variant="invert" size="sm" badge={filterCount || undefined} onClick={onIndex}>
+          Filters
+        </Button>
         <Button variant="primary" size="md" onClick={onPrint}>
           {primaryLabel}
         </Button>

@@ -195,6 +195,13 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   );
   const shownById = useMemo(() => new Map(shown.map((f) => [f.id, f])), [shown]);
   const clusterIndex = useMemo(() => buildClusterIndex(shown), [shown]);
+  // Issue 159: a real results list for the search field, capped so a broad
+  // query (e.g. a single letter) doesn't dump the whole dataset into a
+  // dropdown.
+  const searchMatches = useMemo(
+    () => (trimmedQuery ? shown.slice(0, 8).map((f) => ({ id: f.id, label: f.name })) : []),
+    [trimmedQuery, shown],
+  );
 
   const slotState = slot.state; // local const so TS narrows `kind` through the closure below
   const openFrame = slotState.kind === "card" ? data.find((f) => f.id === slotState.frameId) : undefined;
@@ -323,6 +330,18 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
             setViewMode("atlas");
           };
 
+          // Issue 159: the search field used to only ever filter pins
+          // silently behind this bar. Picking a result now also guarantees
+          // it's actually visible, same treatment as "To Print" above.
+          const selectSearchResult = (id: string) => {
+            const f = data.find((fr) => fr.id === id);
+            if (!f) return;
+            map.flyTo({ lat: f.lat, lon: f.lon }, 14);
+            slot.openCard(f.id);
+            setViewMode("atlas");
+            setSearch("");
+          };
+
           // Issue 126: real, directionally-calibrated drive-time rings
           // (see isochrone.ts's ZAGREB_DRIVE_RINGS) projected through the
           // real map, replacing the old single-radius circle — a uniform
@@ -414,6 +433,9 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                 : null}
 
               <div style={{ position: "absolute", right: 16, bottom: 16, zIndex: Z_CHROME, pointerEvents: "auto", display: "flex", flexDirection: "column", gap: 6 }}>
+                {/* Issue 157: "no home button... hard to go back to the
+                    home location" once panned away to a far-off frame. */}
+                <IconButton glyph="⌂" label="Back to home area" onClick={() => map.fitBounds(bounds)} />
                 <IconButton glyph="+" label="Zoom in" onClick={map.zoomIn} />
                 <IconButton glyph="−" label="Zoom out" onClick={map.zoomOut} />
               </div>
@@ -425,6 +447,8 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                   filterCount={filterCount}
                   searchValue={search}
                   onSearchChange={setSearch}
+                  searchResults={searchMatches}
+                  onSelectSearchResult={selectSearchResult}
                   onIndex={toggleIndex}
                   onPrint={rollOne}
                   // Long-press is the decided way to start New Frame
@@ -565,9 +589,18 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
           style={{ position: "absolute", left: "50%", top: 96, transform: "translateX(-50%)", width: "min(760px, 88%)", zIndex: Z_CHROME, pointerEvents: "auto" }}
         >
           <ContactSheet
-            frames={data.map((f, i) => ({ name: f.name, src: photoFor(f, i), state: f.state, driveMinutes: f.driveMinutes }))}
+            frames={data.map((f, i) => ({ id: f.id, name: f.name, src: photoFor(f, i), state: f.state, driveMinutes: f.driveMinutes }))}
             range="2023—2026"
             onClose={() => setViewMode("atlas")}
+            // Issue 156: "it's not clickable" — onPick was never wired at
+            // all, so tapping a cell did nothing. Uses the frame's real id
+            // (not the sorted-array index ContactSheet also passes back)
+            // so the right card opens no matter the current sort order.
+            onPick={(f) => {
+              if (!f.id) return;
+              setViewMode("atlas");
+              slot.openCard(f.id);
+            }}
           />
         </div>
       ) : null}

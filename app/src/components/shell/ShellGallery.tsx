@@ -61,7 +61,7 @@ export function ShellGallery() {
       <Row label="Panel slot — The Index and a FrameCard can never be open together">
         <div style={{ display: "flex", gap: "var(--s-4)", marginBottom: "var(--s-4)" }}>
           <Button variant="secondary" size="sm" onClick={slot.openIndex}>
-            Open The Index
+            Open Filters
           </Button>
           <Button variant="secondary" size="sm" onClick={() => slot.openCard("b7nmno2d")}>
             Open a FrameCard

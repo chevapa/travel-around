@@ -30,8 +30,19 @@ import type { FrameState } from "../../model/frame";
  * grid itself scrolls internally (`maxHeight`/`overflowY` below, sized to
  * leave room for the header), and there's now always a close control in
  * the sheet's own header, not dependent on anything else's position.
+ *
+ * Issue 156: cells rendered as bare photos — no visible name, and (because
+ * AtlasScreen never wired `onPick`) not actually clickable to anything.
+ * Every cell now shows a small caption strip with the frame's name, and
+ * carries an id (see ContactFrame.id) so a caller can safely open the
+ * right frame regardless of the current sort order.
  */
 export interface ContactFrame {
+  /** Issue 156: onPick used to only get a sorted-array index back, which
+   * silently pointed at the wrong frame once `sortBy` reordered the grid
+   * relative to the caller's own source array. Carrying the real id lets a
+   * caller look the frame up directly, independent of sort order. */
+  id?: string;
   name?: string;
   src?: string;
   state?: FrameState;
@@ -184,44 +195,79 @@ export function ContactSheet({
         </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: 6, overflowY: "auto", minHeight: 0 }}>
-        {sorted.map((f, i) =>
-          f.state === "unprinted" ? (
-            <span
-              key={i}
-              className="riso-contact-cell"
-              onClick={() => onPick?.(f, i)}
-              style={{
-                aspectRatio: "4 / 3",
-                border: "1.5px dashed var(--unprinted-edge)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "var(--unprinted-edge)",
-                font: "var(--display-3)",
-                fontSize: 16,
-                cursor: onPick ? "pointer" : "default",
-              }}
-            >
-              ?
-            </span>
-          ) : (
-            <img
-              key={i}
-              className="riso-contact-cell"
-              src={f.src}
-              alt={f.name || ""}
-              onClick={() => onPick?.(f, i)}
-              style={{
-                width: "100%",
-                aspectRatio: "4 / 3",
-                objectFit: "cover",
-                border: "1.5px solid var(--paper-2)",
-                filter: f.state === "fine" ? "grayscale(1)" : "none",
-                cursor: onPick ? "pointer" : "default",
-              }}
-            />
-          ),
-        )}
+        {sorted.map((f, i) => (
+          <div
+            key={f.id ?? i}
+            className="riso-contact-cell"
+            role={onPick ? "button" : undefined}
+            tabIndex={onPick ? 0 : undefined}
+            // Only the unprinted blank needs the label here — the printed
+            // cell's own <img alt> already names it.
+            aria-label={f.state === "unprinted" ? f.name : undefined}
+            onClick={() => onPick?.(f, i)}
+            onKeyDown={
+              onPick
+                ? (e) => {
+                    if (e.key === " " || e.key === "Enter") {
+                      e.preventDefault();
+                      onPick(f, i);
+                    }
+                  }
+                : undefined
+            }
+            style={{
+              position: "relative",
+              aspectRatio: "4 / 3",
+              display: "flex",
+              cursor: onPick ? "pointer" : "default",
+              ...(f.state === "unprinted"
+                ? { border: "1.5px dashed var(--unprinted-edge)", alignItems: "center", justifyContent: "center" }
+                : { border: "1.5px solid var(--paper-2)" }),
+            }}
+          >
+            {f.state === "unprinted" ? (
+              <span aria-hidden="true" style={{ color: "var(--unprinted-edge)", font: "var(--display-3)", fontSize: 16 }}>
+                ?
+              </span>
+            ) : (
+              <img
+                src={f.src}
+                alt={f.name || ""}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  filter: f.state === "fine" ? "grayscale(1)" : "none",
+                }}
+              />
+            )}
+            {/* Issue 156: "no naming nothing" — every cell, printed or
+                blank, names the place it stands for. */}
+            {f.name ? (
+              <span
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background: "rgba(25,21,16,.72)",
+                  color: "var(--text-on-invert)",
+                  font: "var(--label-sm)",
+                  fontSize: 9,
+                  letterSpacing: ".04em",
+                  padding: "3px 4px",
+                  textAlign: "center",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {f.name}
+              </span>
+            ) : null}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ export function CoreGallery() {
         <Button variant="primary">To Print →</Button>
         <Button variant="secondary">New Frame</Button>
         <Button variant="invert" badge={2}>
-          The Index
+          Filters
         </Button>
         <Button variant="accent">Not interested</Button>
         <Button variant="secondary" disabled>
