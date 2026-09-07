@@ -152,16 +152,22 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   }, [availableCountries]);
   const [countryChecks, setCountryChecks] = useState<Record<string, boolean>>(defaultCountryChecks);
 
-  // The default-filtered set drives the map's *initial* framing only
-  // (issue 125: "can we not show the whole map? only area 3-4 hours from
-  // Zagreb is fine for now" — MapBase's own fitBounds call is deliberately
-  // one-shot, see its docstring). Falls back to every frame if the
-  // restriction would leave nothing to frame the view on.
-  const initialFrames = useMemo(() => {
-    const restricted = baseFrames.filter((f) => !f.country || defaultCountryChecks[f.country] !== false);
-    return restricted.length > 0 ? restricted : baseFrames;
-  }, [baseFrames, defaultCountryChecks]);
-  const bounds = useMemo(() => computeBounds(initialFrames.map((f) => ({ lat: f.lat, lon: f.lon }))), [initialFrames]);
+  // The map's *initial* framing only (issue 125: "can we not show the
+  // whole map? only area 3-4 hours from Zagreb is fine for now" —
+  // MapBase's own fitBounds call is deliberately one-shot, see its
+  // docstring). First attempt (issue 125's own first fix) derived this
+  // from the default-filtered frame set's own extent — an improvement
+  // over the full 9-country dataset, but still as wide as Croatia itself
+  // reaches (e.g. Dubrovnik), which isn't "3-4 hours" and was still
+  // "too much loading" per the follow-up comment. Tied directly to the
+  // real 3h drive-time ring instead (isochrone.ts's own calibrated data,
+  // already used for the map's rings — one source of truth, not a second
+  // guessed radius): the initial view is exactly the ring's real extent,
+  // independent of how far outlying frames in the dataset actually are.
+  const bounds = useMemo(
+    () => computeBounds(ovalOutline(HOME, ZAGREB_DRIVE_RINGS[ZAGREB_DRIVE_RINGS.length - 1])),
+    [],
+  );
   const avgSpeed = useMemo(() => averageSpeedKmh(data), [data]);
 
   const counts = countsByState(data);
