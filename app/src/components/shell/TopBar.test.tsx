@@ -68,6 +68,19 @@ describe("TopBar — never rotates", () => {
   });
 });
 
+// Issue #132: pixel-level analysis of the reporter's screenshot showed
+// the bar's own background stopping ~800px short of the real window
+// edge — an implicit `width: auto` flex row apparently not resolving to
+// its container's full width in whatever transient layout state the
+// screenshot caught. Explicit width removes that ambiguity.
+describe("TopBar — full width (issue #132 defensive fix)", () => {
+  it("sets an explicit width: 100% rather than relying on implicit flex sizing", () => {
+    const { container } = render(<TopBar />);
+    const bar = container.firstElementChild as HTMLElement;
+    expect(bar.getAttribute("style")).toContain("width: 100%");
+  });
+});
+
 describe("TopBar — layout resilience (see plan: 'no overflow at 1440/1024/375px')", () => {
   it("lets the bar wrap as whole groups rather than breaking action order", () => {
     const { container } = render(<TopBar />);
