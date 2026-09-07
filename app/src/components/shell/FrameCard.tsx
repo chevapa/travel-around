@@ -3,8 +3,9 @@ import { Button } from "../core/Button";
 import { IconButton } from "../core/IconButton";
 import { TapeStrip } from "../core/Paper";
 import { Tag } from "../core/Tag";
-import { SEASON_LABEL, type FrameState } from "../../model/frame";
+import { formatDrive, SEASON_LABEL, type FrameState } from "../../model/frame";
 import { fetchWikipediaPhoto } from "../../lib/wikipediaPhoto";
+import { fetchLiveDriveTime } from "../../lib/liveDriveTime";
 
 /**
  * The detail panel for one frame. Order is fixed and deliberate: NAME
@@ -48,6 +49,14 @@ export interface FrameCardProps extends HTMLAttributes<HTMLDivElement> {
   /** e.g. "52 min" — the number people actually decide on, so it gets an ink chip. Rendered as "Drive {driveTime}" (issue 155: a bare duration read as ambiguous). */
   driveTime?: string;
   distance?: string;
+  /**
+   * Issue 146: when set, fetches a real, road-network-aware drive time
+   * (OSRM) once the card opens and swaps it in for `driveTime`/`distance`
+   * once it resolves — the static estimate otherwise shown can be
+   * meaningfully off. On failure/timeout, `driveTime`/`distance` render
+   * exactly as if this had never been passed.
+   */
+  liveRoute?: { originLat: number; originLon: number; destLat: number; destLon: number };
   /** Typical time spent at the place, e.g. "~45 min". */
   stay?: string;
   tags?: string[];
@@ -84,6 +93,7 @@ export function FrameCard({
   warn,
   driveTime,
   distance,
+  liveRoute,
   stay,
   tags = [],
   activeTag,
@@ -123,6 +133,26 @@ export function FrameCard({
     };
   }, [wikiQuery]);
   const resolvedSrc = wikiSrc ?? src;
+
+  // Issue 146: refine the static drive-time estimate with a real,
+  // road-network-aware lookup once the card opens. Same fail-soft
+  // contract as the Wikipedia photo above — a failed/slow/timed-out
+  // lookup just leaves `driveTime`/`distance` showing the static estimate.
+  const [liveDrive, setLiveDrive] = useState<{ minutes: number; km: number } | undefined>(undefined);
+  const { originLat, originLon, destLat, destLon } = liveRoute ?? {};
+  useEffect(() => {
+    setLiveDrive(undefined);
+    if (originLat == null || originLon == null || destLat == null || destLon == null) return;
+    let cancelled = false;
+    fetchLiveDriveTime({ lat: originLat, lon: originLon }, { lat: destLat, lon: destLon }).then((result) => {
+      if (!cancelled) setLiveDrive(result);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [originLat, originLon, destLat, destLon]);
+  const resolvedDriveTime = liveDrive ? formatDrive(liveDrive.minutes) : driveTime;
+  const resolvedDistance = liveDrive ? `${liveDrive.km} km` : distance;
 
   // An unprinted frame with a recognised category (or now, a resolved
   // Wikipedia photo) shows that illustration rather than the hatch
@@ -219,10 +249,10 @@ export function FrameCard({
               cannot understand like 40 minutes for what" — a bare duration
               with no verb read as ambiguous. "Drive" (matching "Stay {stay}"
               below) says what the number actually measures. */}
-          {driveTime ? (
+          {resolvedDriveTime ? (
             <Tag tone="ink">
-              Drive {driveTime}
-              {distance ? " · " + distance : ""}
+              Drive {resolvedDriveTime}
+              {resolvedDistance ? " · " + resolvedDistance : ""}
             </Tag>
           ) : null}
           {stay ? <Tag>Stay {stay}</Tag> : null}
