@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import collage from "../../assets/images/collage.jpeg";
 import collage2 from "../../assets/images/collage2.webp";
 import photoStack from "../../assets/images/photo-stack.jpeg";
@@ -19,6 +19,7 @@ import { MOBILE_SHEET_MAX_HEIGHT_VH, PanelSlot } from "../shell/PanelSlot";
 import { usePanelSlot } from "../shell/panelSlotReducer";
 import { TopBar } from "../shell/TopBar";
 import { buildClusterIndex, getClustersAtZoom, isCluster } from "./clustering";
+import { FilterToast } from "./FilterToast";
 import { FrameStack } from "./FrameStack";
 import { Legend } from "./Legend";
 import { MapBase } from "./MapBase";
@@ -148,6 +149,17 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   // `iso` coexists with `checks`.
   const [countryIso, setCountryIso] = useState<string | null>(null);
   const [seasonIso, setSeasonIso] = useState<string | null>(null);
+  // Issue 109 checklist item 2: "message when filter changed" — a filter
+  // set by a map-level click (Legend, a card's tag/country/season badge)
+  // otherwise changes what's shown with no feedback of its own. Ported
+  // from the live site's showFilterToast (js/filters.js), auto-dismissing
+  // rather than requiring a manual close.
+  const [toast, setToast] = useState<string | null>(null);
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 3500);
+    return () => clearTimeout(timer);
+  }, [toast]);
   const [checks, setChecks] = useState<Record<FrameState, boolean>>({ loved: true, fine: true, unprinted: true });
   const [rolled, setRolled] = useState<string | null>(null);
   const [tagFilter, setTagFilter] = useState<string | null>(null);
@@ -319,6 +331,7 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
     setSeasonIso(null);
     setTagFilter(null);
     setSearch("");
+    setToast(null);
   };
 
   const toggleIndex = () => {
@@ -556,6 +569,12 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                 />
               </div>
 
+              {toast ? (
+                <div style={{ position: "absolute", top: 72, left: "50%", transform: "translateX(-50%)", zIndex: Z_CHROME, pointerEvents: "auto" }}>
+                  <FilterToast message={toast} onReset={resetFilters} />
+                </div>
+              ) : null}
+
               {/* Task 11: "Legend moves above the sheet, stays visible" —
                   on mobile, once the bottom sheet is occupied, it would
                   otherwise sit underneath/behind it. */}
@@ -603,7 +622,15 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                     <span aria-hidden="true">✕</span>
                   </span>
                 ) : null}
-                <Legend counts={counts} active={iso} onToggle={(k) => setIso(iso === k ? null : k)} />
+                <Legend
+                  counts={counts}
+                  active={iso}
+                  onToggle={(k) => {
+                    const next = iso === k ? null : k;
+                    setIso(next);
+                    setToast(next ? `Filtered by "${STATE_LABEL[k]}"` : null);
+                  }}
+                />
                 <Button variant="secondary" size="sm" onClick={() => setViewMode(viewMode === "atlas" ? "sheet" : "atlas")}>
                   {viewMode === "atlas" ? "Contact sheet" : "Back to the atlas"}
                 </Button>
@@ -675,12 +702,30 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                       activeTag={tagFilter}
                       country={openFrame.country}
                       activeCountry={countryIso}
-                      onCountryClick={(c) => setCountryIso((prev) => (prev === c ? null : c))}
+                      onCountryClick={(c) =>
+                        setCountryIso((prev) => {
+                          const next = prev === c ? null : c;
+                          setToast(next ? `Filtered by ${c.toUpperCase()}` : null);
+                          return next;
+                        })
+                      }
                       season={openFrame.season}
                       activeSeason={seasonIso}
-                      onSeasonClick={(s) => setSeasonIso((prev) => (prev === s ? null : s))}
+                      onSeasonClick={(s) =>
+                        setSeasonIso((prev) => {
+                          const next = prev === s ? null : s;
+                          setToast(next ? `Filtered by ${SEASON_LABEL[s] ?? s}` : null);
+                          return next;
+                        })
+                      }
                       searchUrl={`https://www.google.com/search?q=${encodeURIComponent(openFrame.q || openFrame.name)}`}
-                      onTagClick={(tag) => setTagFilter((prev) => (prev === tag ? null : tag))}
+                      onTagClick={(tag) =>
+                        setTagFilter((prev) => {
+                          const next = prev === tag ? null : tag;
+                          setToast(next ? `Filtered by "${tag}"` : null);
+                          return next;
+                        })
+                      }
                       onClose={closeCard}
                       onNearby={() => showSimilar(openFrame)}
                       onToPrint={() => toggleWant(openFrame.id)}

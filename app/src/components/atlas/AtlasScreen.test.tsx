@@ -49,7 +49,7 @@ describe("AtlasScreen — the four required interactions (Task 8 'Done when')", 
     render(<AtlasScreen frames={TEST_FRAMES} />);
     expect(screen.getByText("Krapina")).toBeInTheDocument();
     expect(screen.getByText("Ludbreg")).toBeInTheDocument();
-    await user.click(screen.getByText(/Visited · loved/));
+    await user.click(screen.getByRole("button", { name: /Visited · loved/ }));
     expect(screen.getByText("Krapina")).toBeInTheDocument(); // loved — stays
     expect(screen.queryByText("Ludbreg")).toBeNull(); // fine — isolated away
   });
@@ -57,9 +57,9 @@ describe("AtlasScreen — the four required interactions (Task 8 'Done when')", 
   it("clicking the same legend row again releases the isolation", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText(/Visited · loved/));
+    await user.click(screen.getByRole("button", { name: /Visited · loved/ }));
     expect(screen.queryByText("Ludbreg")).toBeNull();
-    await user.click(screen.getByText(/Visited · loved/));
+    await user.click(screen.getByRole("button", { name: /Visited · loved/ }));
     expect(screen.getByText("Ludbreg")).toBeInTheDocument();
   });
 
@@ -454,6 +454,47 @@ describe("AtlasScreen — country/season filtering from a card (issue 145)", () 
     await user.click(screen.getByLabelText("Close frame"));
     expect(screen.getByText("Alpha")).toBeInTheDocument();
     expect(screen.queryByText("Beta")).toBeNull();
+  });
+});
+
+// Issue 109 checklist item 2: "message when filter changed" — a filter set
+// from a map-level click (Legend row, card badge) previously changed what's
+// shown with no feedback of its own.
+describe("AtlasScreen — filter-change toast (issue 109 checklist)", () => {
+  it("shows a toast naming the state when a Legend row isolates it", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByRole("button", { name: /Visited · loved/ }));
+    expect(screen.getByRole("status")).toHaveTextContent('Filtered by "Visited · loved"');
+  });
+
+  it("clears the toast when the same row releases the isolation", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    const row = screen.getByRole("button", { name: /Visited · loved/ });
+    await user.click(row);
+    await user.click(row);
+    expect(screen.queryByRole("status")).toBeNull();
+  });
+
+  it("shows a toast naming the tag when a card's tag badge filters", async () => {
+    const user = userEvent.setup();
+    const tagged = [{ id: "t1", name: "Alpha", state: "loved" as const, lat: 45.8, lon: 15.9, driveMinutes: 30, distanceKm: 20, tags: ["castle"] }];
+    render(<AtlasScreen frames={tagged} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("castle"));
+    expect(screen.getByRole("status")).toHaveTextContent('Filtered by "castle"');
+  });
+
+  it("the toast's Reset control clears every filter, not just the one that opened it", async () => {
+    const user = userEvent.setup();
+    const tagged = [{ id: "t1", name: "Alpha", state: "loved" as const, lat: 45.8, lon: 15.9, driveMinutes: 30, distanceKm: 20, tags: ["castle"] }];
+    render(<AtlasScreen frames={tagged} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("castle"));
+    await user.click(screen.getByText("Reset"));
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.queryByLabelText("Remove castle filter")).toBeNull();
   });
 });
 
