@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { axe } from "jest-axe";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FrameCard } from "./FrameCard";
+import { _resetWikipediaPhotoCacheForTests } from "../../lib/wikipediaPhoto";
 
 describe("FrameCard — fixed order: name -> print -> description -> drive time -> tags", () => {
   it("renders the name before the print/description/drive-time/tags in document order (MED 06 fix)", () => {
@@ -113,6 +114,70 @@ describe("FrameCard — actions", () => {
     expect(onToPrint).toHaveBeenCalled();
     await user.click(screen.getByText(/Route/));
     expect(onRoute).toHaveBeenCalled();
+  });
+});
+
+// Issue 155: "it's written like 40 minutes on the card, but I cannot
+// understand like 40 minutes for what" — a bare duration read as ambiguous.
+describe("FrameCard — drive time is labelled, not a bare duration (issue 155)", () => {
+  it("prefixes the drive time with 'Drive' so the number reads as a duration by car", () => {
+    render(<FrameCard name="Krapina" driveTime="40 min" distance="38 km" />);
+    expect(screen.getByText("Drive 40 min · 38 km")).toBeInTheDocument();
+    expect(screen.queryByText("40 min · 38 km")).toBeNull();
+  });
+});
+
+// Issue 155: "I saw pictures that are publicly available on Wikipedia...
+// it's not allowed at all so I'm expecting you to fix that."
+describe("FrameCard — real Wikipedia photo (issue 155)", () => {
+  beforeEach(() => {
+    _resetWikipediaPhotoCacheForTests();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("swaps in the resolved Wikipedia photo once it loads, replacing the placeholder src", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ type: "standard", thumbnail: { source: "https://example.com/krapina.jpg" } }),
+      } as Response),
+    );
+    render(<FrameCard name="Krapina" state="loved" src="placeholder.jpg" wikiQuery="Krapina" />);
+    // Placeholder shows first, before the fetch resolves.
+    expect(screen.getByAltText("Krapina")).toHaveAttribute("src", "placeholder.jpg");
+    await waitFor(() => expect(screen.getByAltText("Krapina")).toHaveAttribute("src", "https://example.com/krapina.jpg"));
+  });
+
+  it("keeps the placeholder when the Wikipedia lookup finds nothing", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404, json: async () => ({}) } as Response));
+    render(<FrameCard name="Obscure Place" state="loved" src="placeholder.jpg" wikiQuery="Obscure Place" />);
+    await waitFor(() => expect(vi.mocked(fetch)).toHaveBeenCalled());
+    expect(screen.getByAltText("Obscure Place")).toHaveAttribute("src", "placeholder.jpg");
+  });
+
+  it("shows a resolved Wikipedia photo instead of the hatch placeholder for an unprinted frame with no category art", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ type: "standard", thumbnail: { source: "https://example.com/somewhere.jpg" } }),
+      } as Response),
+    );
+    render(<FrameCard name="Somewhere New" state="unprinted" wikiQuery="Somewhere New" />);
+    expect(screen.getByText(/not visited/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByAltText("Somewhere New")).toHaveAttribute("src", "https://example.com/somewhere.jpg"));
+    expect(screen.queryByText(/not visited/)).toBeNull();
+  });
+
+  it("does not fetch at all when wikiQuery is omitted (a curated photo already exists)", () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    render(<FrameCard name="Krapina" state="loved" src="curated.jpg" />);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 });
 

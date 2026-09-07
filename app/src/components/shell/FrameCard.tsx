@@ -1,9 +1,10 @@
-import type { HTMLAttributes } from "react";
+import { useEffect, useState, type HTMLAttributes } from "react";
 import { Button } from "../core/Button";
 import { IconButton } from "../core/IconButton";
 import { TapeStrip } from "../core/Paper";
 import { Tag } from "../core/Tag";
 import type { FrameState } from "../../model/frame";
+import { fetchWikipediaPhoto } from "../../lib/wikipediaPhoto";
 
 /**
  * The detail panel for one frame. Order is fixed and deliberate: NAME
@@ -39,8 +40,10 @@ export interface FrameCardProps extends HTMLAttributes<HTMLDivElement> {
   name: string;
   state?: FrameState;
   src?: string;
+  /** Issue 155: when set (and no curated `src` exists for real yet — see model/frame.ts's `photo` field), fetches and shows the place's actual Wikipedia photo instead of the generic placeholder, once it resolves. Typically the frame's local-language name (`q`) or its `name`. */
+  wikiQuery?: string;
   description?: string;
-  /** e.g. "52 min" — the number people actually decide on, so it gets an ink chip. */
+  /** e.g. "52 min" — the number people actually decide on, so it gets an ink chip. Rendered as "Drive {driveTime}" (issue 155: a bare duration read as ambiguous). */
   driveTime?: string;
   distance?: string;
   /** Typical time spent at the place, e.g. "~45 min". */
@@ -61,6 +64,7 @@ export function FrameCard({
   name,
   state = "unprinted",
   src,
+  wikiQuery,
   description,
   driveTime,
   distance,
@@ -77,11 +81,31 @@ export function FrameCard({
   ...rest
 }: FrameCardProps) {
   const unprinted = state === "unprinted";
-  // An unprinted frame with a recognised category shows that illustration
-  // rather than the hatch placeholder (issue 122) — `src` is already
-  // resolved to a category image by the caller (AtlasScreen's photoFor)
-  // when one exists, so "unprinted but src is set" is exactly that case.
-  const showPlaceholder = unprinted && !src;
+
+  // Issue 155: prefer a real Wikipedia photo over whatever placeholder
+  // `src` the caller resolved (AtlasScreen's photoFor — a category
+  // illustration, or one of a few generic collage images). Fetched fresh
+  // per open (module-level cache in wikipediaPhoto.ts avoids refetching
+  // the same place across opens); on failure or while still loading, the
+  // placeholder `src` renders exactly as it did before this existed.
+  const [wikiSrc, setWikiSrc] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    setWikiSrc(undefined);
+    if (!wikiQuery) return;
+    let cancelled = false;
+    fetchWikipediaPhoto(wikiQuery).then((url) => {
+      if (!cancelled) setWikiSrc(url);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [wikiQuery]);
+  const resolvedSrc = wikiSrc ?? src;
+
+  // An unprinted frame with a recognised category (or now, a resolved
+  // Wikipedia photo) shows that illustration rather than the hatch
+  // placeholder (issue 122).
+  const showPlaceholder = unprinted && !resolvedSrc;
   return (
     <div
       {...rest}
@@ -144,7 +168,7 @@ export function FrameCard({
         ) : (
           <div style={{ padding: "5px 5px 5px", background: "var(--paper-print)", boxShadow: "var(--lift-print)", flex: "0 0 auto" }}>
             <img
-              src={src}
+              src={resolvedSrc}
               alt={name}
               style={{
                 display: "block",
@@ -158,9 +182,13 @@ export function FrameCard({
         )}
         {description ? <p style={{ margin: 0, font: "var(--body-sm)", color: "var(--text-strong)" }}>{description}</p> : null}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", flex: "0 0 auto" }}>
+          {/* Issue 155: "it's written like 40 minutes on the card, but I
+              cannot understand like 40 minutes for what" — a bare duration
+              with no verb read as ambiguous. "Drive" (matching "Stay {stay}"
+              below) says what the number actually measures. */}
           {driveTime ? (
             <Tag tone="ink">
-              {driveTime}
+              Drive {driveTime}
               {distance ? " · " + distance : ""}
             </Tag>
           ) : null}
