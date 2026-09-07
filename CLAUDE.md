@@ -61,18 +61,45 @@ This only pays off when the task is the right *shape* — see
 
 ### Where to see which tasks are possible via the local LLM right now
 
-- `~/.claude/skills/local-ollama-worker/scripts/` — the actual runnable tools:
+- `~/.claude/skills/local-ollama-worker/scripts/` — the actual runnable tools. This list
+  must stay current — a script that exists but isn't listed here is a script that won't get
+  reached for (see enforcement addendum 3 above; this listing itself fell three scripts
+  behind mid-session once already):
   - `suggest_commit_msg.py` — commit message from a diff
   - `suggest_pr_description.py` — PR title+body from a branch's log/diff
+  - `suggest_issue_comment.py` — draft a GitHub issue-closing/status comment from a summary
+    of what was done (never posts it — caller runs `gh issue comment` by hand)
+  - `commit_push_verify.py` — commits staged changes (via `suggest_commit_msg.py`), pushes,
+    then BLOCKS until GitHub Actions actually finishes on that commit, exiting non-zero on
+    failure/timeout instead of letting the caller merge on a guess. Built after a real
+    incident (PR #148 squash-merged ~13s before its own CI check finished, and the check
+    then failed) — the CI-polling half is plain deterministic scripting, not an Ollama
+    task; only the commit-message half is.
   - `triage_issue.py` — classify a GitHub issue into ui-judgment / data-decision /
     mechanical / non-code (~60-70% agreement with manual triage — a triage aid, not an
     oracle; skim its output, don't just consume it)
-  - `suggest_place_tags.py` — suggest `data/vocab.json` category tags per place, validated
-    against the real vocab (never edits a place file itself)
-  - `summarize_places.py` — "travel taste" overview generated from deterministically
-    aggregated place stats
+  - `check_duplicate_issue.py` — flag likely duplicate GitHub issues against open issues,
+    one local call per candidate (draft text via `--draft-file`, or an existing issue number)
+  - `clarify_issue.py` — rewrite a messy GitHub issue into a clearer, structured task
+    description
+  - `summarize_issue_status.py` — draft a status-update comment for a tracking/epic issue
+  - `summarize_report.py` — draft prose/structure for a document from already-aggregated facts
+  - `summarize_recent_prs.py` — draft a short changelog/status summary from recently merged PRs
+  - `check_branch_overlap.py` — check whether two branches touch the same files vs. a
+    common base, before merging/rebasing either
+  - `apply_issue_topic_label.py` — apply a track label (current-work / future-plans /
+    ollama-tooling) to a GitHub issue
   - `route_command.py` — classify free text into a small fixed command set, then run the
     matching pre-approved command
+  - `suggest_place_tags.py` — suggest `data/vocab.json` category tags per place, validated
+    against the real vocab (never edits a place file itself)
+  - `suggest_warn_extraction.py` — flag places whose `note` field contains warning-shaped
+    text that should be promoted to the `warn` field
+  - `suggest_alt_text.py` — suggest short alt-text captions for images, one local vision call
+  - `summarize_places.py` — "travel taste" overview generated from deterministically
+    aggregated place stats
+  - `ask_ollama.py` — send one raw prompt to a local model and print its response; the
+    building block the other scripts wrap, not usually called directly
   - `agent_pipeline.py` — multi-file spec→code→check pipeline. **Bad fit** (see above) —
     kept only for reference / possible future re-testing, not for routine use.
 - `~/.claude/skills/local-ollama-worker/EXPERIMENT-LOG.md` — the full record of every
