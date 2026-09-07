@@ -1,3 +1,10 @@
+# Note (2026-09-07): PR #148 was squash-merged ~13s before this workflow's
+# own check finished, and the check then failed (a hex-colour lint false
+# positive fixed in PR #150). Fix on the tooling side, not this file:
+# ~/.claude/skills/local-ollama-worker/scripts/commit_push_verify.py now
+# commits+pushes and blocks until `gh api .../check-runs` reports this
+# workflow actually completed, before letting the caller continue to
+# opening/merging a PR.
 name: RISO1 app
 
 on:
