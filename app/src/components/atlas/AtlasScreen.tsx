@@ -12,7 +12,6 @@ import { MOBILE_BREAKPOINT_QUERY, useMediaQuery } from "../../lib/motion";
 import { Button } from "../core/Button";
 import { GrainOverlay } from "../core/GrainOverlay";
 import { IconButton } from "../core/IconButton";
-import { ContactSheet } from "../shell/ContactSheet";
 import { FrameCard } from "../shell/FrameCard";
 import { IndexPanel, type IndexSection } from "../shell/IndexPanel";
 import { NewFrameForm } from "../shell/NewFrameForm";
@@ -150,7 +149,7 @@ export function AtlasScreen({ frames: framesProp, onBackToRecommend, initialOpen
   useEffect(() => {
     if (initialOpenFrameId) slot.openCard(initialOpenFrameId);
   }, []);
-  const [viewMode, setViewMode] = useState<"atlas" | "sheet" | "profile">("atlas");
+  const [viewMode, setViewMode] = useState<"atlas" | "profile">("atlas");
   const [iso, setIso] = useState<FrameState | null>(null);
   // Issue 145: country/season as clickable filter badges on the card,
   // same isolate-toggle pattern the Legend already uses for `iso` above —
@@ -647,12 +646,12 @@ export function AtlasScreen({ frames: framesProp, onBackToRecommend, initialOpen
                 />
                 {viewMode === "atlas" ? (
                   <>
-                    <Button variant="secondary" size="sm" onClick={() => setViewMode("sheet")}>
-                      Contact sheet
-                    </Button>
-                    {/* Issue 142: the profile/stats screen — "how much of
-                        the atlas have I covered", not "what have I
-                        printed" (the Contact Sheet's own question). */}
+                    {/* Issue 156: the Contact Sheet button was removed
+                        entirely per the reporter's explicit "ditch that
+                        button completely" — not fixed in place. An
+                        earlier pass (issue 156, first attempt) wired up
+                        onPick/captions instead of removing it, which was
+                        the wrong read of that request. */}
                     <Button variant="secondary" size="sm" onClick={() => setViewMode("profile")}>
                       Profile
                     </Button>
@@ -774,28 +773,6 @@ export function AtlasScreen({ frames: framesProp, onBackToRecommend, initialOpen
           }}
         </MapBase>
       </div>
-
-      {viewMode === "sheet" ? (
-        <div
-          className="riso-contact-sheet-print"
-          style={{ position: "absolute", left: "50%", top: 96, transform: "translateX(-50%)", width: "min(760px, 88%)", zIndex: Z_CHROME, pointerEvents: "auto" }}
-        >
-          <ContactSheet
-            frames={data.map((f, i) => ({ id: f.id, name: f.name, src: photoFor(f, i), state: f.state, driveMinutes: f.driveMinutes }))}
-            range="2023—2026"
-            onClose={() => setViewMode("atlas")}
-            // Issue 156: "it's not clickable" — onPick was never wired at
-            // all, so tapping a cell did nothing. Uses the frame's real id
-            // (not the sorted-array index ContactSheet also passes back)
-            // so the right card opens no matter the current sort order.
-            onPick={(f) => {
-              if (!f.id) return;
-              setViewMode("atlas");
-              slot.openCard(f.id);
-            }}
-          />
-        </div>
-      ) : null}
 
       {viewMode === "profile" ? (
         <div style={{ position: "absolute", left: "50%", top: 96, transform: "translateX(-50%)", width: "min(420px, 88%)", zIndex: Z_CHROME, pointerEvents: "auto" }}>
