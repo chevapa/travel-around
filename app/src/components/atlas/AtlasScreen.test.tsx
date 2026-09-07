@@ -482,7 +482,27 @@ describe("AtlasScreen — drive-time rings (issue 126)", () => {
 
 // Issue 133: FrameCard's actions were previously unwired no-ops.
 describe("AtlasScreen — FrameCard actions actually do something (issue 133)", () => {
-  it("Similar places filters the map to frames sharing the open frame's first tag", async () => {
+  // Issue 154: on mobile, a silent filter with nothing guaranteed visible
+  // read as a no-op — "just gets me back to the map and doesn't open any
+  // similar places." Similar places now flies to and opens the nearest
+  // actual match, same treatment as search-select/"To Print".
+  it("Similar places filters the map to frames sharing the open frame's first tag, and opens the nearest match", async () => {
+    const user = userEvent.setup();
+    const tagged = [
+      { id: "t1", name: "Alpha", state: "loved" as const, lat: 45.8, lon: 15.9, driveMinutes: 30, distanceKm: 20, tags: ["castle"] },
+      { id: "t2", name: "Beta", state: "loved" as const, lat: 45.9, lon: 16.0, driveMinutes: 35, distanceKm: 25, tags: ["castle"] },
+      { id: "t3", name: "Gamma", state: "loved" as const, lat: 48.5, lon: 20.5, driveMinutes: 50, distanceKm: 40, tags: ["beach"] },
+    ];
+    render(<AtlasScreen frames={tagged} />);
+    await user.click(screen.getByText("Alpha"));
+    await user.click(screen.getByText("Similar places →"));
+    // Beta is the only other frame sharing "castle" — its card opens.
+    expect(screen.getByRole("heading", { name: "Beta" })).toBeInTheDocument();
+    // Gamma (a different tag) is filtered off the map.
+    expect(screen.queryByText("Gamma")).toBeNull();
+  });
+
+  it("Similar places just closes the card, leaving the filter untouched, when nothing else shares the tag", async () => {
     const user = userEvent.setup();
     const tagged = [
       { id: "t1", name: "Alpha", state: "loved" as const, lat: 45.8, lon: 15.9, driveMinutes: 30, distanceKm: 20, tags: ["castle"] },
@@ -491,8 +511,8 @@ describe("AtlasScreen — FrameCard actions actually do something (issue 133)", 
     render(<AtlasScreen frames={tagged} />);
     await user.click(screen.getByText("Alpha"));
     await user.click(screen.getByText("Similar places →"));
-    expect(screen.getByText("Alpha")).toBeInTheDocument();
-    expect(screen.queryByText("Gamma")).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Alpha" })).toBeNull(); // card closed
+    expect(screen.getByText("Gamma")).toBeInTheDocument(); // no dead-end filter applied
   });
 
   it("Want to go marks the frame with a star on the map", async () => {

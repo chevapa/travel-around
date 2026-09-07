@@ -273,15 +273,6 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
     setRolled(null);
   };
 
-  // Issue 133 ("Same roll... doesn't work"), renamed "Similar places" —
-  // filters the map to other frames sharing this one's primary category,
-  // reusing the same tag-filter mechanism issue 128 wires on the card's
-  // own tags, so "similar" means something concrete and visible.
-  const showSimilar = (frame: Frame) => {
-    setTagFilter(frame.tags[0] ?? null);
-    slot.close();
-  };
-
   const toggleWant = (id: string) => {
     setWantSet((prev) => {
       const next = new Set(prev);
@@ -351,6 +342,35 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
             slot.openCard(f.id);
             setViewMode("atlas");
             setSearch("");
+          };
+
+          // Issue 133 ("Same roll... doesn't work") first renamed this
+          // "Similar places", filtering the map to other frames sharing
+          // the card's primary category. Issue 154: on mobile that read as
+          // a no-op — "it's just get me back to the map and doesn't open
+          // any similar places" — because a silent filter with no
+          // guaranteed-visible result is indistinguishable from doing
+          // nothing (same failure shape as issue 159's search field).
+          // Now flies to and opens the nearest actual match, same
+          // treatment as "To Print" and search-select above; with no
+          // match at all, it leaves the filter untouched rather than
+          // applying one that hides every remaining pin.
+          const showSimilar = (frame: Frame) => {
+            const tag = frame.tags[0] ?? null;
+            if (!tag) {
+              slot.close();
+              return;
+            }
+            const candidates = data.filter((f) => f.id !== frame.id && f.tags.includes(tag));
+            if (candidates.length === 0) {
+              slot.close();
+              return;
+            }
+            const nearest = candidates.reduce((best, f) => (f.driveMinutes < best.driveMinutes ? f : best));
+            setTagFilter(tag);
+            map.flyTo({ lat: nearest.lat, lon: nearest.lon }, 14);
+            slot.openCard(nearest.id);
+            setViewMode("atlas");
           };
 
           // Issue 126: real, directionally-calibrated drive-time rings
