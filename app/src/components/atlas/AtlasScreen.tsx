@@ -667,6 +667,10 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                       warn={openFrame.warn}
                       driveTime={formatDrive(openFrame.driveMinutes)}
                       distance={`${openFrame.distanceKm} km`}
+                      // Issue 146: refine the static estimate above with a
+                      // real, road-network-aware lookup (OSRM) once the
+                      // card is open.
+                      liveRoute={{ originLat: HOME.lat, originLon: HOME.lon, destLat: openFrame.lat, destLon: openFrame.lon }}
                       tags={openFrame.tags}
                       activeTag={tagFilter}
                       country={openFrame.country}

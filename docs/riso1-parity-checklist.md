@@ -42,7 +42,7 @@ Anything marked "manual" has no automated test yet.
 | "check before you go" warning line | `js/map.js` (`place.warn`) | `FrameCard`'s warn block | ✅ done (issue 144) |
 | Name links out to a Google search | `js/map.js` (`searchUrl`, title link) | `FrameCard`'s name link (`searchUrl` prop) | ✅ done (issue 109 checklist) |
 | "Draw route" link to Google Maps | `js/map.js` (`routeUrl`) | `FrameCard`'s Route button | ✅ done (issue 109 checklist, issue 133) |
-| Live drive-time lookup (real routing API) | `js/map.js` (`fetchDriveTime`, OSRM) | Only the migrated static estimate; no live lookup | ❌ not ported — issue #146 |
+| Live drive-time lookup (real routing API) | `js/map.js` (`fetchDriveTime`, OSRM) | `lib/liveDriveTime.ts` (same OSRM provider) refines `FrameCard`'s drive-time chip once the card opens | ✅ done (issue 146) |
 | "★ want to return" marker | `js/map.js` (`pin-badge`, `star-mark`) | `FrameCard`'s "★ Want to go" button, reflected as a star on the map pin | ✅ done, renamed for clarity (issue 133, issue 127) |
 | Terra Incognita popup variant for far-away places | `js/map.js` (`isTerraIncognita`) | — | ❌ not ported |
 | Explore nearby/similar places | (no direct equivalent) | `FrameCard`'s "Similar places" button (filters by shared tag) | ✅ new in RISO1 |

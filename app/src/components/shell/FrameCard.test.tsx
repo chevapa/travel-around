@@ -5,6 +5,7 @@ import { axe } from "jest-axe";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FrameCard } from "./FrameCard";
 import { _resetWikipediaPhotoCacheForTests } from "../../lib/wikipediaPhoto";
+import { _resetLiveDriveTimeCacheForTests } from "../../lib/liveDriveTime";
 
 describe("FrameCard — fixed order: name -> print -> description -> drive time -> tags", () => {
   it("renders the name before the print/description/drive-time/tags in document order (MED 06 fix)", () => {
@@ -159,6 +160,55 @@ describe("FrameCard — drive time is labelled, not a bare duration (issue 155)"
     render(<FrameCard name="Krapina" driveTime="40 min" distance="38 km" />);
     expect(screen.getByText("Drive 40 min · 38 km")).toBeInTheDocument();
     expect(screen.queryByText("40 min · 38 km")).toBeNull();
+  });
+});
+
+// Issue 146: "RISO1 only ever shows the static estimate... no live lookup."
+describe("FrameCard — live drive-time lookup (issue 146)", () => {
+  beforeEach(() => {
+    _resetLiveDriveTimeCacheForTests();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("swaps in the live OSRM-derived drive time once it resolves, replacing the static estimate", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true, json: async () => ({ routes: [{ duration: 2520, distance: 41200 }] }) } as Response),
+    );
+    render(
+      <FrameCard
+        name="Krapina"
+        driveTime="40 min"
+        distance="38 km"
+        liveRoute={{ originLat: 45.815, originLon: 15.9819, destLat: 46.16, destLon: 15.87 }}
+      />,
+    );
+    expect(screen.getByText("Drive 40 min · 38 km")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText("Drive 42 min · 41 km")).toBeInTheDocument());
+  });
+
+  it("keeps the static estimate when the live lookup fails", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network down")));
+    render(
+      <FrameCard
+        name="Krapina"
+        driveTime="40 min"
+        distance="38 km"
+        liveRoute={{ originLat: 45.815, originLon: 15.9819, destLat: 46.16, destLon: 15.87 }}
+      />,
+    );
+    await waitFor(() => expect(vi.mocked(fetch)).toHaveBeenCalled());
+    expect(screen.getByText("Drive 40 min · 38 km")).toBeInTheDocument();
+  });
+
+  it("does not fetch at all when liveRoute is omitted", () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    render(<FrameCard name="Krapina" driveTime="40 min" distance="38 km" />);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 });
 
