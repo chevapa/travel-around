@@ -7,6 +7,7 @@ import { categoryImageFor } from "../../lib/categoryImages";
 import { countsByState, formatDrive, formatMeta, SEASON_LABEL, SOURCE_TYPE_LABEL, STATE_LABEL, type Frame, type FrameState } from "../../model/frame";
 import { averageSpeedKmh, destPoint, ovalOutline, ZAGREB_DRIVE_RINGS } from "./isochrone";
 import { haversineKm, HOME } from "../../model/migrate";
+import { computeExplorationStats } from "../../model/stats";
 import { MOBILE_BREAKPOINT_QUERY, useMediaQuery } from "../../lib/motion";
 import { Button } from "../core/Button";
 import { GrainOverlay } from "../core/GrainOverlay";
@@ -17,6 +18,7 @@ import { IndexPanel, type IndexSection } from "../shell/IndexPanel";
 import { NewFrameForm } from "../shell/NewFrameForm";
 import { MOBILE_SHEET_MAX_HEIGHT_VH, PanelSlot } from "../shell/PanelSlot";
 import { usePanelSlot } from "../shell/panelSlotReducer";
+import { ProfileScreen } from "../shell/ProfileScreen";
 import { TopBar } from "../shell/TopBar";
 import { buildClusterIndex, getClustersAtZoom, isCluster } from "./clustering";
 import { FilterToast } from "./FilterToast";
@@ -140,7 +142,7 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   const [extraFrames, setExtraFrames] = useState<Frame[]>([]);
   const data = useMemo(() => [...baseFrames, ...extraFrames], [baseFrames, extraFrames]);
   const slot = usePanelSlot();
-  const [viewMode, setViewMode] = useState<"atlas" | "sheet">("atlas");
+  const [viewMode, setViewMode] = useState<"atlas" | "sheet" | "profile">("atlas");
   const [iso, setIso] = useState<FrameState | null>(null);
   // Issue 145: country/season as clickable filter badges on the card,
   // same isolate-toggle pattern the Legend already uses for `iso` above —
@@ -216,6 +218,10 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
   const avgSpeed = useMemo(() => averageSpeedKmh(data), [data]);
 
   const counts = countsByState(data);
+  // Issue 142: same "always recomputed from the actual frame data, never
+  // a separate stored state" principle as `counts` above — see
+  // model/stats.ts's own docstring.
+  const stats = useMemo(() => computeExplorationStats(data), [data]);
   const trimmedQuery = search.trim().toLowerCase();
   // Memoized on the actual filter criteria, not recomputed on every pan/
   // zoom tick — issue 130 ("when showing many cards the browser is
@@ -631,9 +637,23 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                     setToast(next ? `Filtered by "${STATE_LABEL[k]}"` : null);
                   }}
                 />
-                <Button variant="secondary" size="sm" onClick={() => setViewMode(viewMode === "atlas" ? "sheet" : "atlas")}>
-                  {viewMode === "atlas" ? "Contact sheet" : "Back to the atlas"}
-                </Button>
+                {viewMode === "atlas" ? (
+                  <>
+                    <Button variant="secondary" size="sm" onClick={() => setViewMode("sheet")}>
+                      Contact sheet
+                    </Button>
+                    {/* Issue 142: the profile/stats screen — "how much of
+                        the atlas have I covered", not "what have I
+                        printed" (the Contact Sheet's own question). */}
+                    <Button variant="secondary" size="sm" onClick={() => setViewMode("profile")}>
+                      Profile
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="secondary" size="sm" onClick={() => setViewMode("atlas")}>
+                    Back to the atlas
+                  </Button>
+                )}
               </div>
 
               {/* Issue 124: turning every filter off (State rows, tag,
@@ -761,6 +781,12 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
               slot.openCard(f.id);
             }}
           />
+        </div>
+      ) : null}
+
+      {viewMode === "profile" ? (
+        <div style={{ position: "absolute", left: "50%", top: 96, transform: "translateX(-50%)", width: "min(420px, 88%)", zIndex: Z_CHROME, pointerEvents: "auto" }}>
+          <ProfileScreen stats={stats} onClose={() => setViewMode("atlas")} />
         </div>
       ) : null}
 

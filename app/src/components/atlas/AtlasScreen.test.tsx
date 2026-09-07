@@ -253,6 +253,30 @@ describe("AtlasScreen — structure", () => {
   });
 });
 
+// Issue 142: the profile/stats screen — "how much of the atlas have I
+// covered", ported from the live site's js/stats.js.
+describe("AtlasScreen — Profile screen (issue 142)", () => {
+  it("toggles to the profile view and back", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    await user.click(screen.getByText("Profile"));
+    // TEST_FRAMES: 1 loved, 1 fine, 2 unprinted -> 2/4 explored = 50%
+    // (all four also share no country, so the country-breakdown row
+    // happens to show the same 50% — the headline's own <p> disambiguates).
+    expect(screen.getByText("50%", { selector: "p" })).toBeInTheDocument();
+    await user.click(screen.getByText("Back to the atlas"));
+    expect(screen.queryByText("50%", { selector: "p" })).toBeNull();
+  });
+
+  it("reflects the current frame data, not a stale snapshot", async () => {
+    const user = userEvent.setup();
+    const allUnprinted = TEST_FRAMES.map((f) => ({ ...f, state: "unprinted" as const }));
+    render(<AtlasScreen frames={allUnprinted} />);
+    await user.click(screen.getByText("Profile"));
+    expect(screen.getByText("0%", { selector: "p" })).toBeInTheDocument();
+  });
+});
+
 // Task 11: "The Contact Sheet should print cleanly to PDF." Real
 // pagination/clipping is verified against real headless Chromium
 // (emulateMedia('print') + a generated PDF, in the session) — this just
