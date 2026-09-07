@@ -53,6 +53,10 @@ export interface MapView {
   flyTo: (point: { lat: number; lon: number }, zoom?: number) => void;
   /** The real lat/lon currently at the centre of the viewport — used as a fallback location for New Frame when it's started from TopBar's button rather than a map long-press. */
   center: { lat: number; lon: number };
+  /** Issue 157: "no home button... hard to go back to the home location" —
+   * animated re-fit to a given extent, reusing the same fitBounds call the
+   * map does once on load, so "home" always means the exact same extent. */
+  fitBounds: (bounds: GeoBounds) => void;
 }
 
 export interface MapBaseProps {
@@ -142,6 +146,14 @@ export function MapBase({ initialBounds, styleUrl = DEFAULT_STYLE_URL, onLongPre
     zoomIn: () => mapRef.current?.zoomIn(),
     zoomOut: () => mapRef.current?.zoomOut(),
     flyTo: (point, zoom) => mapRef.current?.flyTo({ center: [point.lon, point.lat], zoom }),
+    fitBounds: (bounds) =>
+      mapRef.current?.fitBounds(
+        [
+          [bounds.minLon, bounds.minLat],
+          [bounds.maxLon, bounds.maxLat],
+        ],
+        { padding: 40 },
+      ),
     center: (() => {
       const c = mapRef.current?.getCenter();
       return c ? { lat: c.lat, lon: c.lng } : { lat: 0, lon: 0 };
