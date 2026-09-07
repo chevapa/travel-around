@@ -49,23 +49,30 @@ Anything marked "manual" has no automated test yet.
 
 ## 3. Recommendation / swipe screen
 
-**This is the single biggest gap.** The live site has a full swipe-based
-recommendation flow (`js/recommend.js`): a stack of cards, drag-to-commit
-in three directions (like / skip / save-for-later), plus explicit
-like/skip/save buttons as a non-drag fallback, and an onboarding pass for a
-new user with no history yet. This is also the app's *first* screen per
-`CLAUDE.md`'s product brief ("Where should I go?" → one recommendation →
-swipe) — RISO1 currently has no equivalent screen at all; only The Atlas
-(map) and The Contact Sheet exist. Porting this is a separate, sizeable
-task (its own screen, its own state, a recommendation-scoring model to
-carry over from `js/recommendationEngine.js`) — out of scope for the bug
--fix pass this checklist came out of, filed as its own task: issue #141.
+`RecommendScreen.tsx` + `model/recommendation.ts` — the app's default
+landing screen now (`App.tsx`), per `CLAUDE.md`'s product brief ("Where
+should I go?" → one recommendation → swipe). Explicit like/skip/save
+buttons, real scoring ported from `js/recommendationEngine.js` (see that
+module's own docstring for the two deliberate differences: no persisted
+interaction log yet, no weather). Two pieces of the live site's version
+are still open, not silently dropped:
+
+- **Drag-to-commit.** The live site supports dragging a card in three
+  directions as well as tapping the buttons; RISO1 only has the buttons
+  so far — real gesture-physics work (velocity thresholds, rotation,
+  multi-touch), scoped as its own follow-up rather than rushed in
+  alongside the scoring engine.
+- **First-time onboarding.** The live site shows an onboarding pass for a
+  user with zero history. This app ships with one fixed, already-lived-in
+  dataset (31 loved, 11 fine, 74 unprinted) — there's no "brand new user"
+  state to trigger it against — and onboarding itself is issue #59's own
+  open design question, not decided here.
 
 | Behaviour | Old site (file) | RISO1 | Status |
 |---|---|---|---|
-| Swipeable recommendation card (like/skip/save, drag + buttons) | `js/recommend.js` | — | ❌ not started — issue #141 |
-| Recommendation scoring (context, history, preferences) | `js/recommendationEngine.js` | — | ❌ not started — issue #141 |
-| First-time onboarding (no history yet) | `js/recommend.js` (`onboarding cards`) | — | ❌ not started — issue #141 |
+| Swipeable recommendation card (like/skip/save, drag + buttons) | `js/recommend.js` | `RecommendScreen.tsx` — buttons only, no drag yet | ⚠️ partial (issue 141) |
+| Recommendation scoring (context, history, preferences) | `js/recommendationEngine.js` | `model/recommendation.ts` — no persisted interaction log or weather yet, see its docstring | ✅ done (issue 141) |
+| First-time onboarding (no history yet) | `js/recommend.js` (`onboarding cards`) | — | ❌ not started — issue #59 |
 
 ## 4. Person / profile page
 
