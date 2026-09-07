@@ -133,9 +133,11 @@ export interface AtlasScreenProps {
   frames?: Frame[];
   /** Issue 141: CLAUDE.md §7 — "on the map, the user can open a specific place and go back to the recommendations." Omit to hide the nav control (e.g. when Atlas is the only screen, as in older tests/stories). */
   onBackToRecommend?: () => void;
+  /** Issue 59: opens this frame's card once, on mount — the payoff for onboarding's "Let's go →". A one-shot value: only the id present at first render is used, later prop changes are ignored (the caller is expected to clear it once this screen mounts, so a later re-entry doesn't force the same card open again). */
+  initialOpenFrameId?: string;
 }
 
-export function AtlasScreen({ frames: framesProp, onBackToRecommend }: AtlasScreenProps) {
+export function AtlasScreen({ frames: framesProp, onBackToRecommend, initialOpenFrameId }: AtlasScreenProps) {
   const baseFrames = framesProp ?? frames;
   // Task 10: frames added via the New Frame flow live only in this
   // session's state — there's no write API in this static site (the
@@ -144,6 +146,10 @@ export function AtlasScreen({ frames: framesProp, onBackToRecommend }: AtlasScre
   const [extraFrames, setExtraFrames] = useState<Frame[]>([]);
   const data = useMemo(() => [...baseFrames, ...extraFrames], [baseFrames, extraFrames]);
   const slot = usePanelSlot();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot by design, see the prop's own doc comment
+  useEffect(() => {
+    if (initialOpenFrameId) slot.openCard(initialOpenFrameId);
+  }, []);
   const [viewMode, setViewMode] = useState<"atlas" | "sheet" | "profile">("atlas");
   const [iso, setIso] = useState<FrameState | null>(null);
   // Issue 145: country/season as clickable filter badges on the card,
