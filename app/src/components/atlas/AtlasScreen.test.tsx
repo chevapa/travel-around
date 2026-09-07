@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import type { Frame } from "../../model/frame";
 import { AtlasScreen } from "./AtlasScreen";
 
@@ -504,5 +504,37 @@ describe("AtlasScreen — FrameCard actions actually do something (issue 133)", 
     await user.click(screen.getByText("Unstarred"));
     await user.click(screen.getByText(/Want to go/));
     expect(screen.getByText("★")).toBeInTheDocument();
+  });
+});
+
+// Issue 153: "as a map... are too big they just don't fit in the mobile
+// screen... I just see like huge [prints]" — prints were never scaled down
+// for the mobile viewport, unlike the rest of the chrome.
+describe("AtlasScreen — smaller print pins on mobile (issue 153)", () => {
+  afterEach(() => {
+    // @ts-expect-error -- test-only cleanup
+    delete window.matchMedia;
+  });
+
+  function mockMobile(isMobile: boolean) {
+    window.matchMedia = ((query: string) => ({
+      matches: isMobile,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })) as unknown as typeof window.matchMedia;
+  }
+
+  it("renders a smaller print on mobile than on desktop, at the same zoom", () => {
+    mockMobile(false);
+    const { container: desktop } = render(<AtlasScreen frames={[TEST_FRAMES[0]]} />);
+    const desktopWidth = Number((desktop.querySelector('img[alt="Krapina"]') as HTMLImageElement).style.width.replace("px", ""));
+
+    mockMobile(true);
+    const { container: mobile } = render(<AtlasScreen frames={[TEST_FRAMES[0]]} />);
+    const mobileWidth = Number((mobile.querySelector('img[alt="Krapina"]') as HTMLImageElement).style.width.replace("px", ""));
+
+    expect(mobileWidth).toBeGreaterThan(0);
+    expect(mobileWidth).toBeLessThan(desktopWidth);
   });
 });

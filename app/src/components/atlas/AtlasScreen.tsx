@@ -104,6 +104,17 @@ function scaleForZoom(zoom: number): number {
 }
 
 /**
+ * Issue 153: "as a map... are too big they just don't fit in the mobile
+ * screen... I just see like huge [prints]." The desktop-sized print (84px
+ * base) was never scaled down for the mobile viewport, unlike every other
+ * piece of chrome. Komoot-style small pins that still carry a name line
+ * (the reporter's own reference) is the target — 0.6 keeps a full-zoom
+ * print's caption readable (still comfortably above Print.tsx's 28px
+ * PRINT_MIN collapse threshold) while meaningfully shrinking the footprint.
+ */
+const MOBILE_PRINT_SCALE = 0.6;
+
+/**
  * Issue 123: the live site's default filter is Croatia only
  * (js/filters.js's `DEFAULT_COUNTRIES = ['hr']`) — this app showed every
  * country at once. Only applied when the dataset actually spans more than
@@ -395,9 +406,16 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                     if (isCluster(feature)) {
                       const { cluster_id: clusterId, point_count: count } = feature.properties;
                       const { tilt } = derivePrintTransform(`cluster-${clusterId}`);
+                      const clusterScale = isMobile ? MOBILE_PRINT_SCALE : 1;
                       return (
                         <div key={`cluster-${clusterId}`} style={{ position: "absolute", left: p.x, top: p.y, transform: "translate(-50%,-50%)", zIndex: Z_PRINT, pointerEvents: "auto" }}>
-                          <FrameStack count={count} tilt={tilt} onClick={() => map.flyTo({ lat, lon }, clusterIndex.getClusterExpansionZoom(clusterId))} />
+                          <FrameStack
+                            count={count}
+                            tilt={tilt}
+                            width={Math.round(58 * clusterScale)}
+                            height={Math.round(46 * clusterScale)}
+                            onClick={() => map.flyTo({ lat, lon }, clusterIndex.getClusterExpansionZoom(clusterId))}
+                          />
                         </div>
                       );
                     }
@@ -406,8 +424,9 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                     if (!f) return null;
                     const i = data.indexOf(f);
                     const { edge, tilt } = derivePrintTransform(f.id);
-                    const baseWidth = f.state === "unprinted" ? 56 : 84;
-                    const baseHeight = f.state === "unprinted" ? 42 : 62;
+                    const mobileScale = isMobile ? MOBILE_PRINT_SCALE : 1;
+                    const baseWidth = (f.state === "unprinted" ? 56 : 84) * mobileScale;
+                    const baseHeight = (f.state === "unprinted" ? 42 : 62) * mobileScale;
                     return (
                       <div
                         key={f.id}
