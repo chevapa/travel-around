@@ -599,6 +599,12 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                       name={openFrame.name}
                       state={openFrame.state}
                       src={photoFor(openFrame, data.indexOf(openFrame))}
+                      // Issue 155: try a real Wikipedia photo whenever
+                      // there's no curated one yet (frame.photo — see its
+                      // own comment in model/frame.ts) rather than always
+                      // falling back to the generic category/placeholder
+                      // art photoFor() resolves above.
+                      wikiQuery={openFrame.photo ? undefined : openFrame.q || openFrame.name}
                       description={openFrame.description}
                       driveTime={formatDrive(openFrame.driveMinutes)}
                       distance={`${openFrame.distanceKm} km`}
