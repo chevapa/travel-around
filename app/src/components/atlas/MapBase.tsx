@@ -25,17 +25,22 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibreWorkerUrl from "../../vendor/maplibre-gl-worker.bundled.mjs?url";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { attachLongPress } from "../../lib/longPress";
-import { restyleToRiso } from "../../lib/mapStyle";
 import type { GeoBounds } from "./projection";
 
 setWorkerUrl(maplibreWorkerUrl);
 
 /**
- * The real, restyled basemap — resolves the tile-provider question that
- * had been open on epic #84 since the epic began. Real pan/zoom, real
- * coastlines and roads, restyled to RISO1's palette (see lib/mapStyle.ts)
- * rather than shipping any tile provider's default look, per Task 5's
- * conditional instruction.
+ * The real basemap — resolves the tile-provider question that had been
+ * open on epic #84 since the epic began. Real pan/zoom, real coastlines
+ * and roads.
+ *
+ * Issue 158: this used to be repainted to RISO1's cream/greige palette on
+ * load (Task 5's conditional instruction, `lib/mapStyle.ts`'s
+ * `restyleToRiso`) — reported back as "over-engineered... really hard to
+ * read", with a standard-looking map (the reporter's own komoot
+ * reference) asked for instead. That restyle call, and `lib/mapStyle.ts`
+ * itself, are gone; this now renders the provider's own "liberty" style
+ * completely unmodified.
  *
  * Provider: OpenFreeMap's "liberty" style — free, no API key, no rate
  * limit (https://openfreemap.org). MapLibre GL JS itself is BSD-3-Clause.
@@ -115,7 +120,7 @@ export function MapBase({ initialBounds, styleUrl = DEFAULT_STYLE_URL, onLongPre
         ],
         { padding: 40, animate: false },
       );
-      restyleToRiso(map);
+      // Issue 158: no restyle — see this file's own top-of-file comment.
       setReady(true);
     });
 
