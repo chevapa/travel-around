@@ -71,7 +71,7 @@ carry over from `js/recommendationEngine.js`) — out of scope for the bug
 
 | Behaviour | Old site (file) | RISO1 | Status |
 |---|---|---|---|
-| Visited/discovered place counts, stats | `js/stats.js`, `js/statsEngine.js`, `js/profile.js` | The Contact Sheet covers "what have I printed" but there's no dedicated profile/stats screen | ❌ not ported — issue #142 |
+| Visited/discovered place counts, stats | `js/stats.js`, `js/statsEngine.js`, `js/profile.js` | `ProfileScreen.tsx` + `model/stats.ts` (`computeExplorationStats`) — exploration percent, state counts, country breakdown | ✅ done (issue 142). `js/profile.js`'s characteristic/season affinity scoring isn't ported — needs a real interaction log (issue #141), not built here yet. |
 
 ## 5. Performance
 
