@@ -89,6 +89,21 @@ export function TopBar({
     <div
       {...rest}
       style={{
+        // Issue #132 ("new frame is broken... spawning in the middle of the
+        // page"): pixel-level analysis of the reporter's own screenshot
+        // showed the TopBar's own background stopped ~800px short of the
+        // true window edge while a full-width border above it did not —
+        // the flex row's implicit `width: auto` wasn't resolving to its
+        // container's full width in whatever transient layout state the
+        // screenshot caught (plausibly the pre-#135 chrome-gated-on-`ready`
+        // architecture, which mounted this whole subtree synchronously
+        // inside the same handler that kicks off fitBounds()'s burst of
+        // resize events — already removed, but not provably the cause).
+        // Explicit width removes the ambiguity either way: this row is
+        // exactly as wide as its positioned ancestor, never a computed
+        // guess that could resolve against a stale/zero intermediate value.
+        width: "100%",
+        boxSizing: "border-box",
         background: "var(--paper-2)",
         borderBottom: "var(--stroke-heavy)",
         padding: "var(--pad-bar)",
