@@ -94,4 +94,23 @@ describe("migratePlace", () => {
     const { frame } = migratePlace(rawPlace({ cats: undefined }));
     expect(frame.tags).toEqual([]);
   });
+
+  // Issue 143: mirrors js/places.js's sourceKey() — explicit "journal" wins,
+  // everything else defaults to "research".
+  describe("sourceType (mirrors js/places.js's sourceKey())", () => {
+    it("maps src: journal -> sourceType: journal", () => {
+      const { frame } = migratePlace(rawPlace({ src: "journal" }));
+      expect(frame.sourceType).toBe("journal");
+    });
+
+    it("maps src: research -> sourceType: research", () => {
+      const { frame } = migratePlace(rawPlace({ src: "research" }));
+      expect(frame.sourceType).toBe("research");
+    });
+
+    it("defaults to research when src is absent, matching the live site's own default", () => {
+      const { frame } = migratePlace(rawPlace({ src: undefined }));
+      expect(frame.sourceType).toBe("research");
+    });
+  });
 });

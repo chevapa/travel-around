@@ -471,6 +471,51 @@ describe("AtlasScreen — default country filter (issue 123)", () => {
   });
 });
 
+// Issue 143: "add season and source filters to the Index panel" — ported
+// from js/filters.js, following the same tab/row pattern as Country above.
+describe("AtlasScreen — Season and Source filters (issue 143)", () => {
+  const SEASON_SOURCE_FRAMES: Frame[] = [
+    { id: "s1", name: "Summer Place", state: "loved", lat: 45.8, lon: 15.9, driveMinutes: 10, distanceKm: 5, tags: [], season: "summer", sourceType: "journal" },
+    { id: "s2", name: "Warm Place", state: "loved", lat: 45.9, lon: 16.0, driveMinutes: 20, distanceKm: 10, tags: [], season: "warm", sourceType: "research" },
+  ];
+
+  it("adds Season and Source tabs to the Index panel", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={SEASON_SOURCE_FRAMES} />);
+    await user.click(screen.getByText("Filters"));
+    expect(screen.getByText("Season")).toBeInTheDocument();
+    expect(screen.getByText("Source")).toBeInTheDocument();
+  });
+
+  it("filters the map from the Season tab", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={SEASON_SOURCE_FRAMES} />);
+    await user.click(screen.getByText("Filters"));
+    await user.click(screen.getByText("Season"));
+    await user.click(screen.getByLabelText("Summer / swimming")); // uncheck it
+    await user.click(screen.getByText("Filters")); // close the panel
+    expect(screen.queryByText("Summer Place")).toBeNull();
+    expect(screen.getByText("Warm Place")).toBeInTheDocument();
+  });
+
+  it("filters the map from the Source tab", async () => {
+    const user = userEvent.setup();
+    render(<AtlasScreen frames={SEASON_SOURCE_FRAMES} />);
+    await user.click(screen.getByText("Filters"));
+    await user.click(screen.getByText("Source"));
+    await user.click(screen.getByLabelText("My travel journal")); // uncheck it
+    await user.click(screen.getByText("Filters"));
+    expect(screen.queryByText("Summer Place")).toBeNull(); // journal
+    expect(screen.getByText("Warm Place")).toBeInTheDocument(); // research
+  });
+
+  it("does not add Season/Source tabs when no frame in the dataset carries that field", () => {
+    render(<AtlasScreen frames={TEST_FRAMES} />);
+    expect(screen.queryByText("Season")).toBeNull();
+    expect(screen.queryByText("Source")).toBeNull();
+  });
+});
+
 // Issue 126: "the circles are wrong completely, there are only 2 and should be 3."
 describe("AtlasScreen — drive-time rings (issue 126)", () => {
   it("draws all three calibrated rings (1h/2h/3h), not two", () => {
