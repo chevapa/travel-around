@@ -181,6 +181,20 @@ describe("FrameCard — real Wikipedia photo (issue 155)", () => {
   });
 });
 
+// Issue 144: Frame.warn existed in the model but the card never rendered it.
+describe("FrameCard — 'check before you go' warning (issue 144)", () => {
+  it("shows the warn text, labelled, when set", () => {
+    render(<FrameCard name="Vukovar" warn="Reconstruction ongoing; closed Mondays." />);
+    expect(screen.getByText("Check before you go")).toBeInTheDocument();
+    expect(screen.getByText("Reconstruction ongoing; closed Mondays.")).toBeInTheDocument();
+  });
+
+  it("renders nothing extra when warn is unset", () => {
+    render(<FrameCard name="Vukovar" />);
+    expect(screen.queryByText("Check before you go")).toBeNull();
+  });
+});
+
 describe("FrameCard — accessibility", () => {
   it("has no axe violations", async () => {
     const { container } = render(

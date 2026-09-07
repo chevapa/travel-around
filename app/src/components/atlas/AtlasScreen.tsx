@@ -606,6 +606,7 @@ export function AtlasScreen({ frames: framesProp }: AtlasScreenProps) {
                       // art photoFor() resolves above.
                       wikiQuery={openFrame.photo ? undefined : openFrame.q || openFrame.name}
                       description={openFrame.description}
+                      warn={openFrame.warn}
                       driveTime={formatDrive(openFrame.driveMinutes)}
                       distance={`${openFrame.distanceKm} km`}
                       tags={openFrame.tags}

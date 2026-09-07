@@ -43,6 +43,8 @@ export interface FrameCardProps extends HTMLAttributes<HTMLDivElement> {
   /** Issue 155: when set (and no curated `src` exists for real yet — see model/frame.ts's `photo` field), fetches and shows the place's actual Wikipedia photo instead of the generic placeholder, once it resolves. Typically the frame's local-language name (`q`) or its `name`. */
   wikiQuery?: string;
   description?: string;
+  /** "Check before you go" — reconstruction, hours, seasonality (model/frame.ts's `Frame.warn`; the live site's `js/map.js` equivalent). Issue 144: existed in the model but was never rendered on the card. */
+  warn?: string;
   /** e.g. "52 min" — the number people actually decide on, so it gets an ink chip. Rendered as "Drive {driveTime}" (issue 155: a bare duration read as ambiguous). */
   driveTime?: string;
   distance?: string;
@@ -66,6 +68,7 @@ export function FrameCard({
   src,
   wikiQuery,
   description,
+  warn,
   driveTime,
   distance,
   stay,
@@ -181,6 +184,17 @@ export function FrameCard({
           </div>
         )}
         {description ? <p style={{ margin: 0, font: "var(--body-sm)", color: "var(--text-strong)" }}>{description}</p> : null}
+        {/* Issue 144: `Frame.warn` existed in the model but nothing ever
+            rendered it. No emoji per RISO1's glyph rule (readme.md) — a
+            labelled block instead of the live site's warning-icon line. */}
+        {warn ? (
+          <div style={{ display: "flex", gap: 8, alignItems: "baseline", padding: "7px 9px", background: "var(--paper-1)", borderLeft: "3px solid var(--pink)", flex: "0 0 auto" }}>
+            <span style={{ font: "var(--label-sm)", fontSize: 9, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--pink)", flex: "0 0 auto", whiteSpace: "nowrap" }}>
+              Check before you go
+            </span>
+            <span style={{ font: "var(--body-sm)", color: "var(--text-strong)" }}>{warn}</span>
+          </div>
+        ) : null}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", flex: "0 0 auto" }}>
           {/* Issue 155: "it's written like 40 minutes on the card, but I
               cannot understand like 40 minutes for what" — a bare duration
