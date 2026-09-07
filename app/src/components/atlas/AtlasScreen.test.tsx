@@ -219,10 +219,10 @@ describe("AtlasScreen — the Legend is always mounted (HIGH 04 regression)", ()
     expect(screen.getByText("Reading the page")).toBeInTheDocument();
   });
 
-  it("stays present in the contact sheet view", async () => {
+  it("stays present in the profile view", async () => {
     const user = userEvent.setup();
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText("Contact sheet"));
+    await user.click(screen.getByText("Profile"));
     expect(screen.getByText("Reading the page")).toBeInTheDocument();
   });
 });
@@ -243,13 +243,12 @@ describe("AtlasScreen — structure", () => {
     expect(screen.getByText(/Zagreb · \d+ visited \/ \d+ not/)).toBeInTheDocument();
   });
 
-  it("toggles to the contact sheet view and back", async () => {
-    const user = userEvent.setup();
+  // Issue 156: the Contact Sheet button was removed entirely per the
+  // reporter's explicit "ditch that button completely" — confirm it's
+  // actually gone, not just broken differently.
+  it("has no Contact Sheet button at all", () => {
     render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText("Contact sheet"));
-    expect(screen.getByText(/Contact sheet · 4/)).toBeInTheDocument();
-    await user.click(screen.getByText("Back to the atlas"));
-    expect(screen.queryByText(/Contact sheet · 4/)).toBeNull();
+    expect(screen.queryByText("Contact sheet")).toBeNull();
   });
 });
 
@@ -286,15 +285,6 @@ describe("AtlasScreen — print class hooks (Task 11)", () => {
   it("marks the map/chrome wrapper as print-hidden", () => {
     const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
     expect(container.querySelector(".riso-print-hide")).not.toBeNull();
-  });
-
-  it("marks the open Contact Sheet's wrapper for print, outside the print-hidden map", async () => {
-    const user = userEvent.setup();
-    const { container } = render(<AtlasScreen frames={TEST_FRAMES} />);
-    await user.click(screen.getByText("Contact sheet"));
-    const sheetWrapper = container.querySelector(".riso-contact-sheet-print");
-    expect(sheetWrapper).not.toBeNull();
-    expect(container.querySelector(".riso-print-hide")?.contains(sheetWrapper!)).toBe(false);
   });
 });
 
