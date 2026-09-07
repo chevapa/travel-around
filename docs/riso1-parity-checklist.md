@@ -62,17 +62,23 @@ are still open, not silently dropped:
   so far — real gesture-physics work (velocity thresholds, rotation,
   multi-touch), scoped as its own follow-up rather than rushed in
   alongside the scoring engine.
-- **First-time onboarding.** The live site shows an onboarding pass for a
-  user with zero history. This app ships with one fixed, already-lived-in
-  dataset (31 loved, 11 fine, 74 unprinted) — there's no "brand new user"
-  state to trigger it against — and onboarding itself is issue #59's own
-  open design question, not decided here.
+
+**First-time onboarding (issue 59)** is a real, if scoped-down, port:
+`OnboardingScreen.tsx` shows once per browser (`lib/onboardingStorage.ts`,
+`localStorage`-backed — the only honest "first-time" signal a static site
+with no accounts can have) with two real parameters (how far, what kind
+of place — both backed by real per-frame data), reusing issue 141's
+scoring engine for the actual pick rather than a coin flip. Drops the
+reporter's own "how much time"/weather parameters: `Frame.stayMinutes` is
+unset on every frame in the current dataset (nothing to filter by), and
+weather needs the same live-API/geolocation flow issue 141 already
+deferred.
 
 | Behaviour | Old site (file) | RISO1 | Status |
 |---|---|---|---|
 | Swipeable recommendation card (like/skip/save, drag + buttons) | `js/recommend.js` | `RecommendScreen.tsx` — buttons only, no drag yet | ⚠️ partial (issue 141) |
 | Recommendation scoring (context, history, preferences) | `js/recommendationEngine.js` | `model/recommendation.ts` — no persisted interaction log or weather yet, see its docstring | ✅ done (issue 141) |
-| First-time onboarding (no history yet) | `js/recommend.js` (`onboarding cards`) | — | ❌ not started — issue #59 |
+| First-time onboarding (no history yet) | `js/recommend.js` (`onboarding cards`) | `OnboardingScreen.tsx` — 2 real parameters (distance, category), not the reporter's original 4 | ✅ done, scoped down (issue 59) |
 
 ## 4. Person / profile page
 
